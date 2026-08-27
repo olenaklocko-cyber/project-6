@@ -78,15 +78,16 @@ body::before {
 /* ===== BOTTOM NAV ===== */
 #bottomNav {
     display: flex;
-    background: white;
-    padding: 12px 5px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px 8px;
     padding-bottom: 25px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
+    backdrop-filter: blur(10px);
 }
 
 .nav-btn {
@@ -94,32 +95,38 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     background: none;
     border: none;
-    padding: 8px;
+    padding: 10px 5px;
     cursor: pointer;
     transition: all 0.3s ease;
     color: #999;
-    border-radius: 12px;
+    border-radius: 14px;
+    position: relative;
 }
 
 .nav-btn.active {
-    color: #667eea;
+    color: white;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transform: translateY(-3px);
 }
 
-.nav-btn:hover {
+.nav-btn:hover:not(.active) {
     color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
 }
 
 .nav-icon {
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .nav-text {
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* ===== PROFILE BAR ===== */
