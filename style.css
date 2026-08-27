@@ -1331,23 +1331,463 @@ body::before {
     transform: translateY(0);
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 500px) {
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+    
+    #screens {
+        padding: 15px;
+        padding-bottom: 100px;
+    }
+    
+    /* Навігація */
     #bottomNav {
+        padding: 8px 5px;
         padding-bottom: 20px;
+        gap: 0;
+    }
+    
+    .nav-btn {
+        padding: 8px 4px;
+    }
+    
+    .nav-icon {
+        font-size: 22px;
+    }
+    
+    .nav-text {
+        font-size: 9px;
+    }
+    
+    /* Профіль бар */
+    .profile-bar {
+        padding: 12px 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .profile-gender {
+        font-size: 24px;
+    }
+    
+    .profile-weight {
+        font-size: 14px;
+    }
+    
+    .profile-goal {
+        font-size: 12px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* Прогрес */
+    .day-progress {
+        padding: 14px 16px;
+    }
+    
+    .day-progress-text {
+        font-size: 14px;
+    }
+    
+    .day-progress-text strong {
+        font-size: 18px;
+    }
+    
+    /* Блоки */
+    .blocks-grid {
+        gap: 10px;
+    }
+    
+    .blocks-grid .block:last-child:nth-child(odd) {
+        max-width: 100%;
+    }
+    
+    .block {
+        border-radius: 16px;
+    }
+    
+    .block-header {
+        padding: 14px 10px;
+    }
+    
+    .block-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
+        border-radius: 16px;
+    }
+    
+    .block-name {
+        font-size: 12px;
+    }
+    
+    .block-progress-text {
+        font-size: 14px;
+    }
+    
+    /* Картки звичок */
+    .habit-card {
+        padding: 12px;
+    }
+    
+    .habit-header {
+        gap: 10px;
+    }
+    
+    .habit-icon {
+        font-size: 30px;
+        width: 44px;
+        height: 44px;
+    }
+    
+    .habit-name {
+        font-size: 14px;
+    }
+    
+    .habit-desc {
+        font-size: 11px;
+    }
+    
+    .habit-count {
+        font-size: 12px;
+    }
+    
+    /* Лічильники */
+    .counter-group {
+        gap: 6px;
+        padding: 6px;
+    }
+    
+    .counter-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .counter-value {
+        font-size: 18px;
+        min-width: 40px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .track-input {
+        padding: 12px;
+        font-size: 16px;
+    }
+    
+    .btn-record {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    /* Статистика */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .stats-card {
+        padding: 15px;
+    }
+    
+    .stats-big-number {
+        font-size: 32px;
+    }
+    
+    .chart-container {
+        padding: 15px;
+    }
+    
+    /* Профіль */
+    .profile-page {
+        gap: 15px;
+    }
+    
+    .profile-avatar-section {
+        padding: 25px 15px;
+    }
+    
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .profile-avatar-emoji {
+        font-size: 40px;
+    }
+    
+    .profile-name {
+        font-size: 20px;
+    }
+    
+    .profile-stats {
+        padding: 15px;
+    }
+    
+    .profile-stat-number {
+        font-size: 24px;
+    }
+    
+    .profile-goal-card {
+        padding: 15px;
+    }
+    
+    .profile-settings {
+        padding: 15px;
+    }
+    
+    .profile-setting-item {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .profile-setting-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    .profile-setting-label {
+        min-width: 50px;
+        font-size: 13px;
+    }
+    
+    .profile-input {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .gender-picker {
+        width: 100%;
+    }
+    
+    .gender-option {
+        min-width: 80px;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+    
+    .btn-primary {
+        padding: 16px;
+        font-size: 14px;
+    }
+    
+    .profile-motivation {
+        padding: 15px;
+    }
+    
+    .motivation-emoji {
+        font-size: 28px;
+    }
+    
+    .motivation-text {
+        font-size: 13px;
+    }
+    
+    /* Форма додавання */
+    .add-form {
+        gap: 15px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+    }
+    
+    .form-group input {
+        padding: 14px;
+        font-size: 15px;
+    }
+    
+    .icon-picker,
+    .unit-picker {
+        gap: 8px;
+    }
+    
+    .icon-option {
+        width: 50px;
+        min-width: 50px;
+        font-size: 24px;
+    }
+    
+    .unit-option {
+        min-width: 60px;
+        height: 40px;
+        font-size: 12px;
+    }
+    
+    /* Порожні стани */
+    .empty-state {
+        padding: 40px 15px;
+    }
+    
+    .empty-state .empty-icon {
+        font-size: 60px;
+    }
+    
+    .empty-state h3 {
+        font-size: 18px;
+    }
+    
+    .empty-state p {
+        font-size: 13px;
+    }
+    
+    /* Графіки */
+    .week-chart {
+        height: 100px;
+    }
+    
+    .habit-stat-row {
+        gap: 10px;
+    }
+    
+    .habit-stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+    
+    .habit-stat-name {
+        font-size: 13px;
+    }
+    
+    .habit-stat-count {
+        font-size: 13px;
+        min-width: 70px;
+    }
+}
+
+/* ===== МОБІЛЬНІ МАЛЕНЬКІ ===== */
+@media (max-width: 380px) {
+    .blocks-grid {
+        gap: 8px;
+    }
+    
+    .block-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+    }
+    
+    .block-name {
+        font-size: 11px;
+    }
+    
+    .block-progress-text {
+        font-size: 13px;
     }
     
     .stats-grid {
-        grid-template-columns: 1fr;
+        gap: 8px;
     }
     
-    .counter-group {
-        flex-wrap: wrap;
-        justify-content: center;
+    .stats-card {
+        padding: 12px;
     }
     
-    .profile-bar {
-        flex-wrap: wrap;
-        justify-content: center;
+    .stats-big-number {
+        font-size: 28px;
+    }
+    
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .profile-avatar-emoji {
+        font-size: 36px;
+    }
+}
+
+/* ===== TABLET ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #screens {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .blocks-grid {
+        gap: 15px;
+    }
+    
+    .block-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 38px;
+    }
+}
+
+/* ===== ДЕСКТОП ===== */
+@media (min-width: 1025px) {
+    #screens {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .blocks-grid {
+        gap: 15px;
+    }
+}
+
+/* ===== SAFE AREA (iPhone X+) ===== */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    #bottomNav {
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    }
+}
+
+/* ===== ЗАРЯДКА — запобігаємо зникненню ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== ТЕМНА СИСТЕМА ===== */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    
+    #app {
+        background: rgba(30, 30, 50, 0.9);
+    }
+    
+    .block,
+    .profile-bar,
+    .day-progress,
+    .stats-card,
+    .chart-container,
+    .profile-settings,
+    .habit-card {
+        background: rgba(40, 40, 60, 0.95);
+    }
+    
+    .block-name,
+    .habit-name,
+    .profile-name,
+    .profile-setting-label,
+    .stats-label {
+        color: #e0e0e0;
+    }
+    
+    .block-progress-text,
+    .habit-desc,
+    .habit-count,
+    .profile-stat-label,
+    .profile-goal-text,
+    .section-subtitle {
+        color: #b0b0b0;
     }
 }
