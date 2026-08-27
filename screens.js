@@ -371,27 +371,97 @@ var Screens = {
     renderProfile: function() {
         var container = document.getElementById('screen-profile');
         var profile = Storage.getProfile();
+        var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
         
-        var html = '<div class="add-form">' +
-            '<div class="form-group">' +
-            '<label>Стать</label>' +
+        // Обчислюємо статистику
+        var allHabits = Storage.getAllHabits();
+        var totalWeek = 0;
+        var activeDays = 0;
+        
+        for (var i = 0; i < allHabits.length; i++) {
+            totalWeek += Storage.getWeekTotal(allHabits[i].id);
+        }
+        
+        for (var d = 0; d < 7; d++) {
+            var date = new Date();
+            date.setDate(date.getDate() - d);
+            var dateStr = Storage.formatDate(date);
+            for (var i = 0; i < allHabits.length; i++) {
+                if (Storage.getCount(allHabits[i].id, dateStr) > 0) {
+                    activeDays++;
+                    break;
+                }
+            }
+        }
+        
+        var html = '<div class="profile-page">' +
+            
+            '<div class="profile-avatar-section">' +
+            '<div class="profile-avatar">' +
+            '<div class="profile-avatar-emoji">' + genderEmoji + '</div>' +
+            '</div>' +
+            '<div class="profile-name">Мій профіль</div>' +
+            '<div class="profile-status">' + (activeDays > 0 ? '🔥 Активний ' + activeDays + ' днів' : 'Почни свій шлях!') + '</div>' +
+            '</div>' +
+            
+            '<div class="profile-stats">' +
+            '<div class="profile-stat-item">' +
+            '<div class="profile-stat-number">' + profile.weight + '</div>' +
+            '<div class="profile-stat-label">кг</div>' +
+            '</div>' +
+            '<div class="profile-stat-divider"></div>' +
+            '<div class="profile-stat-item">' +
+            '<div class="profile-stat-number">' + totalWeek + '</div>' +
+            '<div class="profile-stat-label">за тиждень</div>' +
+            '</div>' +
+            '<div class="profile-stat-divider"></div>' +
+            '<div class="profile-stat-item">' +
+            '<div class="profile-stat-number">' + activeDays + '</div>' +
+            '<div class="profile-stat-label">днів</div>' +
+            '</div>' +
+            '</div>' +
+            
+            '<div class="profile-goal-card">' +
+            '<div class="profile-goal-icon">🎯</div>' +
+            '<div class="profile-goal-info">' +
+            '<div class="profile-goal-title">Моя мета</div>' +
+            '<div class="profile-goal-text">' + profile.goal + '</div>' +
+            '</div>' +
+            '</div>' +
+            
+            '<div class="profile-settings">' +
+            '<div class="profile-settings-title">Налаштування</div>' +
+            
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">👤</div>' +
+            '<div class="profile-setting-label">Стать</div>' +
             '<div class="gender-picker">' +
             '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 Чоловік</div>' +
             '<div class="gender-option ' + (profile.gender === 'female' ? 'selected' : '') + '" data-gender="female">👩 Жінка</div>' +
             '</div>' +
             '</div>' +
             
-            '<div class="form-group">' +
-            '<label>Вага (кг)</label>' +
-            '<input type="number" id="profileWeight" value="' + profile.weight + '" placeholder="60">' +
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">⚖️</div>' +
+            '<div class="profile-setting-label">Вага</div>' +
+            '<input type="number" id="profileWeight" value="' + profile.weight + '" class="profile-input">' +
             '</div>' +
             
-            '<div class="form-group">' +
-            '<label>Бажана мета</label>' +
-            '<input type="text" id="profileGoal" value="' + profile.goal + '" placeholder="Наприклад: Здоров\'я та форма">' +
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">🎯</div>' +
+            '<div class="profile-setting-label">Мета</div>' +
+            '<input type="text" id="profileGoal" value="' + profile.goal + '" class="profile-input">' +
             '</div>' +
             
-            '<button class="btn-primary" id="saveProfileBtn">Зберегти профіль</button>' +
+            '</div>' +
+            
+            '<button class="btn-primary btn-full" id="saveProfileBtn">Зберегти зміни</button>' +
+            
+            '<div class="profile-motivation">' +
+            '<div class="motivation-emoji">💪</div>' +
+            '<div class="motivation-text">Кожен крок наближає тебе до мети!</div>' +
+            '</div>' +
+            
             '</div>';
         
         container.innerHTML = html;
@@ -416,8 +486,16 @@ var Screens = {
             var goal = document.getElementById('profileGoal').value.trim() || 'Здоров\'я та форма';
             
             Storage.saveProfile({ gender: gender, weight: weight, goal: goal });
-            alert('Профіль збережено!');
-            self.switchScreen('home');
+            
+            var btn = document.getElementById('saveProfileBtn');
+            btn.textContent = '✓ Збережено!';
+            btn.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
+            
+            setTimeout(function() {
+                btn.textContent = 'Зберегти зміни';
+                btn.style.background = '';
+                self.renderProfile();
+            }, 1500);
         });
     },
     
