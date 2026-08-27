@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Спортивний Трекер</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -13,7 +13,11 @@
             <h1>🏋️ Мій Спорт</h1>
         </header>
         
-        <main id="screens"></main>
+        <main id="screens">
+            <div id="screen-home" class="screen active"></div>
+            <div id="screen-stats" class="screen"></div>
+            <div id="screen-add" class="screen"></div>
+        </main>
         
         <nav id="bottomNav">
             <button class="nav-btn active" data-screen="home">
