@@ -29,77 +29,74 @@ var Storage = {
         this.saveHabits(habits);
     },
     
-    // Отримати відмітки за день
-    getCompleted: function(date) {
-        var data = localStorage.getItem('sportTracker_completed_' + date);
-        return data ? JSON.parse(data) : [];
+    // Отримати кількість за день
+    getCount: function(habitId, date) {
+        var data = localStorage.getItem('sportTracker_count_' + habitId + '_' + date);
+        return data ? parseInt(data) : 0;
     },
     
-    // Відмітити/зняти відмітку
-    toggleCompleted: function(habitId, date) {
-        var completed = this.getCompleted(date);
-        var index = completed.indexOf(habitId);
-        if (index === -1) {
-            completed.push(habitId);
-        } else {
-            completed.splice(index, 1);
-        }
-        localStorage.setItem('sportTracker_completed_' + date, JSON.stringify(completed));
-        return index === -1; // true = додано, false = видалено
+    // Встановити кількість
+    setCount: function(habitId, date, count) {
+        localStorage.setItem('sportTracker_count_' + habitId + '_' + date, count);
     },
     
-    // Отримати серію (streak) для звички
-    getStreak: function(habitId) {
-        var streak = 0;
-        var today = new Date();
-        for (var i = 0; i < 365; i++) {
-            var d = new Date(today);
-            d.setDate(d.getDate() - i);
-            var dateStr = this.formatDate(d);
-            var completed = this.getCompleted(dateStr);
-            if (completed.indexOf(habitId) !== -1) {
-                streak++;
-            } else if (i > 0) {
-                break;
-            }
-        }
-        return streak;
+    // Збільшити кількість
+    incrementCount: function(habitId, date, amount) {
+        var current = this.getCount(habitId, date);
+        var newCount = Math.max(0, current + amount);
+        this.setCount(habitId, date, newCount);
+        return newCount;
     },
     
-    // Відсоток виконання за тиждень
-    getWeekPercent: function(habitId) {
-        var completed = 0;
+    // Загальна кількість за тиждень
+    getWeekTotal: function(habitId) {
+        var total = 0;
         var today = new Date();
         for (var i = 0; i < 7; i++) {
             var d = new Date(today);
             d.setDate(d.getDate() - i);
             var dateStr = this.formatDate(d);
-            var dayCompleted = this.getCompleted(dateStr);
-            if (dayCompleted.indexOf(habitId) !== -1) {
-                completed++;
-            }
+            total += this.getCount(habitId, dateStr);
         }
-        return Math.round((completed / 7) * 100);
+        return total;
     },
     
-    // Відсоток виконання за місяць
-    getMonthPercent: function(habitId) {
-        var completed = 0;
+    // Загальна кількість за місяць
+    getMonthTotal: function(habitId) {
+        var total = 0;
         var today = new Date();
         for (var i = 0; i < 30; i++) {
             var d = new Date(today);
             d.setDate(d.getDate() - i);
             var dateStr = this.formatDate(d);
-            var dayCompleted = this.getCompleted(dateStr);
-            if (dayCompleted.indexOf(habitId) !== -1) {
-                completed++;
+            total += this.getCount(habitId, dateStr);
+        }
+        return total;
+    },
+    
+    // Середня кількість за день (тиждень)
+    getWeekAvg: function(habitId) {
+        var total = this.getWeekTotal(habitId);
+        return Math.round(total / 7 * 10) / 10;
+    },
+    
+    // Дні з активністю за тиждень
+    getWeekActiveDays: function(habitId) {
+        var days = 0;
+        var today = new Date();
+        for (var i = 0; i < 7; i++) {
+            var d = new Date(today);
+            d.setDate(d.getDate() - i);
+            var dateStr = this.formatDate(d);
+            if (this.getCount(habitId, dateStr) > 0) {
+                days++;
             }
         }
-        return Math.round((completed / 30) * 100);
+        return days;
     },
     
     // Дані для графіка по тижнях (останні 7 днів)
-    getWeekChart: function() {
+    getWeekChart: function(habitId) {
         var chart = [];
         var today = new Date();
         var dayNames = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
@@ -107,14 +104,36 @@ var Storage = {
             var d = new Date(today);
             d.setDate(d.getDate() - i);
             var dateStr = this.formatDate(d);
-            var completed = this.getCompleted(dateStr).length;
-            var habits = this.getHabits().length;
             chart.push({
                 day: dayNames[d.getDay()],
-                percent: habits > 0 ? Math.round((completed / habits) * 100) : 0
+                count: this.getCount(habitId, dateStr)
             });
         }
         return chart;
+    },
+    
+    // Загальна статистика за сьогодні
+    getTodaySummary: function() {
+        var habits = this.getHabits();
+        var today = this.formatDate(new Date());
+        var summary = {
+            total: 0,
+            habits: []
+        };
+        
+        for (var i = 0; i < habits.length; i++) {
+            var count = this.getCount(habits[i].id, today);
+            summary.total += count;
+            summary.habits.push({
+                id: habits[i].id,
+                name: habits[i].name,
+                icon: habits[i].icon,
+                count: count,
+                goal: habits[i].goal || 0
+            });
+        }
+        
+        return summary;
     },
     
     // Форматування дати
