@@ -74,8 +74,8 @@ var Screens = {
             var blockProgress = Storage.getBlockProgress(block.id, today);
             var isExpanded = this.expandedBlock === block.id;
             
-            html += '<div class="block' + (isExpanded ? ' expanded' : '') + '" data-block="' + block.id + '" style="border-color: ' + block.color + '30">' +
-                '<div class="block-header">' +
+            html += '<div class="block' + (isExpanded ? ' expanded' : '') + '" data-block="' + block.id + '">' +
+                '<div class="block-header" style="border-color: ' + block.color + '">' +
                 '<div class="block-icon" style="background: linear-gradient(135deg, ' + block.color + ', ' + block.color + 'cc)">' + block.icon + '</div>' +
                 '<div class="block-info">' +
                 '<div class="block-name">' + block.name + '</div>' +
