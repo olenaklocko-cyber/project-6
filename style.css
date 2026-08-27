@@ -109,57 +109,13 @@ body {
     text-transform: uppercase;
 }
 
-/* ===== TODAY SUMMARY ===== */
-.today-summary {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.summary-card {
-    flex: 1;
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    border: 2px solid #e8ecf1;
-}
-
-.summary-card.main {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border: none;
-    color: white;
-}
-
-.summary-icon {
-    font-size: 36px;
-    margin-bottom: 10px;
-}
-
-.summary-number {
-    font-size: 48px;
-    font-weight: 900;
-    line-height: 1;
-}
-
-.summary-card.main .summary-number {
-    color: white;
-}
-
-.summary-label {
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 5px;
-    opacity: 0.9;
-}
-
 /* ===== DAY SELECTOR ===== */
 .day-selector {
     display: flex;
     gap: 10px;
     overflow-x: auto;
     padding: 15px 0;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     scrollbar-width: none;
 }
 
@@ -206,18 +162,44 @@ body {
     font-weight: 900;
 }
 
-/* ===== HABITS LIST ===== */
-.section-title {
-    font-size: 18px;
-    font-weight: 800;
-    color: #333;
-    margin-bottom: 15px;
+/* ===== DAY PROGRESS BAR ===== */
+.day-progress {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+    color: white;
 }
 
+.day-progress-text {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.day-progress-text strong {
+    font-size: 20px;
+}
+
+.day-progress-bar {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    height: 12px;
+    overflow: hidden;
+}
+
+.day-progress-fill {
+    background: white;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* ===== HABITS LIST ===== */
 .habits-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 .habit-card {
@@ -225,26 +207,29 @@ body {
     border: 2px solid #e8ecf1;
     border-radius: 20px;
     padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
     transition: all 0.3s ease;
 }
 
 .habit-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.habit-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
 }
 
 .habit-icon {
     font-size: 36px;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #f5f7fa;
-    border-radius: 16px;
+    border-radius: 14px;
 }
 
 .habit-info {
@@ -254,39 +239,69 @@ body {
 .habit-name {
     font-size: 17px;
     font-weight: 800;
-    margin-bottom: 5px;
     color: #333;
+    margin-bottom: 3px;
 }
 
-.habit-week {
-    font-size: 13px;
-    color: #888;
-    font-weight: 600;
-}
-
-.habit-goal {
-    font-size: 12px;
+.habit-count {
+    font-size: 14px;
     color: #667eea;
     font-weight: 700;
-    margin-top: 3px;
 }
 
-/* ===== COUNTER ===== */
-.habit-counter {
+/* ===== HABIT PROGRESS MINI ===== */
+.habit-progress-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.habit-progress-mini-bar {
+    flex: 1;
+    background: #e8ecf1;
+    border-radius: 8px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.habit-progress-mini-fill {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.3s ease;
+}
+
+.habit-progress-mini-text {
+    font-size: 13px;
+    font-weight: 800;
+    color: #667eea;
+    min-width: 40px;
+}
+
+/* ===== HABIT ACTIONS ===== */
+.habit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Counter group (разів, підходів) */
+.counter-group {
     display: flex;
     align-items: center;
     gap: 8px;
     background: #f5f7fa;
-    border-radius: 15px;
-    padding: 5px;
+    border-radius: 14px;
+    padding: 8px;
 }
 
 .counter-btn {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border: none;
     border-radius: 12px;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 900;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -302,7 +317,7 @@ body {
 
 .counter-btn.minus:hover {
     background: #ee5a5a;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .counter-btn.plus {
@@ -311,8 +326,18 @@ body {
 }
 
 .counter-btn.plus:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+}
+
+.counter-btn.plus-10 {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+    color: white;
+    width: 55px;
+}
+
+.counter-btn.plus-10:hover {
+    transform: scale(1.05);
 }
 
 .counter-btn:active {
@@ -320,11 +345,52 @@ body {
 }
 
 .counter-value {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
     color: #333;
     min-width: 50px;
     text-align: center;
+}
+
+/* Input group (км, хвилин) */
+.input-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.track-input {
+    flex: 1;
+    padding: 14px 16px;
+    border: 2px solid #e8ecf1;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.track-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-record {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-record:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
 /* ===== EMPTY STATE ===== */
@@ -409,23 +475,23 @@ body {
     font-weight: 800;
 }
 
-/* ===== HABIT PROGRESS ===== */
-.habit-progress {
+/* ===== HABIT STAT ROW ===== */
+.habit-stat-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 15px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.habit-progress:last-child {
+.habit-stat-row:last-child {
     border-bottom: none;
 }
 
-.habit-progress-icon {
+.habit-stat-icon {
     font-size: 28px;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -433,92 +499,108 @@ body {
     border-radius: 12px;
 }
 
-.habit-progress-info {
+.habit-stat-info {
     flex: 1;
 }
 
-.habit-progress-name {
-    font-size: 15px;
+.habit-stat-name {
+    font-size: 14px;
     font-weight: 700;
-    margin-bottom: 8px;
     color: #333;
+    margin-bottom: 6px;
 }
 
-.progress-bar {
+.habit-stat-bar {
     background: #e8ecf1;
-    border-radius: 8px;
-    height: 10px;
+    border-radius: 6px;
+    height: 8px;
     overflow: hidden;
 }
 
-.progress-fill {
+.habit-stat-fill {
     background: linear-gradient(90deg, #667eea, #764ba2);
     height: 100%;
-    border-radius: 8px;
-    transition: width 0.5s ease;
+    border-radius: 6px;
 }
 
-.habit-progress-count {
-    font-size: 16px;
-    font-weight: 900;
+.habit-stat-count {
+    font-size: 14px;
+    font-weight: 800;
     color: #667eea;
     min-width: 80px;
     text-align: right;
 }
 
-/* ===== MINI CHART ===== */
-.habit-detail {
-    margin-bottom: 20px;
+/* ===== WEEK CHART ===== */
+.week-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 120px;
 }
 
-.habit-detail:last-child {
-    margin-bottom: 0;
+.week-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
-.habit-detail-header {
+.week-fill {
+    width: 100%;
+    background: linear-gradient(180deg, #667eea, #764ba2);
+    border-radius: 8px 8px 4px 4px;
+    min-height: 5px;
+    transition: height 0.5s ease;
+}
+
+.week-label {
+    font-size: 12px;
+    color: #888;
+    font-weight: 800;
+}
+
+/* ===== MANAGE ROW ===== */
+.manage-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.habit-detail-icon {
+.manage-row:last-child {
+    border-bottom: none;
+}
+
+.manage-icon {
     font-size: 24px;
 }
 
-.habit-detail-name {
+.manage-name {
+    flex: 1;
     font-size: 15px;
     font-weight: 700;
     color: #333;
 }
 
-.mini-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    height: 80px;
+.btn-danger {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.mini-bar {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.mini-fill {
-    width: 100%;
-    background: linear-gradient(180deg, #667eea, #764ba2);
-    border-radius: 6px 6px 3px 3px;
-    min-height: 4px;
-    transition: height 0.5s ease;
-}
-
-.mini-label {
-    font-size: 10px;
-    color: #888;
-    font-weight: 700;
+.btn-danger:hover {
+    background: #ee5a5a;
+    transform: scale(1.05);
 }
 
 /* ===== ADD SCREEN ===== */
@@ -568,23 +650,25 @@ body {
 
 .icon-option,
 .unit-option {
-    min-width: 60px;
+    min-width: 70px;
     height: 50px;
     border: 2px solid #e8ecf1;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
+    color: #666;
 }
 
 .icon-option {
     font-size: 28px;
     width: 60px;
+    min-width: 60px;
 }
 
 .icon-option:hover,
@@ -596,7 +680,8 @@ body {
 .icon-option.selected,
 .unit-option.selected {
     border-color: #667eea;
-    background: linear-gradient(135deg, #667eea15, #764ba215);
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
     transform: scale(1.05);
 }
 
@@ -624,24 +709,6 @@ body {
     transform: translateY(0);
 }
 
-.btn-danger {
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 800;
-    font-family: 'Nunito', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-danger:hover {
-    background: #ee5a5a;
-    transform: scale(1.05);
-}
-
 /* ===== MOBILE ===== */
 @media (max-width: 500px) {
     #bottomNav {
@@ -652,7 +719,8 @@ body {
         grid-template-columns: 1fr;
     }
     
-    .today-summary {
-        flex-direction: column;
+    .counter-group {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }

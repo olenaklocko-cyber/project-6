@@ -1,16 +1,16 @@
-// ===== SCREENS — переиспользуемые екрани =====
+// ===== SCREENS — рефакторинг трекінгу =====
 
 var Screens = {
     currentScreen: 'home',
     selectedDate: new Date(),
     
-    // Ініціалізація екранів
+    // Ініціалізація
     init: function() {
         this.renderAll();
         this.bindNav();
     },
     
-    // Прив'язка навігації
+    // Навігація
     bindNav: function() {
         var self = this;
         document.querySelectorAll('.nav-btn').forEach(function(btn) {
@@ -21,7 +21,6 @@ var Screens = {
         });
     },
     
-    // Перемикання екрану
     switchScreen: function(name) {
         this.currentScreen = name;
         document.querySelectorAll('.screen').forEach(function(s) {
@@ -35,7 +34,6 @@ var Screens = {
         this.renderAll();
     },
     
-    // Рендер всіх екранів
     renderAll: function() {
         this.renderHome();
         this.renderStats();
@@ -47,58 +45,102 @@ var Screens = {
         var container = document.getElementById('screen-home');
         var habits = Storage.getHabits();
         var today = Storage.formatDate(this.selectedDate);
-        var summary = Storage.getTodaySummary();
         
-        // Загальний підсумок за сьогодні
-        var html = '<div class="today-summary">' +
-            '<div class="summary-card main">' +
-            '<div class="summary-icon">🎯</div>' +
-            '<div class="summary-number">' + summary.total + '</div>' +
-            '<div class="summary-label">всього сьогодні</div>' +
+        // Календар
+        var html = '<div class="day-selector">' + this.renderDays() + '</div>';
+        
+        // Прогрес-бар дня
+        var progress = this.getDayProgress(today);
+        html += '<div class="day-progress">' +
+            '<div class="day-progress-text">Мій прогрес сьогодні: <strong>' + progress.percent + '%</strong></div>' +
+            '<div class="day-progress-bar">' +
+            '<div class="day-progress-fill" style="width: ' + progress.percent + '%"></div>' +
             '</div>' +
             '</div>';
         
-        // Календар
-        html += '<div class="day-selector">' + this.renderDays() + '</div>';
-        
-        // Список звичок з лічильниками
+        // Список вправ
         if (habits.length === 0) {
             html += '<div class="empty-state">' +
                 '<div class="empty-icon">🏋️</div>' +
-                '<h3>Почни свій спорт-шлях!</h3>' +
-                '<p>Додай першу звичку на кнопці "Додати"</p>' +
+                '<h3>Додай свою першу вправу!</h3>' +
+                '<p>Натисни "Додати" внизу</p>' +
                 '</div>';
         } else {
-            html += '<div class="section-title">Мої тренування</div>';
             html += '<div class="habits-list">';
             
             for (var i = 0; i < habits.length; i++) {
                 var h = habits[i];
                 var count = Storage.getCount(h.id, today);
-                var weekTotal = Storage.getWeekTotal(h.id);
                 var goal = h.goal || 0;
                 var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
+                var isDistance = (h.unit === 'км' || h.unit === 'хвилин');
                 
                 html += '<div class="habit-card" data-id="' + h.id + '">' +
+                    '<div class="habit-header">' +
                     '<div class="habit-icon">' + h.icon + '</div>' +
                     '<div class="habit-info">' +
                     '<div class="habit-name">' + h.name + '</div>' +
-                    '<div class="habit-week">Цей тиждень: ' + weekTotal + ' ' + (h.unit || 'разів') + '</div>' +
-                    (goal > 0 ? '<div class="habit-goal">Мета: ' + goal + ' ' + (h.unit || 'разів') + ' (' + goalPercent + '%)</div>' : '') +
-                    '</div>' +
-                    '<div class="habit-counter">' +
-                    '<button class="counter-btn minus" data-id="' + h.id + '" data-action="minus">−</button>' +
-                    '<div class="counter-value">' + count + '</div>' +
-                    '<button class="counter-btn plus" data-id="' + h.id + '" data-action="plus">+</button>' +
+                    '<div class="habit-count">' + count + ' ' + (h.unit || 'разів') + 
+                    (goal > 0 ? ' з ' + goal : '') + '</div>' +
                     '</div>' +
                     '</div>';
+                
+                // Прогрес-бар на картці
+                if (goal > 0) {
+                    html += '<div class="habit-progress-mini">' +
+                        '<div class="habit-progress-mini-bar">' +
+                        '<div class="habit-progress-mini-fill" style="width: ' + goalPercent + '%"></div>' +
+                        '</div>' +
+                        '<div class="habit-progress-mini-text">' + goalPercent + '%</div>' +
+                        '</div>';
+                }
+                
+                // Елементи трекінгу
+                html += '<div class="habit-actions">';
+                
+                if (isDistance) {
+                    // Для км/хвилин — поле введення + кнопка
+                    html += '<div class="input-group">' +
+                        '<input type="number" class="track-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
+                        '<button class="btn-record" data-id="' + h.id + '">Записати</button>' +
+                        '</div>';
+                } else {
+                    // Для разів/підходів — кнопки +/-
+                    html += '<div class="counter-group">' +
+                        '<button class="counter-btn minus" data-id="' + h.id + '">−</button>' +
+                        '<div class="counter-value">' + count + '</div>' +
+                        '<button class="counter-btn plus" data-id="' + h.id + '">+1</button>' +
+                        '<button class="counter-btn plus-10" data-id="' + h.id + '">+10</button>' +
+                        '</div>';
+                }
+                
+                html += '</div></div>';
             }
             
             html += '</div>';
         }
         
         container.innerHTML = html;
-        this.bindHabits();
+        this.bindHomeEvents();
+    },
+    
+    // Прогрес дня
+    getDayProgress: function(date) {
+        var habits = Storage.getHabits();
+        var totalGoal = 0;
+        var totalDone = 0;
+        
+        for (var i = 0; i < habits.length; i++) {
+            var goal = habits[i].goal || 0;
+            if (goal > 0) {
+                totalGoal += goal;
+                totalDone += Math.min(Storage.getCount(habits[i].id, date), goal);
+            }
+        }
+        
+        return {
+            percent: totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0
+        };
     },
     
     // Дні тижня
@@ -122,22 +164,9 @@ var Screens = {
         return html;
     },
     
-    // Прив'язка кліків
-    bindHabits: function() {
+    // Прив'язка подій головного екрану
+    bindHomeEvents: function() {
         var self = this;
-        
-        // Кнопки +/-
-        document.querySelectorAll('.counter-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                var id = parseInt(this.getAttribute('data-id'));
-                var action = this.getAttribute('data-action');
-                var date = Storage.formatDate(self.selectedDate);
-                var amount = action === 'plus' ? 1 : -1;
-                Storage.incrementCount(id, date, amount);
-                self.renderHome();
-            });
-        });
         
         // Вибір днів
         document.querySelectorAll('.day-btn').forEach(function(btn) {
@@ -145,6 +174,47 @@ var Screens = {
                 var date = this.getAttribute('data-date');
                 self.selectedDate = new Date(date);
                 self.renderHome();
+            });
+        });
+        
+        // Кнопки +/-
+        document.querySelectorAll('.counter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = parseInt(this.getAttribute('data-id'));
+                var date = Storage.formatDate(self.selectedDate);
+                var action = this.classList.contains('plus') ? 1 : 
+                             this.classList.contains('plus-10') ? 10 : -1;
+                Storage.incrementCount(id, date, action);
+                self.renderHome();
+            });
+        });
+        
+        // Кнопки "Записати" для км/хвилин
+        document.querySelectorAll('.btn-record').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = parseInt(this.getAttribute('data-id'));
+                var input = document.querySelector('.track-input[data-id="' + id + '"]');
+                var value = parseInt(input.value) || 0;
+                if (value > 0) {
+                    var date = Storage.formatDate(self.selectedDate);
+                    Storage.setCount(id, date, value);
+                    self.renderHome();
+                }
+            });
+        });
+        
+        // Enter в полі введення
+        document.querySelectorAll('.track-input').forEach(function(input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    var id = parseInt(this.getAttribute('data-id'));
+                    var value = parseInt(this.value) || 0;
+                    if (value > 0) {
+                        var date = Storage.formatDate(self.selectedDate);
+                        Storage.setCount(id, date, value);
+                        self.renderHome();
+                    }
+                }
             });
         });
     },
@@ -158,118 +228,88 @@ var Screens = {
             container.innerHTML = '<div class="empty-state">' +
                 '<div class="empty-icon">📊</div>' +
                 '<h3>Поки немає даних</h3>' +
-                '<p>Додай звички та починай тренуватися!</p>' +
+                '<p>Додай вправи та починай тренуватися!</p>' +
                 '</div>';
             return;
         }
         
         // Загальна статистика за тиждень
-        var totalWeek = 0;
-        var totalMonth = 0;
-        var maxWeek = 0;
-        var bestHabit = habits[0];
-        
-        for (var i = 0; i < habits.length; i++) {
-            var weekTotal = Storage.getWeekTotal(habits[i].id);
-            var monthTotal = Storage.getMonthTotal(habits[i].id);
-            totalWeek += weekTotal;
-            totalMonth += monthTotal;
-            
-            if (weekTotal > maxWeek) {
-                maxWeek = weekTotal;
-                bestHabit = habits[i];
-            }
-        }
+        var weekStats = this.getWeekStats(habits);
         
         var html = '<div class="stats-grid">' +
             '<div class="stats-card">' +
             '<h3>Цей тиждень</h3>' +
-            '<div class="stats-big-number">' + totalWeek + '</div>' +
+            '<div class="stats-big-number">' + weekStats.total + '</div>' +
             '<div class="stats-label">всього повторень</div>' +
-            '</div>' +
-            
-            '<div class="stats-card">' +
-            '<h3>Цей місяць</h3>' +
-            '<div class="stats-big-number">' + totalMonth + '</div>' +
-            '<div class="stats-label">всього повторень</div>' +
-            '</div>' +
-            
-            '<div class="stats-card">' +
-            '<h3>Краща звичка</h3>' +
-            '<div class="stats-big-number">' + bestHabit.icon + '</div>' +
-            '<div class="stats-label">' + bestHabit.name + '</div>' +
             '</div>' +
             
             '<div class="stats-card">' +
             '<h3>Активних днів</h3>' +
-            '<div class="stats-big-number">' + this.getActiveDays() + '</div>' +
-            '<div class="stats-label">за тиждень</div>' +
+            '<div class="stats-big-number">' + weekStats.activeDays + '</div>' +
+            '<div class="stats-label">з 7 днів</div>' +
+            '</div>' +
+            
+            '<div class="stats-card">' +
+            '<h3>Вправ</h3>' +
+            '<div class="stats-big-number">' + habits.length + '</div>' +
+            '<div class="stats-label">відстежується</div>' +
+            '</div>' +
+            
+            '<div class="stats-card">' +
+            '<h3>Сьогодні</h3>' +
+            '<div class="stats-big-number">' + weekStats.today + '</div>' +
+            '<div class="stats-label">всього</div>' +
             '</div>' +
             '</div>';
         
-        // Графік по звичках
+        // Розподіл по типах
         html += '<div class="chart-container">' +
-            '<h3>Прогрес по звичках (тиждень)</h3>';
+            '<h3>Розподіл за тиждень</h3>';
         
         for (var i = 0; i < habits.length; i++) {
             var weekTotal = Storage.getWeekTotal(habits[i].id);
             var maxPossible = Math.max(weekTotal, 1);
             
-            html += '<div class="habit-progress">' +
-                '<div class="habit-progress-icon">' + habits[i].icon + '</div>' +
-                '<div class="habit-progress-info">' +
-                '<div class="habit-progress-name">' + habits[i].name + '</div>' +
-                '<div class="progress-bar">' +
-                '<div class="progress-fill" style="width: ' + Math.min(100, (weekTotal / (maxPossible * 1.2)) * 100) + '%"></div>' +
+            html += '<div class="habit-stat-row">' +
+                '<div class="habit-stat-icon">' + habits[i].icon + '</div>' +
+                '<div class="habit-stat-info">' +
+                '<div class="habit-stat-name">' + habits[i].name + '</div>' +
+                '<div class="habit-stat-bar">' +
+                '<div class="habit-stat-fill" style="width: ' + Math.min(100, (weekTotal / (maxPossible * 1.2)) * 100) + '%"></div>' +
                 '</div>' +
                 '</div>' +
-                '<div class="habit-progress-count">' + weekTotal + ' ' + (habits[i].unit || 'разів') + '</div>' +
+                '<div class="habit-stat-count">' + weekTotal + ' ' + (habits[i].unit || 'разів') + '</div>' +
                 '</div>';
         }
         
         html += '</div>';
         
-        // Детальна статистика по кожній звичці
+        // Графік по днях
         html += '<div class="chart-container">' +
-            '<h3>Деталі по днях</h3>';
+            '<h3>Активність по днях</h3>' +
+            '<div class="week-chart">';
         
-        for (var i = 0; i < habits.length; i++) {
-            var chart = Storage.getWeekChart(habits[i].id);
-            var maxCount = 0;
-            for (var j = 0; j < chart.length; j++) {
-                if (chart[j].count > maxCount) maxCount = chart[j].count;
-            }
-            
-            html += '<div class="habit-detail">' +
-                '<div class="habit-detail-header">' +
-                '<span class="habit-detail-icon">' + habits[i].icon + '</span>' +
-                '<span class="habit-detail-name">' + habits[i].name + '</span>' +
-                '</div>' +
-                '<div class="mini-chart">';
-            
-            for (var j = 0; j < chart.length; j++) {
-                var height = maxCount > 0 ? (chart[j].count / maxCount) * 100 : 0;
-                html += '<div class="mini-bar">' +
-                    '<div class="mini-fill" style="height: ' + Math.max(height, 5) + '%"></div>' +
-                    '<div class="mini-label">' + chart[j].day + '</div>' +
-                    '</div>';
-            }
-            
-            html += '</div></div>';
+        var weekDays = this.getWeekActivity(habits);
+        var maxDay = Math.max.apply(null, weekDays.map(function(d) { return d.total; }));
+        
+        for (var i = 0; i < weekDays.length; i++) {
+            var height = maxDay > 0 ? (weekDays[i].total / maxDay) * 100 : 0;
+            html += '<div class="week-bar">' +
+                '<div class="week-fill" style="height: ' + Math.max(height, 5) + '%"></div>' +
+                '<div class="week-label">' + weekDays[i].day + '</div>' +
+                '</div>';
         }
         
-        html += '</div>';
+        html += '</div></div>';
         
         // Керування
         html += '<div class="chart-container">' +
-            '<h3>Керування</h3>';
+            '<h3>Керування вправами</h3>';
         
         for (var i = 0; i < habits.length; i++) {
-            html += '<div class="habit-progress">' +
-                '<div class="habit-progress-icon">' + habits[i].icon + '</div>' +
-                '<div class="habit-progress-info">' +
-                '<div class="habit-progress-name">' + habits[i].name + '</div>' +
-                '</div>' +
+            html += '<div class="manage-row">' +
+                '<span class="manage-icon">' + habits[i].icon + '</span>' +
+                '<span class="manage-name">' + habits[i].name + '</span>' +
                 '<button class="btn-danger" onclick="Screens.deleteHabit(' + habits[i].id + ')">Видалити</button>' +
                 '</div>';
         }
@@ -279,23 +319,65 @@ var Screens = {
         container.innerHTML = html;
     },
     
-    // Активні дні за тиждень
-    getActiveDays: function() {
-        var days = 0;
+    // Статистика за тиждень
+    getWeekStats: function(habits) {
+        var total = 0;
+        var activeDays = {};
+        var today = Storage.formatDate(new Date());
+        var todayTotal = 0;
+        
+        for (var i = 0; i < habits.length; i++) {
+            total += Storage.getWeekTotal(habits[i].id);
+            todayTotal += Storage.getCount(habits[i].id, today);
+        }
+        
+        // Рахуємо активні дні
+        for (var d = 0; d < 7; d++) {
+            var date = new Date();
+            date.setDate(date.getDate() - d);
+            var dateStr = Storage.formatDate(date);
+            for (var i = 0; i < habits.length; i++) {
+                if (Storage.getCount(habits[i].id, dateStr) > 0) {
+                    activeDays[dateStr] = true;
+                }
+            }
+        }
+        
+        return {
+            total: total,
+            activeDays: Object.keys(activeDays).length,
+            today: todayTotal
+        };
+    },
+    
+    // Активність по днях тижня
+    getWeekActivity: function(habits) {
+        var result = [];
         var today = new Date();
-        for (var i = 0; i < 7; i++) {
+        var dayNames = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        
+        for (var i = 6; i >= 0; i--) {
             var d = new Date(today);
             d.setDate(d.getDate() - i);
             var dateStr = Storage.formatDate(d);
-            var summary = Storage.getTodaySummary();
-            if (summary.total > 0) days++;
+            var total = 0;
+            
+            for (var j = 0; j < habits.length; j++) {
+                total += Storage.getCount(habits[j].id, dateStr);
+            }
+            
+            result.push({
+                day: dayNames[d.getDay()],
+                total: total
+            });
         }
-        return days;
+        
+        return result;
     },
     
     // Видалити звичку
     deleteHabit: function(id) {
-        if (confirm('Видалити цю звичку?')) {
+        if (confirm('Видалити цю вправу?')) {
             Storage.deleteHabit(id);
             this.renderAll();
         }
@@ -305,7 +387,7 @@ var Screens = {
     renderAdd: function() {
         var container = document.getElementById('screen-add');
         var icons = ['⚽', '🏀', '🎾', '🏃', '💪', '🧘', '🚴', '🏊', '🤸', '🏋️', '🥊', '⛷️'];
-        var units = ['разів', 'хвилин', 'км', 'підходів', 'повторень', 'кг'];
+        var units = ['разів', 'хвилин', 'км', 'підходів', 'кг'];
         
         var html = '<div class="add-form">' +
             '<div class="form-group">' +
@@ -324,8 +406,8 @@ var Screens = {
         html += '</div></div>' +
             
             '<div class="form-group">' +
-            '<label>Мета на день (опціонально)</label>' +
-            '<input type="number" id="habitGoal" placeholder="Наприклад: 50">' +
+            '<label>Мета на день</label>' +
+            '<input type="number" id="habitGoal" placeholder="Наприклад: 50 разів">' +
             '</div>' +
             
             '<div class="form-group">' +
@@ -358,13 +440,24 @@ var Screens = {
             });
         });
         
-        // Вибір одиниць
+        // Вибір одиниць + динамічний плейсхолдер
+        var goalInput = document.getElementById('habitGoal');
+        var placeholders = {
+            'разів': 'Наприклад: 50 разів',
+            'хвилин': 'Наприклад: 30 хвилин',
+            'км': 'Наприклад: 5 км',
+            'підходів': 'Наприклад: 3 підходи',
+            'кг': 'Наприклад: 20 кг'
+        };
+        
         document.querySelectorAll('.unit-option').forEach(function(opt) {
             opt.addEventListener('click', function() {
                 document.querySelectorAll('.unit-option').forEach(function(o) {
                     o.classList.remove('selected');
                 });
                 this.classList.add('selected');
+                var unit = this.getAttribute('data-unit');
+                goalInput.placeholder = placeholders[unit] || 'Мета на день';
             });
         });
         
