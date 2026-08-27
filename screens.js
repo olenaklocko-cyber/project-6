@@ -158,25 +158,44 @@ var Screens = {
             if (streak > maxStreak) maxStreak = streak;
         }
         
-        var html = '<div class="stats-card">' +
+        // Загальна кількість відміток за тиждень
+        var totalChecks = 0;
+        var today = new Date();
+        for (var i = 0; i < 7; i++) {
+            var d = new Date(today);
+            d.setDate(d.getDate() - i);
+            var dateStr = Storage.formatDate(d);
+            totalChecks += Storage.getCompleted(dateStr).length;
+        }
+        
+        var html = '<div class="stats-grid">' +
+            '<div class="stats-card">' +
             '<h3>Цей тиждень</h3>' +
             '<div class="stats-big-number">' + avgWeek + '%</div>' +
-            '<div class="stats-label">виконання звичок</div>' +
+            '<div class="stats-label">виконання</div>' +
             '</div>' +
             
             '<div class="stats-card">' +
             '<h3>Цей місяць</h3>' +
             '<div class="stats-big-number">' + avgMonth + '%</div>' +
-            '<div class="stats-label">виконання звичок</div>' +
+            '<div class="stats-label">виконання</div>' +
             '</div>' +
             
             '<div class="stats-card">' +
-            '<h3>Найдовша серія</h3>' +
+            '<h3>Серія</h3>' +
             '<div class="stats-big-number">🔥 ' + maxStreak + '</div>' +
             '<div class="stats-label">днів поспіль</div>' +
             '</div>' +
             
-            '<div class="chart-container">' +
+            '<div class="stats-card">' +
+            '<h3>Відміток</h3>' +
+            '<div class="stats-big-number">✅ ' + totalChecks + '</div>' +
+            '<div class="stats-label">за тиждень</div>' +
+            '</div>' +
+            '</div>';
+        
+        // Графік
+        html += '<div class="chart-container">' +
             '<h3>Останні 7 днів</h3>' +
             '<div class="chart">';
         
@@ -188,38 +207,47 @@ var Screens = {
         for (var i = 0; i < chart.length; i++) {
             var barHeight = maxPercent > 0 ? (chart[i].percent / maxPercent) * 100 : 0;
             html += '<div class="chart-bar">' +
-                '<div class="chart-fill" style="height: ' + Math.max(barHeight, 5) + '%"></div>' +
+                '<div class="chart-fill" style="height: ' + Math.max(barHeight, 8) + '%"></div>' +
                 '<div class="chart-label">' + chart[i].day + '</div>' +
                 '</div>';
         }
         
         html += '</div></div>';
         
-        // Звички по відсотках
-        html += '<div class="chart-container"><h3>По звичках (тиждень)</h3>';
+        // Прогрес по звичках
+        html += '<div class="chart-container">' +
+            '<h3>Прогрес по звичках</h3>';
+        
         for (var i = 0; i < habits.length; i++) {
             var percent = Storage.getWeekPercent(habits[i].id);
-            html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">' +
-                '<span style="font-size:24px;">' + habits[i].icon + '</span>' +
-                '<div style="flex:1;">' +
-                '<div style="font-size:14px;font-weight:700;margin-bottom:4px;">' + habits[i].name + '</div>' +
-                '<div style="background:#e0e0e0;border-radius:6px;height:8px;overflow:hidden;">' +
-                '<div style="background:linear-gradient(90deg,#667eea,#764ba2);height:100%;width:' + percent + '%;transition:width 0.5s ease;"></div>' +
+            html += '<div class="habit-progress">' +
+                '<div class="habit-progress-icon">' + habits[i].icon + '</div>' +
+                '<div class="habit-progress-info">' +
+                '<div class="habit-progress-name">' + habits[i].name + '</div>' +
+                '<div class="progress-bar">' +
+                '<div class="progress-fill" style="width: ' + percent + '%"></div>' +
                 '</div>' +
                 '</div>' +
-                '<span style="font-weight:900;color:#667eea;">' + percent + '%</span>' +
+                '<div class="habit-progress-percent">' + percent + '%</div>' +
                 '</div>';
         }
+        
         html += '</div>';
         
-        // Кнопка видалення
-        html += '<div class="chart-container"><h3>Керування</h3>';
+        // Керування
+        html += '<div class="chart-container">' +
+            '<h3>Видалити звичку</h3>';
+        
         for (var i = 0; i < habits.length; i++) {
-            html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e0e0e0;">' +
-                '<span>' + habits[i].icon + ' ' + habits[i].name + '</span>' +
+            html += '<div class="habit-progress">' +
+                '<div class="habit-progress-icon">' + habits[i].icon + '</div>' +
+                '<div class="habit-progress-info">' +
+                '<div class="habit-progress-name">' + habits[i].name + '</div>' +
+                '</div>' +
                 '<button class="btn-danger" onclick="Screens.deleteHabit(' + habits[i].id + ')">Видалити</button>' +
                 '</div>';
         }
+        
         html += '</div>';
         
         container.innerHTML = html;
