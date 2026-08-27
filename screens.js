@@ -67,17 +67,19 @@ var Screens = {
             '</div>';
         
         // Блоки
+        html += '<div class="blocks-grid">';
+        
         for (var b = 0; b < blocks.length; b++) {
             var block = blocks[b];
             var blockProgress = Storage.getBlockProgress(block.id, today);
             var isExpanded = this.expandedBlock === block.id;
             
-            html += '<div class="block" style="border-left: 4px solid ' + block.color + '">' +
-                '<div class="block-header" data-block="' + block.id + '">' +
+            html += '<div class="block' + (isExpanded ? ' expanded' : '') + '" style="border-color: ' + block.color + '40" data-block="' + block.id + '">' +
+                '<div class="block-header">' +
                 '<div class="block-icon" style="background: ' + block.color + '20; color: ' + block.color + '">' + block.icon + '</div>' +
                 '<div class="block-info">' +
                 '<div class="block-name">' + block.name + '</div>' +
-                '<div class="block-progress-text">' + blockProgress + '% виконано</div>' +
+                '<div class="block-progress-text">' + blockProgress + '%</div>' +
                 '</div>' +
                 '<div class="block-toggle">' + (isExpanded ? '▼' : '▶') + '</div>' +
                 '</div>' +
@@ -139,6 +141,8 @@ var Screens = {
             
             html += '</div>';
         }
+        
+        html += '</div>';
         
         // Користувацькі звички
         var customHabits = Storage.getCustomHabits();
@@ -208,8 +212,8 @@ var Screens = {
         var self = this;
         
         // Розгортання блоків
-        document.querySelectorAll('.block-header').forEach(function(header) {
-            header.addEventListener('click', function() {
+        document.querySelectorAll('.block').forEach(function(block) {
+            block.addEventListener('click', function() {
                 var blockId = this.getAttribute('data-block');
                 self.expandedBlock = self.expandedBlock === blockId ? null : blockId;
                 self.renderHome();
