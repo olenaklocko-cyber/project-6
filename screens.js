@@ -1,8 +1,10 @@
-// ===== SCREENS — рефакторинг трекінгу =====
+// ===== SCREENS — персоналізація та календар =====
 
 var Screens = {
     currentScreen: 'home',
     selectedDate: new Date(),
+    calendarMonth: new Date().getMonth(),
+    calendarYear: new Date().getFullYear(),
     
     // Ініціалізація
     init: function() {
@@ -38,16 +40,26 @@ var Screens = {
         this.renderHome();
         this.renderStats();
         this.renderAdd();
+        this.renderProfile();
     },
     
     // ===== ГОЛОВНИЙ ЕКРАН =====
     renderHome: function() {
         var container = document.getElementById('screen-home');
         var habits = Storage.getHabits();
+        var profile = Storage.getProfile();
         var today = Storage.formatDate(this.selectedDate);
         
-        // Календар
-        var html = '<div class="day-selector">' + this.renderDays() + '</div>';
+        // Профіль користувача
+        var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
+        var html = '<div class="profile-bar">' +
+            '<span class="profile-gender">' + genderEmoji + '</span>' +
+            '<span class="profile-weight">' + profile.weight + ' кг</span>' +
+            '<span class="profile-goal">' + profile.goal + '</span>' +
+            '</div>';
+        
+        // Календар на місяць
+        html += this.renderCalendar();
         
         // Прогрес-бар дня
         var progress = this.getDayProgress(today);
@@ -80,6 +92,7 @@ var Screens = {
                     '<div class="habit-icon">' + h.icon + '</div>' +
                     '<div class="habit-info">' +
                     '<div class="habit-name">' + h.name + '</div>' +
+                    (h.description ? '<div class="habit-desc">' + h.description + '</div>' : '') +
                     '<div class="habit-count">' + count + ' ' + (h.unit || 'разів') + 
                     (goal > 0 ? ' з ' + goal : '') + '</div>' +
                     '</div>' +
@@ -99,13 +112,11 @@ var Screens = {
                 html += '<div class="habit-actions">';
                 
                 if (isDistance) {
-                    // Для км/хвилин — поле введення + кнопка
                     html += '<div class="input-group">' +
                         '<input type="number" class="track-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
                         '<button class="btn-record" data-id="' + h.id + '">Записати</button>' +
                         '</div>';
                 } else {
-                    // Для разів/підходів — кнопки +/-
                     html += '<div class="counter-group">' +
                         '<button class="counter-btn minus" data-id="' + h.id + '">−</button>' +
                         '<div class="counter-value">' + count + '</div>' +
@@ -122,6 +133,70 @@ var Screens = {
         
         container.innerHTML = html;
         this.bindHomeEvents();
+    },
+    
+    // Календар на місяць
+    renderCalendar: function() {
+        var self = this;
+        var monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+                         'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+        var dayNames = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        
+        var firstDay = new Date(this.calendarYear, this.calendarMonth, 1);
+        var lastDay = new Date(this.calendarYear, this.calendarMonth + 1, 0);
+        var startDay = firstDay.getDay();
+        var daysInMonth = lastDay.getDate();
+        var today = new Date();
+        
+        var html = '<div class="calendar">' +
+            '<div class="calendar-header">' +
+            '<button class="calendar-nav" id="calPrev">◀</button>' +
+            '<div class="calendar-title">' + monthNames[this.calendarMonth] + ' ' + this.calendarYear + '</div>' +
+            '<button class="calendar-nav" id="calNext">▶</button>' +
+            '</div>' +
+            '<div class="calendar-days-header">';
+        
+        for (var i = 0; i < 7; i++) {
+            html += '<div class="calendar-day-name">' + dayNames[i] + '</div>';
+        }
+        
+        html += '</div><div class="calendar-grid">';
+        
+        // Порожні клітинки перед першим днем
+        for (var i = 0; i < startDay; i++) {
+            html += '<div class="calendar-cell empty"></div>';
+        }
+        
+        // Дні місяця
+        for (var d = 1; d <= daysInMonth; d++) {
+            var date = new Date(this.calendarYear, this.calendarMonth, d);
+            var dateStr = Storage.formatDate(date);
+            var isToday = (date.toDateString() === today.toDateString());
+            var isSelected = (dateStr === Storage.formatDate(this.selectedDate));
+            var hasActivity = this.dayHasActivity(dateStr);
+            
+            var classes = 'calendar-cell';
+            if (isToday) classes += ' today';
+            if (isSelected) classes += ' selected';
+            if (hasActivity) classes += ' active';
+            
+            html += '<div class="' + classes + '" data-date="' + dateStr + '">' + d + '</div>';
+        }
+        
+        html += '</div></div>';
+        
+        return html;
+    },
+    
+    // Перевірка активності дня
+    dayHasActivity: function(dateStr) {
+        var habits = Storage.getHabits();
+        for (var i = 0; i < habits.length; i++) {
+            if (Storage.getCount(habits[i].id, dateStr) > 0) {
+                return true;
+            }
+        }
+        return false;
     },
     
     // Прогрес дня
@@ -143,34 +218,39 @@ var Screens = {
         };
     },
     
-    // Дні тижня
-    renderDays: function() {
-        var html = '';
-        var today = new Date();
-        var dayNames = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-        
-        for (var i = 6; i >= 0; i--) {
-            var d = new Date(today);
-            d.setDate(d.getDate() - i);
-            var dateStr = Storage.formatDate(d);
-            var isToday = i === 0;
-            var isSelected = Storage.formatDate(this.selectedDate) === dateStr;
-            
-            html += '<div class="day-btn ' + (isToday ? 'today' : '') + (isSelected ? ' selected' : '') + '" data-date="' + dateStr + '">' +
-                '<div class="day-name">' + dayNames[d.getDay()] + '</div>' +
-                '<div class="day-num">' + d.getDate() + '</div>' +
-                '</div>';
-        }
-        return html;
-    },
-    
-    // Прив'язка подій головного екрану
+    // Прив'язка подій
     bindHomeEvents: function() {
         var self = this;
         
+        // Навігація календаря
+        var calPrev = document.getElementById('calPrev');
+        var calNext = document.getElementById('calNext');
+        
+        if (calPrev) {
+            calPrev.addEventListener('click', function() {
+                self.calendarMonth--;
+                if (self.calendarMonth < 0) {
+                    self.calendarMonth = 11;
+                    self.calendarYear--;
+                }
+                self.renderHome();
+            });
+        }
+        
+        if (calNext) {
+            calNext.addEventListener('click', function() {
+                self.calendarMonth++;
+                if (self.calendarMonth > 11) {
+                    self.calendarMonth = 0;
+                    self.calendarYear++;
+                }
+                self.renderHome();
+            });
+        }
+        
         // Вибір днів
-        document.querySelectorAll('.day-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
+        document.querySelectorAll('.calendar-cell:not(.empty)').forEach(function(cell) {
+            cell.addEventListener('click', function() {
                 var date = this.getAttribute('data-date');
                 self.selectedDate = new Date(date);
                 self.renderHome();
@@ -189,7 +269,7 @@ var Screens = {
             });
         });
         
-        // Кнопки "Записати" для км/хвилин
+        // Кнопки "Записати"
         document.querySelectorAll('.btn-record').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var id = parseInt(this.getAttribute('data-id'));
@@ -233,14 +313,13 @@ var Screens = {
             return;
         }
         
-        // Загальна статистика за тиждень
         var weekStats = this.getWeekStats(habits);
         
         var html = '<div class="stats-grid">' +
             '<div class="stats-card">' +
             '<h3>Цей тиждень</h3>' +
             '<div class="stats-big-number">' + weekStats.total + '</div>' +
-            '<div class="stats-label">всього повторень</div>' +
+            '<div class="stats-label">всього</div>' +
             '</div>' +
             
             '<div class="stats-card">' +
@@ -309,7 +388,10 @@ var Screens = {
         for (var i = 0; i < habits.length; i++) {
             html += '<div class="manage-row">' +
                 '<span class="manage-icon">' + habits[i].icon + '</span>' +
+                '<div class="manage-info">' +
                 '<span class="manage-name">' + habits[i].name + '</span>' +
+                (habits[i].description ? '<span class="manage-desc">' + habits[i].description + '</span>' : '') +
+                '</div>' +
                 '<button class="btn-danger" onclick="Screens.deleteHabit(' + habits[i].id + ')">Видалити</button>' +
                 '</div>';
         }
@@ -319,7 +401,6 @@ var Screens = {
         container.innerHTML = html;
     },
     
-    // Статистика за тиждень
     getWeekStats: function(habits) {
         var total = 0;
         var activeDays = {};
@@ -331,7 +412,6 @@ var Screens = {
             todayTotal += Storage.getCount(habits[i].id, today);
         }
         
-        // Рахуємо активні дні
         for (var d = 0; d < 7; d++) {
             var date = new Date();
             date.setDate(date.getDate() - d);
@@ -350,7 +430,6 @@ var Screens = {
         };
     },
     
-    // Активність по днях тижня
     getWeekActivity: function(habits) {
         var result = [];
         var today = new Date();
@@ -375,12 +454,65 @@ var Screens = {
         return result;
     },
     
-    // Видалити звичку
     deleteHabit: function(id) {
         if (confirm('Видалити цю вправу?')) {
             Storage.deleteHabit(id);
             this.renderAll();
         }
+    },
+    
+    // ===== ЕКРАН ПРОФІЛЮ =====
+    renderProfile: function() {
+        var container = document.getElementById('screen-profile');
+        var profile = Storage.getProfile();
+        
+        var html = '<div class="add-form">' +
+            '<div class="form-group">' +
+            '<label>Стать</label>' +
+            '<div class="gender-picker">' +
+            '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 Чоловік</div>' +
+            '<div class="gender-option ' + (profile.gender === 'female' ? 'selected' : '') + '" data-gender="female">👩 Жінка</div>' +
+            '</div>' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Вага (кг)</label>' +
+            '<input type="number" id="profileWeight" value="' + profile.weight + '" placeholder="60">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Бажана мета</label>' +
+            '<input type="text" id="profileGoal" value="' + profile.goal + '" placeholder="Наприклад: Здоров\'я та форма">' +
+            '</div>' +
+            
+            '<button class="btn-primary" id="saveProfileBtn">Зберегти профіль</button>' +
+            '</div>';
+        
+        container.innerHTML = html;
+        this.bindProfileEvents();
+    },
+    
+    bindProfileEvents: function() {
+        var self = this;
+        
+        document.querySelectorAll('.gender-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.gender-option').forEach(function(o) {
+                    o.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        document.getElementById('saveProfileBtn').addEventListener('click', function() {
+            var gender = document.querySelector('.gender-option.selected').getAttribute('data-gender');
+            var weight = parseInt(document.getElementById('profileWeight').value) || 60;
+            var goal = document.getElementById('profileGoal').value.trim() || 'Здоров\'я та форма';
+            
+            Storage.saveProfile({ gender: gender, weight: weight, goal: goal });
+            alert('Профіль збережено!');
+            self.switchScreen('home');
+        });
     },
     
     // ===== ЕКРАН ДОДАВАННЯ =====
@@ -393,6 +525,11 @@ var Screens = {
             '<div class="form-group">' +
             '<label>Назва вправи</label>' +
             '<input type="text" id="habitName" placeholder="Наприклад: Присідання">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Опис (опціонально)</label>' +
+            '<input type="text" id="habitDesc" placeholder="Наприклад: З вагою тіла">' +
             '</div>' +
             
             '<div class="form-group">' +
@@ -426,11 +563,9 @@ var Screens = {
         this.bindAddForm();
     },
     
-    // Прив'язка форми
     bindAddForm: function() {
         var self = this;
         
-        // Вибір іконки
         document.querySelectorAll('.icon-option').forEach(function(opt) {
             opt.addEventListener('click', function() {
                 document.querySelectorAll('.icon-option').forEach(function(o) {
@@ -440,7 +575,6 @@ var Screens = {
             });
         });
         
-        // Вибір одиниць + динамічний плейсхолдер
         var goalInput = document.getElementById('habitGoal');
         var placeholders = {
             'разів': 'Наприклад: 50 разів',
@@ -461,9 +595,9 @@ var Screens = {
             });
         });
         
-        // Додавання
         document.getElementById('addHabitBtn').addEventListener('click', function() {
             var name = document.getElementById('habitName').value.trim();
+            var desc = document.getElementById('habitDesc').value.trim();
             var icon = document.querySelector('.icon-option.selected').getAttribute('data-icon');
             var unit = document.querySelector('.unit-option.selected').getAttribute('data-unit');
             var goal = parseInt(document.getElementById('habitGoal').value) || 0;
@@ -473,8 +607,9 @@ var Screens = {
                 return;
             }
             
-            Storage.addHabit({ name: name, icon: icon, unit: unit, goal: goal });
+            Storage.addHabit({ name: name, description: desc, icon: icon, unit: unit, goal: goal });
             document.getElementById('habitName').value = '';
+            document.getElementById('habitDesc').value = '';
             document.getElementById('habitGoal').value = '';
             self.switchScreen('home');
         });

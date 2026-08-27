@@ -1,6 +1,21 @@
 // ===== STORAGE — робота з localStorage =====
 
 var Storage = {
+    // Отримати профіль
+    getProfile: function() {
+        var data = localStorage.getItem('sportTracker_profile');
+        return data ? JSON.parse(data) : {
+            gender: 'female',
+            weight: 60,
+            goal: 'Здоров\'я та форма'
+        };
+    },
+    
+    // Зберегти профіль
+    saveProfile: function(profile) {
+        localStorage.setItem('sportTracker_profile', JSON.stringify(profile));
+    },
+    
     // Отримати всі звички
     getHabits: function() {
         var data = localStorage.getItem('sportTracker_habits');
@@ -74,17 +89,11 @@ var Storage = {
         return total;
     },
     
-    // Середня кількість за день (тиждень)
-    getWeekAvg: function(habitId) {
-        var total = this.getWeekTotal(habitId);
-        return Math.round(total / 7 * 10) / 10;
-    },
-    
-    // Дні з активністю за тиждень
-    getWeekActiveDays: function(habitId) {
+    // Кількість днів з активністю за місяць
+    getMonthActiveDays: function(habitId) {
         var days = 0;
         var today = new Date();
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < 30; i++) {
             var d = new Date(today);
             d.setDate(d.getDate() - i);
             var dateStr = this.formatDate(d);
@@ -110,30 +119,6 @@ var Storage = {
             });
         }
         return chart;
-    },
-    
-    // Загальна статистика за сьогодні
-    getTodaySummary: function() {
-        var habits = this.getHabits();
-        var today = this.formatDate(new Date());
-        var summary = {
-            total: 0,
-            habits: []
-        };
-        
-        for (var i = 0; i < habits.length; i++) {
-            var count = this.getCount(habits[i].id, today);
-            summary.total += count;
-            summary.habits.push({
-                id: habits[i].id,
-                name: habits[i].name,
-                icon: habits[i].icon,
-                count: count,
-                goal: habits[i].goal || 0
-            });
-        }
-        
-        return summary;
     },
     
     // Форматування дати

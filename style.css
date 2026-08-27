@@ -66,7 +66,7 @@ body {
 #bottomNav {
     display: flex;
     background: white;
-    padding: 15px 10px;
+    padding: 12px 5px;
     padding-bottom: 25px;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     position: fixed;
@@ -81,14 +81,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     background: none;
     border: none;
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     color: #999;
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 .nav-btn.active {
@@ -100,66 +100,145 @@ body {
 }
 
 .nav-icon {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .nav-text {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
 }
 
-/* ===== DAY SELECTOR ===== */
-.day-selector {
+/* ===== PROFILE BAR ===== */
+.profile-bar {
     display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    scrollbar-width: none;
-}
-
-.day-selector::-webkit-scrollbar {
-    display: none;
-}
-
-.day-btn {
-    min-width: 60px;
-    padding: 15px 10px;
-    border: 2px solid #e8ecf1;
+    align-items: center;
+    gap: 12px;
+    background: white;
     border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border: 2px solid #e8ecf1;
+}
+
+.profile-gender {
+    font-size: 28px;
+}
+
+.profile-weight {
+    font-size: 16px;
+    font-weight: 800;
+    color: #667eea;
+}
+
+.profile-goal {
+    flex: 1;
+    font-size: 13px;
+    color: #888;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* ===== CALENDAR ===== */
+.calendar {
+    background: white;
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 20px;
+    border: 2px solid #e8ecf1;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.calendar-nav {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #e8ecf1;
+    border-radius: 10px;
     background: white;
     cursor: pointer;
-    text-align: center;
+    font-size: 14px;
     transition: all 0.3s ease;
 }
 
-.day-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.calendar-nav:hover {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
 }
 
-.day-btn.today {
-    border-color: #667eea;
+.calendar-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #333;
+}
+
+.calendar-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.calendar-day-name {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #999;
+    padding: 4px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calendar-cell:hover:not(.empty) {
+    background: #f0f4f8;
+}
+
+.calendar-cell.today {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
 }
 
-.day-btn.selected {
-    border-color: #764ba2;
-    background: linear-gradient(135deg, #764ba2, #667eea);
+.calendar-cell.selected {
+    background: #667eea;
     color: white;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
 }
 
-.day-btn .day-name {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
+.calendar-cell.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 6px;
+    height: 6px;
+    background: #667eea;
+    border-radius: 50%;
 }
 
-.day-btn .day-num {
-    font-size: 22px;
-    font-weight: 900;
+.calendar-cell.active {
+    position: relative;
 }
 
 /* ===== DAY PROGRESS BAR ===== */
@@ -240,7 +319,14 @@ body {
     font-size: 17px;
     font-weight: 800;
     color: #333;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+}
+
+.habit-desc {
+    font-size: 12px;
+    color: #999;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .habit-count {
@@ -286,7 +372,6 @@ body {
     justify-content: center;
 }
 
-/* Counter group (разів, підходів) */
 .counter-group {
     display: flex;
     align-items: center;
@@ -352,7 +437,6 @@ body {
     text-align: center;
 }
 
-/* Input group (км, хвилин) */
 .input-group {
     display: flex;
     gap: 10px;
@@ -475,7 +559,6 @@ body {
     font-weight: 800;
 }
 
-/* ===== HABIT STAT ROW ===== */
 .habit-stat-row {
     display: flex;
     align-items: center;
@@ -531,7 +614,6 @@ body {
     text-align: right;
 }
 
-/* ===== WEEK CHART ===== */
 .week-chart {
     display: flex;
     align-items: flex-end;
@@ -561,7 +643,6 @@ body {
     font-weight: 800;
 }
 
-/* ===== MANAGE ROW ===== */
 .manage-row {
     display: flex;
     align-items: center;
@@ -578,11 +659,21 @@ body {
     font-size: 24px;
 }
 
-.manage-name {
+.manage-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.manage-name {
     font-size: 15px;
     font-weight: 700;
     color: #333;
+}
+
+.manage-desc {
+    font-size: 12px;
+    color: #999;
 }
 
 .btn-danger {
@@ -641,7 +732,8 @@ body {
 }
 
 .icon-picker,
-.unit-picker {
+.unit-picker,
+.gender-picker {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
@@ -649,7 +741,8 @@ body {
 }
 
 .icon-option,
-.unit-option {
+.unit-option,
+.gender-option {
     min-width: 70px;
     height: 50px;
     border: 2px solid #e8ecf1;
@@ -665,6 +758,11 @@ body {
     color: #666;
 }
 
+.gender-option {
+    flex: 1;
+    min-width: 120px;
+}
+
 .icon-option {
     font-size: 28px;
     width: 60px;
@@ -672,13 +770,15 @@ body {
 }
 
 .icon-option:hover,
-.unit-option:hover {
+.unit-option:hover,
+.gender-option:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .icon-option.selected,
-.unit-option.selected {
+.unit-option.selected,
+.gender-option.selected {
     border-color: #667eea;
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
@@ -720,6 +820,11 @@ body {
     }
     
     .counter-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .profile-bar {
         flex-wrap: wrap;
         justify-content: center;
     }
