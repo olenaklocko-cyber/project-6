@@ -1,4 +1,4 @@
-// ===== SCREENS — персоналізація та календар =====
+// ===== SCREENS — постійні звички =====
 
 var Screens = {
     currentScreen: 'home',
@@ -50,7 +50,7 @@ var Screens = {
         var profile = Storage.getProfile();
         var today = Storage.formatDate(this.selectedDate);
         
-        // Профіль користувача
+        // Профіль
         var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
         var html = '<div class="profile-bar">' +
             '<span class="profile-gender">' + genderEmoji + '</span>' +
@@ -58,10 +58,10 @@ var Screens = {
             '<span class="profile-goal">' + profile.goal + '</span>' +
             '</div>';
         
-        // Календар на місяць
+        // Календар
         html += this.renderCalendar();
         
-        // Прогрес-бар дня
+        // Прогрес
         var progress = this.getDayProgress(today);
         html += '<div class="day-progress">' +
             '<div class="day-progress-text">Мій прогрес сьогодні: <strong>' + progress.percent + '%</strong></div>' +
@@ -70,24 +70,89 @@ var Screens = {
             '</div>' +
             '</div>';
         
-        // Список вправ
-        if (habits.length === 0) {
-            html += '<div class="empty-state">' +
-                '<div class="empty-icon">🏋️</div>' +
-                '<h3>Додай свою першу вправу!</h3>' +
-                '<p>Натисни "Додати" внизу</p>' +
+        // Секція "Щоденні звички"
+        html += '<div class="section-header">' +
+            '<div class="section-title">📅 Щоденні звички</div>' +
+            '<div class="section-subtitle">Ці звички вже додані за замовчуванням</div>' +
+            '</div>';
+        
+        html += '<div class="habits-list">';
+        
+        // Спочатку стандартні
+        for (var i = 0; i < habits.length; i++) {
+            var h = habits[i];
+            if (!h.isDefault) continue;
+            
+            var count = Storage.getCount(h.id, today);
+            var goal = h.goal || 0;
+            var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
+            var isDistance = (h.unit === 'км' || h.unit === 'хвилин');
+            
+            html += '<div class="habit-card default" data-id="' + h.id + '">' +
+                '<div class="habit-header">' +
+                '<div class="habit-icon">' + h.icon + '</div>' +
+                '<div class="habit-info">' +
+                '<div class="habit-name">' + h.name + ' <span class="badge">Щодня</span></div>' +
+                '<div class="habit-desc">' + h.description + '</div>' +
+                '<div class="habit-count">' + count + ' ' + (h.unit || 'разів') + 
+                (goal > 0 ? ' з ' + goal : '') + '</div>' +
+                '</div>' +
+                '</div>';
+            
+            if (goal > 0) {
+                html += '<div class="habit-progress-mini">' +
+                    '<div class="habit-progress-mini-bar">' +
+                    '<div class="habit-progress-mini-fill" style="width: ' + goalPercent + '%"></div>' +
+                    '</div>' +
+                    '<div class="habit-progress-mini-text">' + goalPercent + '%</div>' +
+                    '</div>';
+            }
+            
+            html += '<div class="habit-actions">';
+            
+            if (isDistance) {
+                html += '<div class="input-group">' +
+                    '<input type="number" class="track-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
+                    '<button class="btn-record" data-id="' + h.id + '">Записати</button>' +
+                    '</div>';
+            } else {
+                html += '<div class="counter-group">' +
+                    '<button class="counter-btn minus" data-id="' + h.id + '">−</button>' +
+                    '<div class="counter-value">' + count + '</div>' +
+                    '<button class="counter-btn plus" data-id="' + h.id + '">+1</button>' +
+                    '<button class="counter-btn plus-10" data-id="' + h.id + '">+10</button>' +
+                    '</div>';
+            }
+            
+            html += '</div></div>';
+        }
+        
+        html += '</div>';
+        
+        // Секція "Мої звички"
+        var customHabits = Storage.getCustomHabits();
+        
+        html += '<div class="section-header" style="margin-top: 25px;">' +
+            '<div class="section-title">⭐ Мої звички</div>' +
+            '<div class="section-subtitle">' + (customHabits.length > 0 ? 'Додані тобою' : 'Додай свої звички!') + '</div>' +
+            '</div>';
+        
+        html += '<div class="habits-list">';
+        
+        if (customHabits.length === 0) {
+            html += '<div class="empty-state-mini">' +
+                '<div class="empty-icon-mini">➕</div>' +
+                '<p>Додай власні звички на вкладці "Додати"</p>' +
                 '</div>';
         } else {
-            html += '<div class="habits-list">';
-            
-            for (var i = 0; i < habits.length; i++) {
-                var h = habits[i];
+            for (var i = 0; i < customHabits.length; i++) {
+                var h = customHabits[i];
                 var count = Storage.getCount(h.id, today);
                 var goal = h.goal || 0;
                 var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
                 var isDistance = (h.unit === 'км' || h.unit === 'хвилин');
                 
-                html += '<div class="habit-card" data-id="' + h.id + '">' +
+                html += '<div class="habit-card custom" data-id="' + h.id + '">' +
                     '<div class="habit-header">' +
                     '<div class="habit-icon">' + h.icon + '</div>' +
                     '<div class="habit-info">' +
@@ -98,7 +163,6 @@ var Screens = {
                     '</div>' +
                     '</div>';
                 
-                // Прогрес-бар на картці
                 if (goal > 0) {
                     html += '<div class="habit-progress-mini">' +
                         '<div class="habit-progress-mini-bar">' +
@@ -108,7 +172,6 @@ var Screens = {
                         '</div>';
                 }
                 
-                // Елементи трекінгу
                 html += '<div class="habit-actions">';
                 
                 if (isDistance) {
@@ -127,9 +190,9 @@ var Screens = {
                 
                 html += '</div></div>';
             }
-            
-            html += '</div>';
         }
+        
+        html += '</div>';
         
         container.innerHTML = html;
         this.bindHomeEvents();
@@ -162,12 +225,10 @@ var Screens = {
         
         html += '</div><div class="calendar-grid">';
         
-        // Порожні клітинки перед першим днем
         for (var i = 0; i < startDay; i++) {
             html += '<div class="calendar-cell empty"></div>';
         }
         
-        // Дні місяця
         for (var d = 1; d <= daysInMonth; d++) {
             var date = new Date(this.calendarYear, this.calendarMonth, d);
             var dateStr = Storage.formatDate(date);
@@ -188,7 +249,6 @@ var Screens = {
         return html;
     },
     
-    // Перевірка активності дня
     dayHasActivity: function(dateStr) {
         var habits = Storage.getHabits();
         for (var i = 0; i < habits.length; i++) {
@@ -199,7 +259,6 @@ var Screens = {
         return false;
     },
     
-    // Прогрес дня
     getDayProgress: function(date) {
         var habits = Storage.getHabits();
         var totalGoal = 0;
@@ -218,11 +277,10 @@ var Screens = {
         };
     },
     
-    // Прив'язка подій
     bindHomeEvents: function() {
         var self = this;
         
-        // Навігація календаря
+        // Календар
         var calPrev = document.getElementById('calPrev');
         var calNext = document.getElementById('calNext');
         
@@ -248,7 +306,7 @@ var Screens = {
             });
         }
         
-        // Вибір днів
+        // Дні календаря
         document.querySelectorAll('.calendar-cell:not(.empty)').forEach(function(cell) {
             cell.addEventListener('click', function() {
                 var date = this.getAttribute('data-date');
@@ -283,7 +341,7 @@ var Screens = {
             });
         });
         
-        // Enter в полі введення
+        // Enter в полі
         document.querySelectorAll('.track-input').forEach(function(input) {
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -341,7 +399,7 @@ var Screens = {
             '</div>' +
             '</div>';
         
-        // Розподіл по типах
+        // Розподіл
         html += '<div class="chart-container">' +
             '<h3>Розподіл за тиждень</h3>';
         
@@ -352,7 +410,8 @@ var Screens = {
             html += '<div class="habit-stat-row">' +
                 '<div class="habit-stat-icon">' + habits[i].icon + '</div>' +
                 '<div class="habit-stat-info">' +
-                '<div class="habit-stat-name">' + habits[i].name + '</div>' +
+                '<div class="habit-stat-name">' + habits[i].name + 
+                (habits[i].isDefault ? ' <span class="badge-small">Щодня</span>' : '') + '</div>' +
                 '<div class="habit-stat-bar">' +
                 '<div class="habit-stat-fill" style="width: ' + Math.min(100, (weekTotal / (maxPossible * 1.2)) * 100) + '%"></div>' +
                 '</div>' +
@@ -363,7 +422,7 @@ var Screens = {
         
         html += '</div>';
         
-        // Графік по днях
+        // Графік
         html += '<div class="chart-container">' +
             '<h3>Активність по днях</h3>' +
             '<div class="week-chart">';
@@ -383,17 +442,25 @@ var Screens = {
         
         // Керування
         html += '<div class="chart-container">' +
-            '<h3>Керування вправами</h3>';
+            '<h3>Керування</h3>';
         
-        for (var i = 0; i < habits.length; i++) {
-            html += '<div class="manage-row">' +
-                '<span class="manage-icon">' + habits[i].icon + '</span>' +
-                '<div class="manage-info">' +
-                '<span class="manage-name">' + habits[i].name + '</span>' +
-                (habits[i].description ? '<span class="manage-desc">' + habits[i].description + '</span>' : '') +
-                '</div>' +
-                '<button class="btn-danger" onclick="Screens.deleteHabit(' + habits[i].id + ')">Видалити</button>' +
+        var customHabits = Storage.getCustomHabits();
+        
+        if (customHabits.length === 0) {
+            html += '<div class="empty-state-mini">' +
+                '<p>Немає користувацьких звичок</p>' +
                 '</div>';
+        } else {
+            for (var i = 0; i < customHabits.length; i++) {
+                html += '<div class="manage-row">' +
+                    '<span class="manage-icon">' + customHabits[i].icon + '</span>' +
+                    '<div class="manage-info">' +
+                    '<span class="manage-name">' + customHabits[i].name + '</span>' +
+                    (customHabits[i].description ? '<span class="manage-desc">' + customHabits[i].description + '</span>' : '') +
+                    '</div>' +
+                    '<button class="btn-danger" onclick="Screens.deleteHabit(' + customHabits[i].id + ')">Видалити</button>' +
+                    '</div>';
+            }
         }
         
         html += '</div>';
@@ -455,13 +522,17 @@ var Screens = {
     },
     
     deleteHabit: function(id) {
-        if (confirm('Видалити цю вправу?')) {
+        if (id >= 1000) {
+            alert('Цю звичку не можна видалити!');
+            return;
+        }
+        if (confirm('Видалити цю звичку?')) {
             Storage.deleteHabit(id);
             this.renderAll();
         }
     },
     
-    // ===== ЕКРАН ПРОФІЛЮ =====
+    // ===== ПРОФІЛЬ =====
     renderProfile: function() {
         var container = document.getElementById('screen-profile');
         var profile = Storage.getProfile();
@@ -515,7 +586,7 @@ var Screens = {
         });
     },
     
-    // ===== ЕКРАН ДОДАВАННЯ =====
+    // ===== ДОДАТИ =====
     renderAdd: function() {
         var container = document.getElementById('screen-add');
         var icons = ['⚽', '🏀', '🎾', '🏃', '💪', '🧘', '🚴', '🏊', '🤸', '🏋️', '🥊', '⛷️'];
@@ -524,12 +595,12 @@ var Screens = {
         var html = '<div class="add-form">' +
             '<div class="form-group">' +
             '<label>Назва вправи</label>' +
-            '<input type="text" id="habitName" placeholder="Наприклад: Присідання">' +
+            '<input type="text" id="habitName" placeholder="Наприклад: Йога">' +
             '</div>' +
             
             '<div class="form-group">' +
             '<label>Опис (опціонально)</label>' +
-            '<input type="text" id="habitDesc" placeholder="Наприклад: З вагою тіла">' +
+            '<input type="text" id="habitDesc" placeholder="Наприклад: Ранкові вправи">' +
             '</div>' +
             
             '<div class="form-group">' +

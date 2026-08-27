@@ -1,6 +1,15 @@
 // ===== STORAGE — робота з localStorage =====
 
 var Storage = {
+    // Стандартні звички (не видаляються)
+    defaultHabits: [
+        { id: 1001, name: 'Присідання', description: 'Щоденна вправа для ніг', icon: '💪', unit: 'разів', goal: 50, isDefault: true },
+        { id: 1002, name: 'Ранкова гімнастика', description: 'Зарядка на 10 хвилин', icon: '🧘', unit: 'хвилин', goal: 10, isDefault: true },
+        { id: 1003, name: 'Прогулянка', description: 'Кроки на свіжому повітрі', icon: '🚶', unit: 'хвилин', goal: 30, isDefault: true },
+        { id: 1004, name: 'Підтягування', description: 'Вправа для рук', icon: '🏋️', unit: 'разів', goal: 10, isDefault: true },
+        { id: 1005, name: 'Планка', description: 'Вправа для преса', icon: '🤸', unit: 'хвилин', goal: 2, isDefault: true }
+    ],
+    
     // Отримати профіль
     getProfile: function() {
         var data = localStorage.getItem('sportTracker_profile');
@@ -16,32 +25,41 @@ var Storage = {
         localStorage.setItem('sportTracker_profile', JSON.stringify(profile));
     },
     
-    // Отримати всі звички
+    // Отримати всі звички (стандартні + користувацькі)
     getHabits: function() {
+        var custom = localStorage.getItem('sportTracker_habits');
+        var customHabits = custom ? JSON.parse(custom) : [];
+        return this.defaultHabits.concat(customHabits);
+    },
+    
+    // Отримати тільки користувацькі звички
+    getCustomHabits: function() {
         var data = localStorage.getItem('sportTracker_habits');
         return data ? JSON.parse(data) : [];
     },
     
-    // Зберегти звички
-    saveHabits: function(habits) {
+    // Зберегти користувацькі звички
+    saveCustomHabits: function(habits) {
         localStorage.setItem('sportTracker_habits', JSON.stringify(habits));
     },
     
     // Додати звичку
     addHabit: function(habit) {
-        var habits = this.getHabits();
+        var habits = this.getCustomHabits();
         habit.id = Date.now();
         habit.createdAt = new Date().toISOString();
+        habit.isDefault = false;
         habits.push(habit);
-        this.saveHabits(habits);
+        this.saveCustomHabits(habits);
         return habit;
     },
     
-    // Видалити звичку
+    // Видалити звичку (тільки користувацькі)
     deleteHabit: function(id) {
-        var habits = this.getHabits();
+        if (id >= 1000) return; // Стандартні не видаляються
+        var habits = this.getCustomHabits();
         habits = habits.filter(function(h) { return h.id !== id; });
-        this.saveHabits(habits);
+        this.saveCustomHabits(habits);
     },
     
     // Отримати кількість за день
@@ -104,7 +122,7 @@ var Storage = {
         return days;
     },
     
-    // Дані для графіка по тижнях (останні 7 днів)
+    // Дані для графіка по тижнях
     getWeekChart: function(habitId) {
         var chart = [];
         var today = new Date();
