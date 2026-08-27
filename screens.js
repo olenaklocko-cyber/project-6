@@ -42,6 +42,32 @@ var Screens = {
         this.renderProfile();
     },
     
+    // Отримати клас анімації для іконки
+    getIconAnimation: function(icon) {
+        var animations = {
+            '❤️': 'icon-heart',
+            '💧': 'icon-breathe',
+            '💊': 'icon-breathe',
+            '😴': 'icon-breathe',
+            '🌅': 'icon-run',
+            '🚶': 'icon-steps',
+            '👣': 'icon-steps',
+            '🏃': 'icon-run',
+            '💪': 'icon-muscle',
+            '🦵': 'icon-muscle',
+            '🏋️': 'icon-muscle',
+            '🤸': 'icon-breathe',
+            '🧘': 'icon-breathe',
+            '🕉️': 'icon-breathe',
+            '🕯️': 'icon-breathe',
+            '⚖️': 'icon-weight',
+            '🚫': 'icon-forbidden',
+            '🍔': 'icon-forbidden',
+            '🍎': 'icon-apple'
+        };
+        return animations[icon] || '';
+    },
+    
     // ===== ГОЛОВНИЙ ЕКРАН =====
     renderHome: function() {
         var container = document.getElementById('screen-home');
@@ -76,7 +102,7 @@ var Screens = {
             
             html += '<div class="block' + (isExpanded ? ' expanded' : '') + '" data-block="' + block.id + '" style="border-color: ' + block.color + '">' +
                 '<div class="block-header">' +
-                '<div class="block-icon" style="background: linear-gradient(135deg, ' + block.color + ', ' + block.color + 'cc)">' + block.icon + '</div>' +
+                '<div class="block-icon ' + this.getIconAnimation(block.icon) + '" style="background: linear-gradient(135deg, ' + block.color + ', ' + block.color + 'cc)">' + block.icon + '</div>' +
                 '<div class="block-info">' +
                 '<div class="block-name">' + block.name + '</div>' +
                 '<div class="block-progress-text">' + blockProgress + '%</div>' +
