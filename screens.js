@@ -960,9 +960,12 @@ var Screens = {
             
             photoPreview.innerHTML = '<div class="photo-preview-card">' +
                 '<img src="' + e.target.result + '" alt="Їжа" class="photo-preview-img">' +
+                '<div class="photo-loading" id="photoLoading">' +
+                '<div class="loading-spinner"></div>' +
+                '<div class="loading-text">🤖 AI аналізує їжу...</div>' +
+                '</div>' +
                 '<div class="photo-preview-actions">' +
                 '<button class="photo-preview-btn" id="photoRetakeBtn">📸 Нове фото</button>' +
-                '<button class="photo-preview-btn primary" id="photoAnalyzeBtn">🔍 Аналізувати</button>' +
                 '</div>' +
                 '</div>';
             
@@ -970,12 +973,102 @@ var Screens = {
                 self.openCamera();
             });
             
-            document.getElementById('photoAnalyzeBtn').addEventListener('click', function() {
-                alert('📸 Фото отримано! Функція аналізу їжі буде додана пізніше.');
-            });
+            self.analyzeWithAI(e.target.result);
         };
         
         reader.readAsDataURL(file);
+    },
+    
+    analyzeWithAI: function(imageBase64) {
+        var self = this;
+        var loading = document.getElementById('photoLoading');
+        var actionsDiv = document.querySelector('.photo-preview-actions');
+        
+        var apiKey = '16749e13b0msh437c9c685ba695bp10d553jsn871fbf3b2535';
+        
+        fetch('https://caloai.p.rapidapi.com/v1/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': apiKey,
+                'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
+            },
+            body: JSON.stringify({ image: imageBase64 })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            loading.style.display = 'none';
+            self.showAIResults(data, actionsDiv);
+        })
+        .catch(function(error) {
+            loading.innerHTML = '<div class="loading-error">❌ Помилка аналізу. Спробуй ще раз.</div>';
+            console.error('AI Error:', error);
+        });
+    },
+    
+    showAIResults: function(data, container) {
+        var self = this;
+        
+        var resultsHTML = '<div class="ai-results">';
+        
+        if (data.detected_dishes && data.detected_dishes.length > 0) {
+            resultsHTML += '<div class="ai-total">' +
+                '<div class="ai-total-cal">' + data.calories + ' ккал</div>' +
+                '<div class="ai-total-macros">' +
+                '<span>Білки: ' + data.proteins + 'г</span>' +
+                '<span>Жири: ' + data.fats + 'г</span>' +
+                '<span>Вуглеводи: ' + data.carbs + 'г</span>' +
+                '</div>' +
+                '</div>';
+            
+            resultsHTML += '<div class="ai-dishes">';
+            for (var i = 0; i < data.detected_dishes.length; i++) {
+                var dish = data.detected_dishes[i];
+                resultsHTML += '<div class="ai-dish">' +
+                    '<div class="ai-dish-name">' + dish.name + '</div>' +
+                    '<div class="ai-dish-info">' +
+                    '<span class="ai-dish-weight">' + dish.weight_g + 'г</span>' +
+                    '<span class="ai-dish-cal">' + dish.calories + ' ккал</span>' +
+                    '</div>' +
+                    '</div>';
+            }
+            resultsHTML += '</div>';
+            
+            resultsHTML += '<button class="btn-primary" id="saveAIResultBtn">💾 Зберегти в журнал</button>';
+        } else {
+            resultsHTML += '<div class="ai-no-result">😔 Не вдалося розпізнати їжу на фото. Спробуй інше фото або додай вручну.</div>';
+        }
+        
+        resultsHTML += '</div>';
+        
+        container.insertAdjacentHTML('beforeend', resultsHTML);
+        
+        if (data.detected_dishes && data.detected_dishes.length > 0) {
+            document.getElementById('saveAIResultBtn').addEventListener('click', function() {
+                var portion = data.detected_dishes.map(function(d) {
+                    return d.name + ' (' + d.weight_g + 'г)';
+                }).join(', ');
+                
+                Storage.addFoodEntry({
+                    name: data.detected_dishes.map(function(d) { return d.name; }).join(' + '),
+                    calories: data.calories,
+                    portion: portion,
+                    time: new Date().toLocaleTimeString('uk-UA'),
+                    ai: true
+                });
+                
+                this.textContent = '✓ Збережено!';
+                this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
+                
+                setTimeout(function() {
+                    var preview = document.getElementById('photoPreview');
+                    if (preview) preview.remove();
+                    self.renderFoodHistory();
+                }, 1000);
+            });
+        }
     },
     
     bindAddForm: function() {
