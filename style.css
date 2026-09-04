@@ -1324,15 +1324,25 @@ body::before {
     min-width: 60px;
 }
 
-.food-entry-name {
+.food-entry-info {
     flex: 1;
+}
+
+.food-entry-name {
     font-weight: 700;
     color: #333;
+    margin-bottom: 2px;
+}
+
+.food-entry-portion {
+    font-size: 12px;
+    color: #888;
 }
 
 .food-entry-cal {
     font-weight: 800;
     color: #023e8a;
+    font-size: 16px;
 }
 
 .food-total {
@@ -1350,6 +1360,50 @@ body::before {
     padding: 30px;
     color: #888;
     font-style: italic;
+}
+
+.food-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 50;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.food-suggestion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #eee;
+}
+
+.food-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.food-suggestion-item:hover {
+    background: #f5f5f5;
+}
+
+.suggestion-name {
+    font-weight: 700;
+    color: #333;
+}
+
+.suggestion-cal {
+    font-size: 12px;
+    color: #888;
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
 .photo-modal {
@@ -1473,6 +1527,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    position: relative;
 }
 
 .form-group label {

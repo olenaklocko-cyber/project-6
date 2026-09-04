@@ -579,13 +579,19 @@ var Screens = {
             
             '<div class="nutrition-manual" id="nutritionManual">' +
             '<div class="form-group">' +
-            '<label>Або введи вручну</label>' +
-            '<input type="text" id="foodName" placeholder="Назва страви">' +
+            '<label>Назва страви</label>' +
+            '<input type="text" id="foodName" placeholder="Почни вводити назву..." autocomplete="off">' +
+            '<div class="food-suggestions" id="foodSuggestions"></div>' +
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Калорії</label>' +
-            '<input type="number" id="foodCalories" placeholder="Калорії">' +
+            '<label>Калорії (ккал)</label>' +
+            '<input type="number" id="foodCalories" placeholder="Автоматично або введи">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Кількість (порція)</label>' +
+            '<input type="text" id="foodPortion" placeholder="Наприклад: 1 тарілка, 200г">' +
             '</div>' +
             
             '<button class="btn-primary" id="addFoodBtn">Додати запис</button>' +
@@ -621,24 +627,219 @@ var Screens = {
     bindNutritionEvents: function() {
         var self = this;
         
+        // База продуктів з калоріями (на 100г)
+        this.foodDB = [
+            { name: 'Вареники з картоплею', calories: 210, portion: '1 тарілка (300г)', total: 630 },
+            { name: 'Вареники з вишнями', calories: 200, portion: '1 тарілка (250г)', total: 500 },
+            { name: 'Борщ', calories: 50, portion: '1 тарілка (350г)', total: 175 },
+            { name: 'Щі', calories: 45, portion: '1 тарілка (350г)', total: 158 },
+            { name: 'Картопляне пюре', calories: 95, portion: '1 порція (200г)', total: 190 },
+            { name: 'Каша гречана', calories: 132, portion: '1 порція (200г)', total: 264 },
+            { name: 'Каша рисова', calories: 130, portion: '1 порція (200г)', total: 260 },
+            { name: 'Каша вівсяна', calories: 88, portion: '1 порція (250г)', total: 220 },
+            { name: 'Молочна каша', calories: 100, portion: '1 порція (250г)', total: 250 },
+            { name: 'Котлета куряча', calories: 190, portion: '1 штука (100г)', total: 190 },
+            { name: 'Котлета свиняча', calories: 250, portion: '1 штука (100г)', total: 250 },
+            { name: 'Риба смажена', calories: 220, portion: '1 порція (150г)', total: 330 },
+            { name: 'Риба запечена', calories: 160, portion: '1 порція (150г)', total: 240 },
+            { name: 'Суп курячий', calories: 45, portion: '1 тарілка (350г)', total: 158 },
+            { name: 'Суп гороховий', calories: 60, portion: '1 тарілка (350г)', total: 210 },
+            { name: 'Борщ український', calories: 55, portion: '1 тарілка (350г)', total: 193 },
+            { name: 'Салат Олів\'є', calories: 150, portion: '1 порція (200г)', total: 300 },
+            { name: 'Салат з капусти', calories: 30, portion: '1 порція (150г)', total: 45 },
+            { name: 'Омлет', calories: 155, portion: '1 штука (200г)', total: 310 },
+            { name: 'Яйце варене', calories: 155, portion: '1 штука', total: 155 },
+            { name: 'Хліб білий', calories: 265, portion: '1 скибка (30г)', total: 80 },
+            { name: 'Хліб чорний', calories: 210, portion: '1 скибка (30г)', total: 63 },
+            { name: 'Макарони', calories: 130, portion: '1 порція (200г)', total: 260 },
+            { name: 'Паста з соусом', calories: 150, portion: '1 порція (250г)', total: 375 },
+            { name: 'Бутерброд з маслом', calories: 280, portion: '1 штука', total: 280 },
+            { name: 'Бутерброд з сиром', calories: 300, portion: '1 штука', total: 300 },
+            { name: 'Сир творожний', calories: 120, portion: '1 порція (200г)', total: 240 },
+            { name: 'Йогурт', calories: 60, portion: '1 упаковка (200г)', total: 120 },
+            { name: 'Молоко', calories: 42, portion: '1 склянка (250мл)', total: 105 },
+            { name: 'Кефір', calories: 40, portion: '1 склянка (250мл)', total: 100 },
+            { name: 'Сметана', calories: 200, portion: '2 столові ложки (30г)', total: 60 },
+            { name: 'Масло вершкове', calories: 720, portion: '1 чайна ложка (10г)', total: 72 },
+            { name: 'Сир твердий', calories: 350, portion: '1 скибка (30г)', total: 105 },
+            { name: 'Ковбаса', calories: 260, portion: '1 скибка (30г)', total: 78 },
+            { name: 'Шинка', calories: 145, portion: '1 скибка (30г)', total: 44 },
+            { name: 'Курка смажена', calories: 240, portion: '1 порція (150г)', total: 360 },
+            { name: 'Курка запечена', calories: 180, portion: '1 порція (150г)', total: 270 },
+            { name: 'Стейк яловичий', calories: 270, portion: '1 порція (150г)', total: 405 },
+            { name: 'Печінка', calories: 140, portion: '1 порція (150г)', total: 210 },
+            { name: 'Горохова каша', calories: 110, portion: '1 порція (200г)', total: 220 },
+            { name: 'Боби', calories: 110, portion: '1 порція (200г)', total: 220 },
+            { name: 'Квасоля', calories: 100, portion: '1 порція (200г)', total: 200 },
+            { name: 'Нут', calories: 160, portion: '1 порція (200г)', total: 320 },
+            { name: 'Сочевиця', calories: 115, portion: '1 порція (200г)', total: 230 },
+            { name: 'Печено картопля', calories: 95, portion: '1 штука (150г)', total: 143 },
+            { name: 'Фрі', calories: 310, portion: '1 порція (100г)', total: 310 },
+            { name: 'Піца', calories: 266, portion: '1 скибка (100г)', total: 266 },
+            { name: 'Бургер', calories: 295, portion: '1 штука (150г)', total: 443 },
+            { name: 'Хот-дог', calories: 290, portion: '1 штука', total: 290 },
+            { name: 'Сосиски', calories: 270, portion: '2 штуки (100г)', total: 270 },
+            { name: 'Бекон', calories: 540, portion: '2 скибки (30г)', total: 162 },
+            { name: 'Сало', calories: 800, portion: '1 скибка (20г)', total: 160 },
+            { name: 'Шашлик', calories: 250, portion: '1 порція (150г)', total: 375 },
+            { name: 'Пельмені', calories: 200, portion: '1 порція (250г)', total: 500 },
+            { name: 'Манти', calories: 210, portion: '1 порція (250г)', total: 525 },
+            { name: 'Хінкалі', calories: 200, portion: '1 штука (80г)', total: 160 },
+            { name: 'Лагман', calories: 120, portion: '1 тарілка (350г)', total: 420 },
+            { name: 'Плов', calories: 150, portion: '1 порція (300г)', total: 450 },
+            { name: 'Голубці', calories: 130, portion: '2 штуки (200г)', total: 260 },
+            { name: 'Рулети з м\'ясом', calories: 180, portion: '2 штуки (200г)', total: 360 },
+            { name: 'Запіканка', calories: 110, portion: '1 порція (200г)', total: 220 },
+            { name: 'Млинці', calories: 230, portion: '2 штуки', total: 460 },
+            { name: 'Млинці з начинкою', calories: 280, portion: '2 штуки', total: 560 },
+            { name: 'Вафлі', calories: 320, portion: '2 штуки', total: 640 },
+            { name: 'Пончик', calories: 350, portion: '1 штука', total: 350 },
+            { name: 'Торт', calories: 350, portion: '1 штука (100г)', total: 350 },
+            { name: 'Тістечко', calories: 380, portion: '1 штука (80г)', total: 304 },
+            { name: 'Цукерки', calories: 400, portion: '3 штуки (30г)', total: 120 },
+            { name: 'Шоколад', calories: 540, portion: '1 скибка (20г)', total: 108 },
+            { name: 'Морозиво', calories: 200, portion: '1 порція (100г)', total: 200 },
+            { name: 'Печиво', calories: 480, portion: '3 штуки (30г)', total: 144 },
+            { name: 'Сухарики', calories: 380, portion: '1 порція (30г)', total: 114 },
+            { name: 'Чіпси', calories: 530, portion: '1 порція (30г)', total: 159 },
+            { name: 'Попкорн', calories: 380, portion: '1 порція (30г)', total: 114 },
+            { name: 'Горіхи', calories: 600, portion: '1 жменя (30г)', total: 180 },
+            { name: 'Мигдаль', calories: 580, portion: '1 жменя (30г)', total: 174 },
+            { name: 'Кеш\'ю', calories: 570, portion: '1 жменя (30г)', total: 171 },
+            { name: 'Арахіс', calories: 570, portion: '1 жменя (30г)', total: 171 },
+            { name: 'Ізюм', calories: 300, portion: '1 жменя (30г)', total: 90 },
+            { name: 'Курага', calories: 280, portion: '1 жменя (30г)', total: 84 },
+            { name: 'Чорнослив', calories: 240, portion: '1 жменя (30г)', total: 72 },
+            { name: 'Банан', calories: 95, portion: '1 штука (120г)', total: 114 },
+            { name: 'Яблуко', calories: 52, portion: '1 штука (150г)', total: 78 },
+            { name: 'Апельсин', calories: 43, portion: '1 штука (150г)', total: 65 },
+            { name: 'Груша', calories: 57, portion: '1 штука (150г)', total: 86 },
+            { name: 'Виноград', calories: 69, portion: '1 порція (100г)', total: 69 },
+            { name: 'Кавун', calories: 30, portion: '1 порція (200г)', total: 60 },
+            { name: 'Диня', calories: 35, portion: '1 порція (200г)', total: 70 },
+            { name: 'Полуниця', calories: 33, portion: '1 порція (150г)', total: 50 },
+            { name: 'Вишня', calories: 50, portion: '1 порція (150г)', total: 75 },
+            { name: 'Слива', calories: 45, portion: '1 штука (50г)', total: 23 },
+            { name: 'Персик', calories: 40, portion: '1 штука (150г)', total: 60 },
+            { name: 'Манго', calories: 60, portion: '1 штука (150г)', total: 90 },
+            { name: 'Ківі', calories: 61, portion: '1 штука (75г)', total: 46 },
+            { name: 'Ананас', calories: 50, portion: '1 порція (100г)', total: 50 },
+            { name: 'Грейпфрут', calories: 42, portion: '1 штука (150г)', total: 63 },
+            { name: 'Лимон', calories: 29, portion: '1 штука (60г)', total: 17 },
+            { name: 'Виноградний сік', calories: 60, portion: '1 склянка (200мл)', total: 120 },
+            { name: 'Апельсиновий сік', calories: 45, portion: '1 склянка (200мл)', total: 90 },
+            { name: 'Кола', calories: 42, portion: '1 склянка (330мл)', total: 139 },
+            { name: 'Пепсі', calories: 43, portion: '1 склянка (330мл)', total: 142 },
+            { name: 'Спрайт', calories: 40, portion: '1 склянка (330мл)', total: 132 },
+            { name: 'Чай з цукром', calories: 35, portion: '1 чашка (200мл)', total: 70 },
+            { name: 'Кава з молоком', calories: 25, portion: '1 чашка (200мл)', total: 50 },
+            { name: 'Какао', calories: 45, portion: '1 чашка (200мл)', total: 90 },
+            { name: 'Пиво', calories: 43, portion: '1 пляшка (500мл)', total: 215 },
+            { name: 'Вино червоне', calories: 85, portion: '1 келих (150мл)', total: 128 },
+            { name: 'Вино біле', calories: 80, portion: '1 келих (150мл)', total: 120 },
+            { name: 'Водка', calories: 235, portion: '1 порція (50мл)', total: 118 },
+            { name: 'Коньяк', calories: 240, portion: '1 порція (50мл)', total: 120 },
+            { name: 'Олія соняшникова', calories: 899, portion: '1 столова ложка (15мл)', total: 135 },
+            { name: 'Олія оливкова', calories: 884, portion: '1 столова ложка (15мл)', total: 133 },
+            { name: 'Майонез', calories: 680, portion: '1 столова ложка (15мл)', total: 102 },
+            { name: 'Кетчуп', calories: 110, portion: '1 столова ложка (15мл)', total: 17 },
+            { name: 'Гірчиця', calories: 66, portion: '1 чайна ложка (5мл)', total: 3 },
+            { name: 'Соєвий соус', calories: 53, portion: '1 столова ложка (15мл)', total: 8 },
+            { name: 'Цукор', calories: 387, portion: '1 чайна ложка (5г)', total: 19 },
+            { name: 'Мед', calories: 304, portion: '1 столова ложка (20г)', total: 61 },
+            { name: 'Варення', calories: 270, portion: '1 столова ложка (20г)', total: 54 },
+            { name: 'Шоколадний соус', calories: 450, portion: '1 столова ложка (15мл)', total: 68 },
+            { name: 'Ванільний цукор', calories: 399, portion: '1 пакетик (10г)', total: 4 },
+            { name: 'Борошно', calories: 364, portion: '1 склянка (120г)', total: 437 },
+            { name: 'Крохмаль', calories: 380, portion: '1 столова ложка (10г)', total: 4 },
+            { name: 'Какао порошок', calories: 228, portion: '1 столова ложка (5г)', total: 11 },
+            { name: 'Розпушувач', calories: 50, portion: '1 чайна ложка (5г)', total: 3 },
+            { name: 'Дріжджі', calories: 105, portion: '1 пакетик (7г)', total: 7 },
+            { name: 'Сіль', calories: 0, portion: 'за смаком', total: 0 },
+            { name: 'Перець чорний', calories: 251, portion: 'за смаком', total: 2 },
+            { name: 'Петрушка', calories: 36, portion: '1 пучок (10г)', total: 4 },
+            { name: 'Кріп', calories: 40, portion: '1 пучок (10г)', total: 4 },
+            { name: 'Базилік', calories: 23, portion: '5 листків (5г)', total: 1 },
+            { name: 'Часник', calories: 149, portion: '1 зубчик (3г)', total: 4 },
+            { name: 'Цибуля', calories: 40, portion: '1 штука (100г)', total: 40 },
+            { name: 'Морква', calories: 41, portion: '1 штука (100г)', total: 41 },
+            { name: 'Буряк', calories: 43, portion: '1 штука (100г)', total: 43 },
+            { name: 'Капуста', calories: 25, portion: '1 порція (150г)', total: 38 },
+            { name: 'Огірок', calories: 15, portion: '1 штука (100г)', total: 15 },
+            { name: 'Помідор', calories: 18, portion: '1 штука (100г)', total: 18 },
+            { name: 'Болгарський перець', calories: 27, portion: '1 штука (150г)', total: 41 },
+            { name: 'Баклажан', calories: 25, portion: '1 штука (100г)', total: 25 },
+            { name: 'Кабачок', calories: 17, portion: '1 штука (100г)', total: 17 },
+            { name: 'Гриби', calories: 22, portion: '1 порція (100г)', total: 22 },
+            { name: 'Кукурудза', calories: 86, portion: '1 качан (150г)', total: 129 },
+            { name: 'Горох', calories: 81, portion: '1 порція (100г)', total: 81 },
+            { name: 'Шпинат', calories: 23, portion: '1 порція (100г)', total: 23 },
+            { name: 'Авокадо', calories: 160, portion: '1 штука (100г)', total: 160 },
+            { name: 'Оливки', calories: 115, portion: '10 штук (30г)', total: 35 },
+            { name: 'Каперси', calories: 23, portion: '1 столова ложка (10г)', total: 2 },
+            { name: 'Морська капуста', calories: 20, portion: '1 порція (100г)', total: 20 },
+            { name: 'Тунець (консерви)', calories: 130, portion: '1 банка (100г)', total: 130 },
+            { name: 'Сардини (консерви)', calories: 200, portion: '1 банка (100г)', total: 200 },
+            { name: 'Шпроти', calories: 350, portion: '1 банка (100г)', total: 350 },
+            { name: 'Креветки', calories: 95, portion: '1 порція (100г)', total: 95 },
+            { name: 'Кальмар', calories: 75, portion: '1 порція (100г)', total: 75 },
+            { name: 'Крабові палички', calories: 130, portion: '1 порція (50г)', total: 65 },
+            { name: 'Ікра червона', calories: 230, portion: '1 столова ложка (15г)', total: 35 },
+            { name: 'Ікра чорна', calories: 250, portion: '1 столова ложка (15г)', total: 38 },
+            { name: 'М\'ясний бульйон', calories: 15, portion: '1 тарілка (350мл)', total: 53 },
+            { name: 'Овочевий бульйон', calories: 10, portion: '1 тарілка (350мл)', total: 35 },
+            { name: 'Грибний бульйон', calories: 12, portion: '1 тарілка (350мл)', total: 42 }
+        ];
+        
         // Кнопка камери
         document.getElementById('cameraBtn').addEventListener('click', function() {
             self.openCamera();
+        });
+        
+        // Автозаповнення
+        var foodNameInput = document.getElementById('foodName');
+        var suggestionsDiv = document.getElementById('foodSuggestions');
+        
+        foodNameInput.addEventListener('input', function() {
+            var query = this.value.toLowerCase().trim();
+            suggestionsDiv.innerHTML = '';
+            
+            if (query.length < 2) return;
+            
+            var matches = self.foodDB.filter(function(f) {
+                return f.name.toLowerCase().indexOf(query) !== -1;
+            }).slice(0, 5);
+            
+            matches.forEach(function(food) {
+                var div = document.createElement('div');
+                div.className = 'food-suggestion-item';
+                div.innerHTML = '<span class="suggestion-name">' + food.name + '</span>' +
+                    '<span class="suggestion-cal">' + food.calories + ' ккал/100г</span>';
+                div.addEventListener('click', function() {
+                    foodNameInput.value = food.name;
+                    document.getElementById('foodCalories').value = food.total;
+                    document.getElementById('foodPortion').value = food.portion;
+                    suggestionsDiv.innerHTML = '';
+                });
+                suggestionsDiv.appendChild(div);
+            });
         });
         
         // Додати їжу вручну
         document.getElementById('addFoodBtn').addEventListener('click', function() {
             var name = document.getElementById('foodName').value.trim();
             var calories = parseInt(document.getElementById('foodCalories').value) || 0;
+            var portion = document.getElementById('foodPortion').value.trim();
             
             if (!name) {
                 alert('Введи назву страви!');
                 return;
             }
             
-            Storage.addFoodEntry({ name: name, calories: calories, time: new Date().toLocaleTimeString('uk-UA') });
+            Storage.addFoodEntry({ name: name, calories: calories, portion: portion, time: new Date().toLocaleTimeString('uk-UA') });
             document.getElementById('foodName').value = '';
             document.getElementById('foodCalories').value = '';
+            document.getElementById('foodPortion').value = '';
             self.renderFoodHistory();
         });
         
@@ -663,12 +864,15 @@ var Screens = {
             totalCal += e.calories || 0;
             html += '<div class="food-entry">' +
                 '<div class="food-entry-time">' + e.time + '</div>' +
+                '<div class="food-entry-info">' +
                 '<div class="food-entry-name">' + e.name + '</div>' +
+                (e.portion ? '<div class="food-entry-portion">' + e.portion + '</div>' : '') +
+                '</div>' +
                 '<div class="food-entry-cal">' + (e.calories || '?') + ' ккал</div>' +
                 '</div>';
         }
         
-        html = '<div class="food-total">Всього: <strong>' + totalCal + ' ккал</strong></div>' + html;
+        html = '<div class="food-total">Всього сьогодні: <strong>' + totalCal + ' ккал</strong></div>' + html;
         container.innerHTML = html;
     },
     
