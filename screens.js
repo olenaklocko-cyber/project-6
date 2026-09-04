@@ -673,19 +673,93 @@ var Screens = {
     },
     
     openCamera: function() {
+        var modal = document.createElement('div');
+        modal.className = 'photo-modal';
+        modal.innerHTML = '<div class="photo-modal-content">' +
+            '<div class="photo-modal-title">Обери джерело фото</div>' +
+            '<button class="photo-modal-btn" id="photoTakeBtn">' +
+            '<span class="photo-modal-icon">📸</span>' +
+            '<span>Зробити фото</span>' +
+            '</button>' +
+            '<button class="photo-modal-btn" id="photoGalleryBtn">' +
+            '<span class="photo-modal-icon">🖼️</span>' +
+            '<span>Обрати з галереї</span>' +
+            '</button>' +
+            '<button class="photo-modal-cancel" id="photoCancelBtn">Скасувати</button>' +
+            '</div>';
+        
+        document.body.appendChild(modal);
+        
+        var self = this;
+        
+        document.getElementById('photoTakeBtn').addEventListener('click', function() {
+            modal.remove();
+            self.openCameraInput('environment');
+        });
+        
+        document.getElementById('photoGalleryBtn').addEventListener('click', function() {
+            modal.remove();
+            self.openCameraInput('user');
+        });
+        
+        document.getElementById('photoCancelBtn').addEventListener('click', function() {
+            modal.remove();
+        });
+    },
+    
+    openCameraInput: function(mode) {
+        var self = this;
         var input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.capture = 'environment';
+        
+        if (mode === 'environment') {
+            input.capture = 'environment';
+        }
         
         input.onchange = function(e) {
             var file = e.target.files[0];
             if (file) {
-                alert('📸 Фото отримано! Функція аналізу їжі буде додана пізніше.');
+                self.processFoodPhoto(file);
             }
         };
         
         input.click();
+    },
+    
+    processFoodPhoto: function(file) {
+        var self = this;
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            var photoPreview = document.getElementById('photoPreview');
+            if (!photoPreview) {
+                var container = document.querySelector('.nutrition-section');
+                var previewDiv = document.createElement('div');
+                previewDiv.id = 'photoPreview';
+                previewDiv.className = 'photo-preview';
+                container.insertBefore(previewDiv, container.firstChild);
+                photoPreview = document.getElementById('photoPreview');
+            }
+            
+            photoPreview.innerHTML = '<div class="photo-preview-card">' +
+                '<img src="' + e.target.result + '" alt="Їжа" class="photo-preview-img">' +
+                '<div class="photo-preview-actions">' +
+                '<button class="photo-preview-btn" id="photoRetakeBtn">📸 Нове фото</button>' +
+                '<button class="photo-preview-btn primary" id="photoAnalyzeBtn">🔍 Аналізувати</button>' +
+                '</div>' +
+                '</div>';
+            
+            document.getElementById('photoRetakeBtn').addEventListener('click', function() {
+                self.openCamera();
+            });
+            
+            document.getElementById('photoAnalyzeBtn').addEventListener('click', function() {
+                alert('📸 Фото отримано! Функція аналізу їжі буде додана пізніше.');
+            });
+        };
+        
+        reader.readAsDataURL(file);
     },
     
     bindAddForm: function() {
