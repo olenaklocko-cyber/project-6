@@ -1013,7 +1013,7 @@ var Screens = {
             var base64Data = compressedBase64.split(',')[1];
             
             // Використовуємо наш сервер
-            var serverUrl = 'https://food-ai-server.vercel.app/api/analyze';
+            var serverUrl = 'https://food-ai-server-navy.vercel.app/api/analyze';
             
             fetch(serverUrl, {
                 method: 'POST',
