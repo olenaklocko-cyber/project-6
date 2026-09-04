@@ -1625,6 +1625,115 @@ body::before {
     font-style: italic;
 }
 
+.quick-food-select {
+    padding: 20px;
+}
+
+.quick-food-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.quick-food-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quick-food-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.quick-food-item:hover {
+    background: #e9ecef;
+}
+
+.quick-food-item.selected {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #667eea;
+}
+
+.quick-food-item.selected .quick-food-name,
+.quick-food-item.selected .quick-food-cal {
+    color: white;
+}
+
+.quick-food-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.quick-food-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+.quick-food-cal {
+    font-size: 10px;
+    color: #888;
+}
+
+.quick-food-custom {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.quick-food-custom input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e8ecf1;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.quick-food-custom input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.quick-food-add-btn {
+    padding: 12px 20px;
+    background: #20c997;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+}
+
+.quick-food-total {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4e8e5, #b8d4d0);
+    border-radius: 12px;
+}
+
+.quick-food-total span {
+    color: #023e8a;
+    font-size: 24px;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
