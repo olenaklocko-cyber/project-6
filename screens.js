@@ -986,26 +986,65 @@ var Screens = {
         
         var apiKey = '16749e13b0msh437c9c685ba695bp10d553jsn871fbf3b2535';
         
-        fetch('https://caloai.p.rapidapi.com/v1/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-RapidAPI-Key': apiKey,
-                'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
-            },
-            body: JSON.stringify({ image: imageBase64 })
-        })
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            loading.style.display = 'none';
-            self.showAIResults(data, actionsDiv);
-        })
-        .catch(function(error) {
-            loading.innerHTML = '<div class="loading-error">❌ Помилка аналізу. Спробуй ще раз.</div>';
-            console.error('AI Error:', error);
-        });
+        // Конвертуємо в JPEG та зменшуємо розмір
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        
+        img.onload = function() {
+            // Обмежуємо розмір до 800px
+            var maxSize = 800;
+            var width = img.width;
+            var height = img.height;
+            
+            if (width > maxSize || height > maxSize) {
+                if (width > height) {
+                    height = Math.round((height * maxSize) / width);
+                    width = maxSize;
+                } else {
+                    width = Math.round((width * maxSize) / height);
+                    height = maxSize;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Конвертуємо в JPEG
+            var compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            var base64Data = compressedBase64.split(',')[1];
+            
+            fetch('https://caloai.p.rapidapi.com/v1/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-RapidAPI-Key': apiKey,
+                    'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
+                },
+                body: JSON.stringify({ image: base64Data })
+            })
+            .then(function(response) {
+                console.log('API Response status:', response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('API Response:', data);
+                loading.style.display = 'none';
+                
+                if (data.error) {
+                    loading.innerHTML = '<div class="loading-error">❌ Помилка: ' + data.error + '</div>';
+                } else {
+                    self.showAIResults(data, actionsDiv);
+                }
+            })
+            .catch(function(error) {
+                console.error('AI Error:', error);
+                loading.innerHTML = '<div class="loading-error">❌ Помилка з\'єднання. Перевір інтернет.</div>';
+            });
+        };
+        
+        img.src = imageBase64;
     },
     
     showAIResults: function(data, container) {
@@ -1013,48 +1052,60 @@ var Screens = {
         
         var resultsHTML = '<div class="ai-results">';
         
-        if (data.detected_dishes && data.detected_dishes.length > 0) {
+        // Перевіряємо різні формати відповіді
+        var calories = data.calories || data.total_calories || 0;
+        var proteins = data.proteins || data.protein || 0;
+        var fats = data.fats || data.fat || 0;
+        var carbs = data.carbs || data.carbohydrates || 0;
+        var dishes = data.detected_dishes || data.foods || data.items || [];
+        
+        if (calories > 0 || dishes.length > 0) {
             resultsHTML += '<div class="ai-total">' +
-                '<div class="ai-total-cal">' + data.calories + ' ккал</div>' +
+                '<div class="ai-total-cal">' + calories + ' ккал</div>' +
                 '<div class="ai-total-macros">' +
-                '<span>Білки: ' + data.proteins + 'г</span>' +
-                '<span>Жири: ' + data.fats + 'г</span>' +
-                '<span>Вуглеводи: ' + data.carbs + 'г</span>' +
+                '<span>Білки: ' + proteins + 'г</span>' +
+                '<span>Жири: ' + fats + 'г</span>' +
+                '<span>Вуглеводи: ' + carbs + 'г</span>' +
                 '</div>' +
                 '</div>';
             
-            resultsHTML += '<div class="ai-dishes">';
-            for (var i = 0; i < data.detected_dishes.length; i++) {
-                var dish = data.detected_dishes[i];
-                resultsHTML += '<div class="ai-dish">' +
-                    '<div class="ai-dish-name">' + dish.name + '</div>' +
-                    '<div class="ai-dish-info">' +
-                    '<span class="ai-dish-weight">' + dish.weight_g + 'г</span>' +
-                    '<span class="ai-dish-cal">' + dish.calories + ' ккал</span>' +
-                    '</div>' +
-                    '</div>';
+            if (dishes.length > 0) {
+                resultsHTML += '<div class="ai-dishes">';
+                for (var i = 0; i < dishes.length; i++) {
+                    var dish = dishes[i];
+                    var dishName = dish.name || dish.food_name || 'Страва';
+                    var dishWeight = dish.weight_g || dish.weight || dish.serving_size || '?';
+                    var dishCal = dish.calories || dish.calories_kcal || 0;
+                    resultsHTML += '<div class="ai-dish">' +
+                        '<div class="ai-dish-name">' + dishName + '</div>' +
+                        '<div class="ai-dish-info">' +
+                        '<span class="ai-dish-weight">' + dishWeight + 'г</span>' +
+                        '<span class="ai-dish-cal">' + dishCal + ' ккал</span>' +
+                        '</div>' +
+                        '</div>';
+                }
+                resultsHTML += '</div>';
             }
-            resultsHTML += '</div>';
             
             resultsHTML += '<button class="btn-primary" id="saveAIResultBtn">💾 Зберегти в журнал</button>';
         } else {
-            resultsHTML += '<div class="ai-no-result">😔 Не вдалося розпізнати їжу на фото. Спробуй інше фото або додай вручну.</div>';
+            resultsHTML += '<div class="ai-no-result">😔 Не вдалося розпізнати їжу. Спробуй інше фото або додай вручну.</div>';
         }
         
         resultsHTML += '</div>';
         
         container.insertAdjacentHTML('beforeend', resultsHTML);
         
-        if (data.detected_dishes && data.detected_dishes.length > 0) {
+        if (calories > 0 || dishes.length > 0) {
             document.getElementById('saveAIResultBtn').addEventListener('click', function() {
-                var portion = data.detected_dishes.map(function(d) {
-                    return d.name + ' (' + d.weight_g + 'г)';
+                var portion = dishes.map(function(d) {
+                    return (d.name || d.food_name || '') + ' (' + (d.weight_g || d.weight || '') + 'г)';
                 }).join(', ');
                 
                 Storage.addFoodEntry({
-                    name: data.detected_dishes.map(function(d) { return d.name; }).join(' + '),
-                    calories: data.calories,
-                    portion: portion,
+                    name: dishes.length > 0 ? dishes.map(function(d) { return d.name || d.food_name; }).join(' + ') : 'Їжа з фото',
+                    calories: calories,
+                    portion: portion || 'фото',
                     time: new Date().toLocaleTimeString('uk-UA'),
                     ai: true
                 });
