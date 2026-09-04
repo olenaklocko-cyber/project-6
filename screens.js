@@ -985,8 +985,6 @@ var Screens = {
         var loading = document.getElementById('photoLoading');
         var actionsDiv = document.querySelector('.photo-preview-actions');
         
-        var apiKey = '16749e13b0msh437c9c685ba695bp10d553jsn871fbf3b2535';
-        
         // Конвертуємо в JPEG та зменшуємо розмір
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
@@ -1014,15 +1012,13 @@ var Screens = {
             var compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
             var base64Data = compressedBase64.split(',')[1];
             
-            // Використовуємо CORS-проксі
-            var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://caloai.p.rapidapi.com/v1/');
+            // Використовуємо наш сервер
+            var serverUrl = 'https://food-ai-server.vercel.app/api/analyze';
             
-            fetch(proxyUrl, {
+            fetch(serverUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-RapidAPI-Key': apiKey,
-                    'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ image: base64Data })
             })
@@ -1042,30 +1038,7 @@ var Screens = {
             })
             .catch(function(error) {
                 console.error('Error:', error);
-                // Якщо проксі не працює — пробуємо інший
-                var proxy2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://caloai.p.rapidapi.com/v1/');
-                
-                fetch(proxy2, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-RapidAPI-Key': apiKey,
-                        'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
-                    },
-                    body: JSON.stringify({ image: base64Data })
-                })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    loading.style.display = 'none';
-                    if (data.error) {
-                        loading.innerHTML = '<div class="loading-error">❌ ' + data.error + '</div>';
-                    } else {
-                        self.showAIResults(data, actionsDiv);
-                    }
-                })
-                .catch(function(err) {
-                    loading.innerHTML = '<div class="loading-error">❌ AI тимчасово недоступний. Спробуй пізніше.</div>';
-                });
+                loading.innerHTML = '<div class="loading-error">❌ Помилка з\'єднання з сервером</div>';
             });
         };
         
