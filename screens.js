@@ -500,13 +500,35 @@ var Screens = {
     },
     
     // ===== ДОДАТИ =====
+    addTab: 'exercises',
+    
     renderAdd: function() {
         var container = document.getElementById('screen-add');
+        var self = this;
+        
+        var html = '<div class="add-form">' +
+            '<div class="add-tabs">' +
+            '<button class="add-tab' + (this.addTab === 'exercises' ? ' active' : '') + '" data-tab="exercises">🏋️ Вправи</button>' +
+            '<button class="add-tab' + (this.addTab === 'nutrition' ? ' active' : '') + '" data-tab="nutrition">🍎 Харчування</button>' +
+            '</div>';
+        
+        if (this.addTab === 'exercises') {
+            html += this.renderAddExercises();
+        } else {
+            html += this.renderAddNutrition();
+        }
+        
+        html += '</div>';
+        
+        container.innerHTML = html;
+        this.bindAddEvents();
+    },
+    
+    renderAddExercises: function() {
         var icons = ['⚽', '🏀', '🎾', '🏃', '💪', '🧘', '🚴', '🏊', '🤸', '🏋️', '🥊', '⛷️'];
         var units = ['разів', 'хвилин', 'км', 'підходів', 'кг'];
         
-        var html = '<div class="add-form">' +
-            '<div class="form-group">' +
+        var html = '<div class="form-group">' +
             '<label>Назва вправи</label>' +
             '<input type="text" id="habitName" placeholder="Наприклад: Йога">' +
             '</div>' +
@@ -540,11 +562,130 @@ var Screens = {
         }
         
         html += '</div></div>' +
-            '<button class="btn-primary" id="addHabitBtn">Додати вправу</button>' +
+            '<button class="btn-primary" id="addHabitBtn">Додати вправу</button>';
+        
+        return html;
+    },
+    
+    renderAddNutrition: function() {
+        var html = '<div class="nutrition-section">' +
+            '<div class="camera-btn-container">' +
+            '<button class="camera-btn" id="cameraBtn">' +
+            '<div class="camera-icon">📸</div>' +
+            '<div class="camera-text">Сфотографувати порцію</div>' +
+            '<div class="camera-hint">Зроби фото їжі для аналізу калорій</div>' +
+            '</button>' +
+            '</div>' +
+            
+            '<div class="nutrition-manual" id="nutritionManual">' +
+            '<div class="form-group">' +
+            '<label>Або введи вручну</label>' +
+            '<input type="text" id="foodName" placeholder="Назва страви">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Калорії</label>' +
+            '<input type="number" id="foodCalories" placeholder="Калорії">' +
+            '</div>' +
+            
+            '<button class="btn-primary" id="addFoodBtn">Додати запис</button>' +
+            '</div>' +
+            
+            '<div class="food-history" id="foodHistory">' +
+            '<div class="section-title">Сьогоднішні записи</div>' +
+            '<div id="foodList"></div>' +
+            '</div>' +
             '</div>';
         
+        return html;
+    },
+    
+    bindAddEvents: function() {
+        var self = this;
+        
+        // Перемикач вкладок
+        document.querySelectorAll('.add-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                self.addTab = this.getAttribute('data-tab');
+                self.renderAdd();
+            });
+        });
+        
+        if (this.addTab === 'exercises') {
+            this.bindAddForm();
+        } else {
+            this.bindNutritionEvents();
+        }
+    },
+    
+    bindNutritionEvents: function() {
+        var self = this;
+        
+        // Кнопка камери
+        document.getElementById('cameraBtn').addEventListener('click', function() {
+            self.openCamera();
+        });
+        
+        // Додати їжу вручну
+        document.getElementById('addFoodBtn').addEventListener('click', function() {
+            var name = document.getElementById('foodName').value.trim();
+            var calories = parseInt(document.getElementById('foodCalories').value) || 0;
+            
+            if (!name) {
+                alert('Введи назву страви!');
+                return;
+            }
+            
+            Storage.addFoodEntry({ name: name, calories: calories, time: new Date().toLocaleTimeString('uk-UA') });
+            document.getElementById('foodName').value = '';
+            document.getElementById('foodCalories').value = '';
+            self.renderFoodHistory();
+        });
+        
+        this.renderFoodHistory();
+    },
+    
+    renderFoodHistory: function() {
+        var container = document.getElementById('foodList');
+        var today = Storage.formatDate(new Date());
+        var entries = Storage.getFoodEntries(today);
+        
+        if (entries.length === 0) {
+            container.innerHTML = '<div class="empty-food">Ще немає записів. Сфотографуй їжу або додай вручну!</div>';
+            return;
+        }
+        
+        var html = '';
+        var totalCal = 0;
+        
+        for (var i = entries.length - 1; i >= 0; i--) {
+            var e = entries[i];
+            totalCal += e.calories || 0;
+            html += '<div class="food-entry">' +
+                '<div class="food-entry-time">' + e.time + '</div>' +
+                '<div class="food-entry-name">' + e.name + '</div>' +
+                '<div class="food-entry-cal">' + (e.calories || '?') + ' ккал</div>' +
+                '</div>';
+        }
+        
+        html = '<div class="food-total">Всього: <strong>' + totalCal + ' ккал</strong></div>' + html;
         container.innerHTML = html;
-        this.bindAddForm();
+    },
+    
+    openCamera: function() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+        
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                alert('📸 Фото отримано! Функція аналізу їжі буде додана пізніше.');
+            }
+        };
+        
+        input.click();
     },
     
     bindAddForm: function() {

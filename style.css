@@ -1222,6 +1222,136 @@ body::before {
     gap: 20px;
 }
 
+.add-tabs {
+    display: flex;
+    gap: 10px;
+    background: #e8ecf1;
+    border-radius: 16px;
+    padding: 6px;
+}
+
+.add-tab {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #888;
+}
+
+.add-tab.active {
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.nutrition-section {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.camera-btn-container {
+    display: flex;
+    justify-content: center;
+}
+
+.camera-btn {
+    width: 100%;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #023e8a, #0096c7);
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(2, 62, 138, 0.3);
+}
+
+.camera-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(2, 62, 138, 0.4);
+}
+
+.camera-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.camera-text {
+    font-size: 22px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.camera-hint {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+}
+
+.nutrition-manual {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.food-history {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.food-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.food-entry:last-child {
+    border-bottom: none;
+}
+
+.food-entry-time {
+    font-size: 12px;
+    color: #888;
+    min-width: 60px;
+}
+
+.food-entry-name {
+    flex: 1;
+    font-weight: 700;
+    color: #333;
+}
+
+.food-entry-cal {
+    font-weight: 800;
+    color: #023e8a;
+}
+
+.food-total {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #d4e8e5, #b8d4d0);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #2d5a5a;
+}
+
+.empty-food {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-style: italic;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
