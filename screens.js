@@ -958,146 +958,190 @@ var Screens = {
                 photoPreview = document.getElementById('photoPreview');
             }
             
-            // Показуємо фото та швидкий вибір продуктів
             photoPreview.innerHTML = '<div class="photo-preview-card">' +
                 '<img src="' + e.target.result + '" alt="Їжа" class="photo-preview-img">' +
-                '<div class="quick-food-select">' +
-                '<div class="quick-food-title">Обери що бачиш на фото:</div>' +
-                '<div class="quick-food-grid" id="quickFoodGrid"></div>' +
-                '<div class="quick-food-custom">' +
-                '<input type="text" id="customFoodName" placeholder="Назва страви">' +
-                '<input type="number" id="customFoodCal" placeholder="Калорії">' +
-                '<button class="quick-food-add-btn" id="addCustomFoodBtn">Додати</button>' +
+                '<div class="photo-loading" id="photoLoading">' +
+                '<div class="loading-spinner"></div>' +
+                '<div class="loading-text">🤖 AI аналізує їжу...</div>' +
+                '<div class="loading-subtext">Зачекай 2-3 секунди</div>' +
                 '</div>' +
-                '<div class="quick-food-total">Разом: <span id="quickFoodTotal">0</span> ккал</div>' +
-                '<button class="btn-primary" id="saveQuickFoodBtn">💾 Зберегти в журнал</button>' +
+                '<div class="photo-preview-actions">' +
+                '<button class="photo-preview-btn" id="photoRetakeBtn">📸 Нове фото</button>' +
                 '</div>' +
                 '</div>';
             
-            self.initQuickFoodGrid();
+            document.getElementById('photoRetakeBtn').addEventListener('click', function() {
+                self.openCamera();
+            });
+            
+            self.analyzeWithAI(e.target.result);
         };
         
         reader.readAsDataURL(file);
     },
     
-    initQuickFoodGrid: function() {
+    analyzeWithAI: function(imageBase64) {
         var self = this;
-        this.selectedQuickFoods = [];
+        var loading = document.getElementById('photoLoading');
+        var actionsDiv = document.querySelector('.photo-preview-actions');
         
-        // Швидкий вибір найпопулярніших продуктів
-        var quickFoods = [
-            { name: 'Сосиска', cal: 150, icon: '🌭' },
-            { name: 'Помідор', cal: 18, icon: '🍅' },
-            { name: 'Хліб', cal: 80, icon: '🍞' },
-            { name: 'Сир', cal: 105, icon: '🧀' },
-            { name: 'Масло', cal: 72, icon: '🧈' },
-            { name: 'Яйце', cal: 78, icon: '🥚' },
-            { name: 'Ковбаса', cal: 78, icon: '🥓' },
-            { name: 'Огірок', cal: 15, icon: '🥒' },
-            { name: 'Картопля', cal: 95, icon: '🥔' },
-            { name: 'Морква', cal: 41, icon: '🥕' },
-            { name: 'Курка', cal: 165, icon: '🍗' },
-            { name: 'Рис', cal: 130, icon: '🍚' },
-            { name: 'Макарони', cal: 130, icon: '🍝' },
-            { name: 'Салат', cal: 20, icon: '🥗' },
-            { name: 'Суп', cal: 50, icon: '🍲' },
-            { name: 'Піца', cal: 266, icon: '🍕' },
-            { name: 'Бургер', cal: 295, icon: '🍔' },
-            { name: 'Сирники', cal: 180, icon: '🥞' },
-            { name: 'Каша', cal: 100, icon: '🥣' },
-            { name: 'Фрукти', cal: 50, icon: '🍎' },
-            { name: 'Йогурт', cal: 60, icon: '🥛' },
-            { name: 'Сік', cal: 45, icon: '🧃' },
-            { name: 'Кава', cal: 5, icon: '☕' },
-            { name: 'Чай', cal: 2, icon: '🍵' }
-        ];
+        var apiKey = '16749e13b0msh437c9c685ba695bp10d553jsn871fbf3b2535';
         
-        var grid = document.getElementById('quickFoodGrid');
-        var html = '';
+        // Конвертуємо в JPEG та зменшуємо розмір
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
         
-        for (var i = 0; i < quickFoods.length; i++) {
-            var f = quickFoods[i];
-            html += '<div class="quick-food-item" data-index="' + i + '" data-name="' + f.name + '" data-cal="' + f.cal + '">' +
-                '<div class="quick-food-icon">' + f.icon + '</div>' +
-                '<div class="quick-food-name">' + f.name + '</div>' +
-                '<div class="quick-food-cal">' + f.cal + ' ккал</div>' +
-                '</div>';
-        }
-        
-        grid.innerHTML = html;
-        
-        // Обробник кліків
-        document.querySelectorAll('.quick-food-item').forEach(function(item) {
-            item.addEventListener('click', function() {
-                this.classList.toggle('selected');
-                self.updateQuickFoodTotal();
-            });
-        });
-        
-        // Кастомна страва
-        document.getElementById('addCustomFoodBtn').addEventListener('click', function() {
-            var name = document.getElementById('customFoodName').value.trim();
-            var cal = parseInt(document.getElementById('customFoodCal').value) || 0;
+        img.onload = function() {
+            var maxSize = 600;
+            var width = img.width;
+            var height = img.height;
             
-            if (name && cal > 0) {
-                self.selectedQuickFoods.push({ name: name, cal: cal });
-                self.updateQuickFoodTotal();
-                document.getElementById('customFoodName').value = '';
-                document.getElementById('customFoodCal').value = '';
+            if (width > maxSize || height > maxSize) {
+                if (width > height) {
+                    height = Math.round((height * maxSize) / width);
+                    width = maxSize;
+                } else {
+                    width = Math.round((width * maxSize) / height);
+                    height = maxSize;
+                }
             }
-        });
-        
-        // Збереження
-        document.getElementById('saveQuickFoodBtn').addEventListener('click', function() {
-            var selected = [];
-            document.querySelectorAll('.quick-food-item.selected').forEach(function(item) {
-                selected.push({
-                    name: item.getAttribute('data-name'),
-                    cal: parseInt(item.getAttribute('data-cal'))
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            var compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            var base64Data = compressedBase64.split(',')[1];
+            
+            // Використовуємо CORS-проксі
+            var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://caloai.p.rapidapi.com/v1/');
+            
+            fetch(proxyUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-RapidAPI-Key': apiKey,
+                    'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
+                },
+                body: JSON.stringify({ image: base64Data })
+            })
+            .then(function(response) {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('AI Response:', data);
+                loading.style.display = 'none';
+                
+                if (data.error) {
+                    loading.innerHTML = '<div class="loading-error">❌ ' + data.error + '</div>';
+                } else {
+                    self.showAIResults(data, actionsDiv);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                // Якщо проксі не працює — пробуємо інший
+                var proxy2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://caloai.p.rapidapi.com/v1/');
+                
+                fetch(proxy2, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-RapidAPI-Key': apiKey,
+                        'X-RapidAPI-Host': 'caloai.p.rapidapi.com'
+                    },
+                    body: JSON.stringify({ image: base64Data })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    loading.style.display = 'none';
+                    if (data.error) {
+                        loading.innerHTML = '<div class="loading-error">❌ ' + data.error + '</div>';
+                    } else {
+                        self.showAIResults(data, actionsDiv);
+                    }
+                })
+                .catch(function(err) {
+                    loading.innerHTML = '<div class="loading-error">❌ AI тимчасово недоступний. Спробуй пізніше.</div>';
                 });
             });
-            
-            selected = selected.concat(self.selectedQuickFoods);
-            
-            if (selected.length === 0) {
-                alert('Обери хоча б один продукт!');
-                return;
-            }
-            
-            var totalCal = selected.reduce(function(sum, item) { return sum + item.cal; }, 0);
-            var names = selected.map(function(item) { return item.name; }).join(' + ');
-            
-            Storage.addFoodEntry({
-                name: names,
-                calories: totalCal,
-                portion: 'з фото',
-                time: new Date().toLocaleTimeString('uk-UA'),
-                ai: true
-            });
-            
-            this.textContent = '✓ Збережено!';
-            this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
-            
-            setTimeout(function() {
-                var preview = document.getElementById('photoPreview');
-                if (preview) preview.remove();
-                self.renderFoodHistory();
-            }, 1000);
-        });
+        };
+        
+        img.src = imageBase64;
     },
     
-    updateQuickFoodTotal: function() {
-        var total = 0;
+    showAIResults: function(data, container) {
+        var self = this;
         
-        document.querySelectorAll('.quick-food-item.selected').forEach(function(item) {
-            total += parseInt(item.getAttribute('data-cal'));
-        });
+        var resultsHTML = '<div class="ai-results">';
         
-        this.selectedQuickFoods.forEach(function(item) {
-            total += item.cal;
-        });
+        var calories = data.calories || 0;
+        var proteins = data.proteins || 0;
+        var fats = data.fats || 0;
+        var carbs = data.carbs || 0;
+        var dishes = data.detected_dishes || [];
         
-        document.getElementById('quickFoodTotal').textContent = total;
+        if (calories > 0 || dishes.length > 0) {
+            resultsHTML += '<div class="ai-total">' +
+                '<div class="ai-total-cal">' + Math.round(calories) + ' ккал</div>' +
+                '<div class="ai-total-macros">' +
+                '<span>Білки: ' + Math.round(proteins) + 'г</span>' +
+                '<span>Жири: ' + Math.round(fats) + 'г</span>' +
+                '<span>Вуглеводи: ' + Math.round(carbs) + 'г</span>' +
+                '</div>' +
+                '</div>';
+            
+            if (dishes.length > 0) {
+                resultsHTML += '<div class="ai-dishes-title">Що AI побачив:</div>';
+                resultsHTML += '<div class="ai-dishes">';
+                for (var i = 0; i < dishes.length; i++) {
+                    var dish = dishes[i];
+                    resultsHTML += '<div class="ai-dish">' +
+                        '<div class="ai-dish-name">' + dish.name + '</div>' +
+                        '<div class="ai-dish-info">' +
+                        '<span class="ai-dish-weight">' + dish.weight_g + 'г</span>' +
+                        '<span class="ai-dish-cal">' + Math.round(dish.calories) + ' ккал</span>' +
+                        '</div>' +
+                        '</div>';
+                }
+                resultsHTML += '</div>';
+            }
+            
+            resultsHTML += '<button class="btn-primary" id="saveAIResultBtn">💾 Зберегти в журнал</button>';
+        } else {
+            resultsHTML += '<div class="ai-no-result">😔 AI не зміг розпізнати. Спробуй інше фото.</div>';
+        }
+        
+        resultsHTML += '</div>';
+        
+        container.insertAdjacentHTML('beforeend', resultsHTML);
+        
+        if (calories > 0 || dishes.length > 0) {
+            document.getElementById('saveAIResultBtn').addEventListener('click', function() {
+                var portion = dishes.map(function(d) {
+                    return d.name + ' (' + d.weight_g + 'г)';
+                }).join(', ');
+                
+                Storage.addFoodEntry({
+                    name: dishes.length > 0 ? dishes.map(function(d) { return d.name; }).join(' + ') : 'Їжа',
+                    calories: Math.round(calories),
+                    portion: portion || 'фото',
+                    time: new Date().toLocaleTimeString('uk-UA'),
+                    ai: true
+                });
+                
+                this.textContent = '✓ Збережено!';
+                this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
+                
+                setTimeout(function() {
+                    var preview = document.getElementById('photoPreview');
+                    if (preview) preview.remove();
+                    self.renderFoodHistory();
+                }, 1000);
+            });
+        }
     },
     
     bindAddForm: function() {
