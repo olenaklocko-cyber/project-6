@@ -1523,6 +1523,140 @@ body::before {
     transform: translateY(-2px);
 }
 
+.quick-add-section {
+    padding: 20px;
+}
+
+.quick-add-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.quick-search {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e8ecf1;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Nunito', sans-serif;
+    margin-bottom: 12px;
+}
+
+.quick-search:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.quick-categories {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.quick-cat {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    background: #f0f0f0;
+    color: #666;
+}
+
+.quick-cat.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.quick-food-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.quick-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.quick-item:hover {
+    background: #f5f5f5;
+}
+
+.quick-item.selected {
+    background: linear-gradient(135deg, #667eea20, #764ba220);
+    border-color: #667eea;
+}
+
+.quick-item-icon {
+    font-size: 24px;
+}
+
+.quick-item-name {
+    flex: 1;
+    font-weight: 700;
+    color: #333;
+}
+
+.quick-item-cal {
+    font-size: 13px;
+    color: #888;
+}
+
+.quick-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.quick-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.quick-tag-remove {
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.quick-tag-remove:hover {
+    opacity: 1;
+}
+
+.quick-total {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: #333;
+    padding: 12px;
+    background: linear-gradient(135deg, #d4e8e5, #b8d4d0);
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
 .photo-loading {
     padding: 40px;
     text-align: center;

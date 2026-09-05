@@ -958,163 +958,278 @@ var Screens = {
                 photoPreview = document.getElementById('photoPreview');
             }
             
+            // Показуємо фото та швидкий вибір
             photoPreview.innerHTML = '<div class="photo-preview-card">' +
                 '<img src="' + e.target.result + '" alt="Їжа" class="photo-preview-img">' +
-                '<div class="photo-loading" id="photoLoading">' +
-                '<div class="loading-spinner"></div>' +
-                '<div class="loading-text">🤖 AI аналізує їжу...</div>' +
-                '<div class="loading-subtext">Зачекай 2-3 секунди</div>' +
+                '<div class="quick-add-section">' +
+                '<div class="quick-add-title">Що на фото?</div>' +
+                '<input type="text" class="quick-search" id="quickSearch" placeholder="🔍 Шукати страву...">' +
+                '<div class="quick-categories" id="quickCategories">' +
+                '<button class="quick-cat active" data-cat="all">Все</button>' +
+                '<button class="quick-cat" data-cat="popular">⭐ Популярне</button>' +
+                '<button class="quick-cat" data-cat="breakfast">🌅 Сніданок</button>' +
+                '<button class="quick-cat" data-cat="lunch">🍽️ Обід</button>' +
+                '<button class="quick-cat" data-cat="dinner">🌙 Вечеря</button>' +
+                '<button class="quick-cat" data-cat="snacks">🍿 Перекуси</button>' +
                 '</div>' +
-                '<div class="photo-preview-actions">' +
-                '<button class="photo-preview-btn" id="photoRetakeBtn">📸 Нове фото</button>' +
+                '<div class="quick-food-list" id="quickFoodList"></div>' +
+                '<div class="quick-selected" id="quickSelected"></div>' +
+                '<div class="quick-total" id="quickTotal">Обери страви</div>' +
+                '<button class="btn-primary" id="saveQuickBtn" disabled>💾 Зберегти</button>' +
                 '</div>' +
                 '</div>';
             
-            document.getElementById('photoRetakeBtn').addEventListener('click', function() {
-                self.openCamera();
-            });
-            
-            self.analyzeWithAI(e.target.result);
+            self.initQuickAdd();
         };
         
         reader.readAsDataURL(file);
     },
     
-    analyzeWithAI: function(imageBase64) {
+    initQuickAdd: function() {
         var self = this;
-        var loading = document.getElementById('photoLoading');
-        var actionsDiv = document.querySelector('.photo-preview-actions');
+        this.selectedFoods = [];
         
-        // Конвертуємо в JPEG та зменшуємо розмір
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-        var img = new Image();
+        // Велика база страв
+        this.allFoods = [
+            // Популярне
+            { name: 'Вареники', cal: 210, cat: 'popular', icon: '🥟' },
+            { name: 'Борщ', cal: 50, cat: 'popular', icon: '🍲' },
+            { name: 'Плов', cal: 150, cat: 'popular', icon: '🍛' },
+            { name: 'Котлета', cal: 190, cat: 'popular', icon: '🥩' },
+            { name: 'Піца', cal: 266, cat: 'popular', icon: '🍕' },
+            { name: 'Бургер', cal: 295, cat: 'popular', icon: '🍔' },
+            { name: 'Суши', cal: 200, cat: 'popular', icon: '🍣' },
+            { name: 'Макарони', cal: 130, cat: 'popular', icon: '🍝' },
+            
+            // Сніданок
+            { name: 'Каша вівсяна', cal: 88, cat: 'breakfast', icon: '🥣' },
+            { name: 'Каша гречана', cal: 132, cat: 'breakfast', icon: '🥣' },
+            { name: 'Каша рисова', cal: 130, cat: 'breakfast', icon: '🥣' },
+            { name: 'Омлет', cal: 155, cat: 'breakfast', icon: '🥚' },
+            { name: 'Яйце варене', cal: 78, cat: 'breakfast', icon: '🥚' },
+            { name: 'Бутерброд з маслом', cal: 280, cat: 'breakfast', icon: '🍞' },
+            { name: 'Бутерброд з сиром', cal: 300, cat: 'breakfast', icon: '🧀' },
+            { name: 'Млинці', cal: 230, cat: 'breakfast', icon: '🥞' },
+            { name: 'Сирники', cal: 180, cat: 'breakfast', icon: '🥞' },
+            { name: 'Тост', cal: 120, cat: 'breakfast', icon: '🍞' },
+            { name: 'Вафлі', cal: 320, cat: 'breakfast', icon: '🧇' },
+            { name: 'Смузі', cal: 120, cat: 'breakfast', icon: '🥤' },
+            
+            // Обід
+            { name: 'Суп курячий', cal: 45, cat: 'lunch', icon: '🍲' },
+            { name: 'Суп гороховий', cal: 60, cat: 'lunch', icon: '🍲' },
+            { name: 'Борщ', cal: 50, cat: 'lunch', icon: '🍲' },
+            { name: 'Щі', cal: 45, cat: 'lunch', icon: '🍲' },
+            { name: 'Солянка', cal: 65, cat: 'lunch', icon: '🍲' },
+            { name: 'Картопляне пюре', cal: 95, cat: 'lunch', icon: '🥔' },
+            { name: 'Рис', cal: 130, cat: 'lunch', icon: '🍚' },
+            { name: 'Гречка', cal: 132, cat: 'lunch', icon: '🥣' },
+            { name: 'Курка смажена', cal: 240, cat: 'lunch', icon: '🍗' },
+            { name: 'Курка запечена', cal: 180, cat: 'lunch', icon: '🍗' },
+            { name: 'Риба смажена', cal: 220, cat: 'lunch', icon: '🐟' },
+            { name: 'Риба запечена', cal: 160, cat: 'lunch', icon: '🐟' },
+            { name: 'Стейк', cal: 270, cat: 'lunch', icon: '🥩' },
+            { name: 'Вареники', cal: 210, cat: 'lunch', icon: '🥟' },
+            { name: 'Пельмені', cal: 200, cat: 'lunch', icon: '🥟' },
+            { name: 'Голубці', cal: 130, cat: 'lunch', icon: '🥬' },
+            { name: 'Плов', cal: 150, cat: 'lunch', icon: '🍛' },
+            { name: 'Лагман', cal: 120, cat: 'lunch', icon: '🍜' },
+            { name: 'Харчо', cal: 70, cat: 'lunch', icon: '🍲' },
+            { name: 'Салат Олів\'є', cal: 150, cat: 'lunch', icon: '🥗' },
+            { name: 'Салат Цезар', cal: 180, cat: 'lunch', icon: '🥗' },
+            { name: 'Салат з капусти', cal: 30, cat: 'lunch', icon: '🥗' },
+            
+            // Вечеря
+            { name: 'Запіканка', cal: 110, cat: 'dinner', icon: '🥧' },
+            { name: 'Запіканка з сиру', cal: 130, cat: 'dinner', icon: '🥧' },
+            { name: 'Млинці з м\'ясом', cal: 300, cat: 'dinner', icon: '🥞' },
+            { name: 'Млинці з сиром', cal: 270, cat: 'dinner', icon: '🥞' },
+            { name: 'Млинці з варенням', cal: 260, cat: 'dinner', icon: '🥞' },
+            { name: 'Котлета куряча', cal: 190, cat: 'dinner', icon: '🥩' },
+            { name: 'Котлета свиняча', cal: 250, cat: 'dinner', icon: '🥩' },
+            { name: 'Тефтелі', cal: 200, cat: 'dinner', icon: '🥩' },
+            { name: 'Рулети з м\'ясом', cal: 180, cat: 'dinner', icon: '🥩' },
+            { name: 'Рибні котлети', cal: 180, cat: 'dinner', icon: '🐟' },
+            { name: 'Омлет з овочами', cal: 140, cat: 'dinner', icon: '🥚' },
+            { name: 'Яйця пашот', cal: 120, cat: 'dinner', icon: '🥚' },
+            
+            // Перекуси
+            { name: 'Сирники', cal: 180, cat: 'snacks', icon: '🥞' },
+            { name: 'Йогурт', cal: 60, cat: 'snacks', icon: '🥛' },
+            { name: 'Сир творожний', cal: 120, cat: 'snacks', icon: '🧀' },
+            { name: 'Сир', cal: 350, cat: 'snacks', icon: '🧀' },
+            { name: 'Фрукти', cal: 50, cat: 'snacks', icon: '🍎' },
+            { name: 'Банан', cal: 95, cat: 'snacks', icon: '🍌' },
+            { name: 'Яблуко', cal: 52, cat: 'snacks', icon: '🍎' },
+            { name: 'Виноград', cal: 69, cat: 'snacks', icon: '🍇' },
+            { name: 'Горіхи', cal: 600, cat: 'snacks', icon: '🥜' },
+            { name: 'Цукерки', cal: 400, cat: 'snacks', icon: '🍬' },
+            { name: 'Шоколад', cal: 540, cat: 'snacks', icon: '🍫' },
+            { name: 'Печиво', cal: 480, cat: 'snacks', icon: '🍪' },
+            { name: 'Морозиво', cal: 200, cat: 'snacks', icon: '🍦' },
+            { name: 'Попкорн', cal: 380, cat: 'snacks', icon: '🍿' },
+            { name: 'Чіпси', cal: 530, cat: 'snacks', icon: '🍟' },
+            { name: 'Хліб', cal: 265, cat: 'snacks', icon: '🍞' },
+            { name: 'Сухарики', cal: 380, cat: 'snacks', icon: '🍞' },
+            { name: 'Сосиска', cal: 150, cat: 'snacks', icon: '🌭' },
+            { name: 'Ковбаса', cal: 260, cat: 'snacks', icon: '🥓' },
+            { name: 'Помідор', cal: 18, cat: 'snacks', icon: '🍅' },
+            { name: 'Огірок', cal: 15, cat: 'snacks', icon: '🥒' },
+            { name: 'Морква', cal: 41, cat: 'snacks', icon: '🥕' },
+            { name: 'Капуста', cal: 25, cat: 'snacks', icon: '🥬' },
+            { name: 'Картопля', cal: 95, cat: 'snacks', icon: '🥔' },
+            { name: 'Кукурудза', cal: 86, cat: 'snacks', icon: '🌽' },
+            
+            // Напої
+            { name: 'Чай', cal: 2, cat: 'snacks', icon: '🍵' },
+            { name: 'Кава', cal: 5, cat: 'snacks', icon: '☕' },
+            { name: 'Кава з молоком', cal: 25, cat: 'snacks', icon: '☕' },
+            { name: 'Какао', cal: 45, cat: 'snacks', icon: '☕' },
+            { name: 'Сік', cal: 45, cat: 'snacks', icon: '🧃' },
+            { name: 'Компот', cal: 40, cat: 'snacks', icon: '🥤' },
+            { name: 'Кефір', cal: 40, cat: 'snacks', icon: '🥛' },
+            { name: 'Молоко', cal: 42, cat: 'snacks', icon: '🥛' }
+        ];
         
-        img.onload = function() {
-            var maxSize = 600;
-            var width = img.width;
-            var height = img.height;
-            
-            if (width > maxSize || height > maxSize) {
-                if (width > height) {
-                    height = Math.round((height * maxSize) / width);
-                    width = maxSize;
-                } else {
-                    width = Math.round((width * maxSize) / height);
-                    height = maxSize;
-                }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            var compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            var base64Data = compressedBase64.split(',')[1];
-            
-            // Використовуємо наш сервер
-            var serverUrl = 'https://food-api-v2-git-main-olenka1.vercel.app/api/analyze';
-            
-            fetch(serverUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ image: base64Data })
-            })
-            .then(function(response) {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
-            .then(function(data) {
-                console.log('AI Response:', data);
-                loading.style.display = 'none';
-                
-                if (data.error) {
-                    loading.innerHTML = '<div class="loading-error">❌ ' + data.error + '</div>';
-                } else {
-                    self.showAIResults(data, actionsDiv);
-                }
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-                loading.innerHTML = '<div class="loading-error">❌ Помилка з\'єднання з сервером</div>';
-            });
-        };
-        
-        img.src = imageBase64;
+        this.renderFoodList(this.allFoods);
+        this.bindQuickEvents();
     },
     
-    showAIResults: function(data, container) {
+    renderFoodList: function(foods) {
+        var container = document.getElementById('quickFoodList');
+        var html = '';
+        
+        for (var i = 0; i < foods.length; i++) {
+            var f = foods[i];
+            var isSelected = this.selectedFoods.some(function(s) { return s.name === f.name; });
+            html += '<div class="quick-item' + (isSelected ? ' selected' : '') + '" data-name="' + f.name + '" data-cal="' + f.cal + '">' +
+                '<span class="quick-item-icon">' + f.icon + '</span>' +
+                '<span class="quick-item-name">' + f.name + '</span>' +
+                '<span class="quick-item-cal">' + f.cal + ' ккал</span>' +
+                '</div>';
+        }
+        
+        container.innerHTML = html;
+        
+        var self = this;
+        document.querySelectorAll('.quick-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var name = this.getAttribute('data-name');
+                var cal = parseInt(this.getAttribute('data-cal'));
+                self.toggleFood(name, cal);
+            });
+        });
+    },
+    
+    toggleFood: function(name, cal) {
+        var index = this.selectedFoods.findIndex(function(f) { return f.name === name; });
+        
+        if (index > -1) {
+            this.selectedFoods.splice(index, 1);
+        } else {
+            this.selectedFoods.push({ name: name, cal: cal });
+        }
+        
+        this.updateSelectedUI();
+    },
+    
+    updateSelectedUI: function() {
+        var self = this;
+        var selectedDiv = document.getElementById('quickSelected');
+        var totalDiv = document.getElementById('quickTotal');
+        var saveBtn = document.getElementById('saveQuickBtn');
+        
+        if (this.selectedFoods.length === 0) {
+            selectedDiv.innerHTML = '';
+            totalDiv.textContent = 'Обери страви';
+            saveBtn.disabled = true;
+            return;
+        }
+        
+        var html = '';
+        var total = 0;
+        
+        this.selectedFoods.forEach(function(f) {
+            total += f.cal;
+            html += '<div class="quick-tag">' + f.name + ' (' + f.cal + ' ккал) <span class="quick-tag-remove" data-name="' + f.name + '">✕</span></div>';
+        });
+        
+        selectedDiv.innerHTML = html;
+        totalDiv.innerHTML = 'Разом: <strong>' + total + ' ккал</strong>';
+        saveBtn.disabled = false;
+        
+        // Обробник видалення
+        document.querySelectorAll('.quick-tag-remove').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var name = this.getAttribute('data-name');
+                self.selectedFoods = self.selectedFoods.filter(function(f) { return f.name !== name; });
+                self.updateSelectedUI();
+                self.renderFoodList(self.currentFoods || self.allFoods);
+            });
+        });
+        
+        // Оновлюємо виділення в списку
+        this.renderFoodList(this.currentFoods || this.allFoods);
+    },
+    
+    bindQuickEvents: function() {
         var self = this;
         
-        var resultsHTML = '<div class="ai-results">';
-        
-        var calories = data.calories || 0;
-        var proteins = data.proteins || 0;
-        var fats = data.fats || 0;
-        var carbs = data.carbs || 0;
-        var dishes = data.detected_dishes || [];
-        
-        if (calories > 0 || dishes.length > 0) {
-            resultsHTML += '<div class="ai-total">' +
-                '<div class="ai-total-cal">' + Math.round(calories) + ' ккал</div>' +
-                '<div class="ai-total-macros">' +
-                '<span>Білки: ' + Math.round(proteins) + 'г</span>' +
-                '<span>Жири: ' + Math.round(fats) + 'г</span>' +
-                '<span>Вуглеводи: ' + Math.round(carbs) + 'г</span>' +
-                '</div>' +
-                '</div>';
-            
-            if (dishes.length > 0) {
-                resultsHTML += '<div class="ai-dishes-title">Що AI побачив:</div>';
-                resultsHTML += '<div class="ai-dishes">';
-                for (var i = 0; i < dishes.length; i++) {
-                    var dish = dishes[i];
-                    resultsHTML += '<div class="ai-dish">' +
-                        '<div class="ai-dish-name">' + dish.name + '</div>' +
-                        '<div class="ai-dish-info">' +
-                        '<span class="ai-dish-weight">' + dish.weight_g + 'г</span>' +
-                        '<span class="ai-dish-cal">' + Math.round(dish.calories) + ' ккал</span>' +
-                        '</div>' +
-                        '</div>';
-                }
-                resultsHTML += '</div>';
+        // Пошук
+        document.getElementById('quickSearch').addEventListener('input', function() {
+            var query = this.value.toLowerCase().trim();
+            if (query.length === 0) {
+                self.renderFoodList(self.currentFoods || self.allFoods);
+                return;
             }
-            
-            resultsHTML += '<button class="btn-primary" id="saveAIResultBtn">💾 Зберегти в журнал</button>';
-        } else {
-            resultsHTML += '<div class="ai-no-result">😔 AI не зміг розпізнати. Спробуй інше фото.</div>';
-        }
-        
-        resultsHTML += '</div>';
-        
-        container.insertAdjacentHTML('beforeend', resultsHTML);
-        
-        if (calories > 0 || dishes.length > 0) {
-            document.getElementById('saveAIResultBtn').addEventListener('click', function() {
-                var portion = dishes.map(function(d) {
-                    return d.name + ' (' + d.weight_g + 'г)';
-                }).join(', ');
-                
-                Storage.addFoodEntry({
-                    name: dishes.length > 0 ? dishes.map(function(d) { return d.name; }).join(' + ') : 'Їжа',
-                    calories: Math.round(calories),
-                    portion: portion || 'фото',
-                    time: new Date().toLocaleTimeString('uk-UA'),
-                    ai: true
-                });
-                
-                this.textContent = '✓ Збережено!';
-                this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
-                
-                setTimeout(function() {
-                    var preview = document.getElementById('photoPreview');
-                    if (preview) preview.remove();
-                    self.renderFoodHistory();
-                }, 1000);
+            var filtered = self.allFoods.filter(function(f) {
+                return f.name.toLowerCase().indexOf(query) !== -1;
             });
-        }
+            self.renderFoodList(filtered);
+        });
+        
+        // Категорії
+        document.querySelectorAll('.quick-cat').forEach(function(cat) {
+            cat.addEventListener('click', function() {
+                document.querySelectorAll('.quick-cat').forEach(function(c) { c.classList.remove('active'); });
+                this.classList.add('active');
+                
+                var category = this.getAttribute('data-cat');
+                if (category === 'all') {
+                    self.currentFoods = self.allFoods;
+                } else if (category === 'popular') {
+                    self.currentFoods = self.allFoods.filter(function(f) { return f.cat === 'popular'; });
+                } else {
+                    self.currentFoods = self.allFoods.filter(function(f) { return f.cat === category; });
+                }
+                self.renderFoodList(self.currentFoods);
+            });
+        });
+        
+        // Збереження
+        document.getElementById('saveQuickBtn').addEventListener('click', function() {
+            if (self.selectedFoods.length === 0) return;
+            
+            var total = self.selectedFoods.reduce(function(sum, f) { return sum + f.cal; }, 0);
+            var names = self.selectedFoods.map(function(f) { return f.name; }).join(' + ');
+            
+            Storage.addFoodEntry({
+                name: names,
+                calories: total,
+                portion: 'з фото',
+                time: new Date().toLocaleTimeString('uk-UA')
+            });
+            
+            this.textContent = '✓ Збережено!';
+            this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
+            
+            setTimeout(function() {
+                var preview = document.getElementById('photoPreview');
+                if (preview) preview.remove();
+                self.renderFoodHistory();
+            }, 1000);
+        });
     },
     
     bindAddForm: function() {
