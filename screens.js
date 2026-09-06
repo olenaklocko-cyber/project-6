@@ -601,13 +601,6 @@ var Screens = {
     
     renderAddNutrition: function() {
         var html = '<div class="nutrition-section">' +
-            '<div class="camera-btn-container">' +
-            '<button class="camera-btn" id="cameraBtn">' +
-            '<div class="camera-icon">📸</div>' +
-            '<div class="camera-text">Сфотографувати порцію</div>' +
-            '<div class="camera-hint">Зроби фото їжі для аналізу калорій</div>' +
-            '</button>' +
-            '</div>' +
             
             '<div class="nutrition-manual" id="nutritionManual">' +
             '<div class="form-group">' +
