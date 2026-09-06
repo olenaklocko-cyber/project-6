@@ -1589,8 +1589,8 @@ body::before {
 
 .ai-dish {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
     padding: 14px;
     background: #f8f9fa;
     border-radius: 12px;
@@ -1599,6 +1599,22 @@ body::before {
 .ai-dish-name {
     font-weight: 700;
     color: #333;
+}
+
+.ai-dish-name-input {
+    font-weight: 700;
+    color: #333;
+    border: none;
+    border-bottom: 2px dashed #a0c4be;
+    background: transparent;
+    font-size: 16px;
+    padding: 4px 0;
+    width: 100%;
+    outline: none;
+}
+
+.ai-dish-name-input:focus {
+    border-bottom-color: #20c997;
 }
 
 .ai-dish-info {

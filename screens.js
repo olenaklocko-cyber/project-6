@@ -1069,7 +1069,7 @@ var Screens = {
         for (var i = 0; i < data.dishes.length; i++) {
             var dish = data.dishes[i];
             html += '<div class="ai-dish">' +
-                '<div class="ai-dish-name">' + dish.name + '</div>' +
+                '<input type="text" class="ai-dish-name-input" value="' + dish.name + '" data-index="' + i + '">' +
                 '<div class="ai-dish-info">' +
                 '<span class="ai-dish-conf">впевненість ' + dish.confidence + '%</span>' +
                 '<span class="ai-dish-cal">' + dish.calories + ' ккал</span>' +
@@ -1085,10 +1085,15 @@ var Screens = {
         container.insertAdjacentHTML('beforeend', html);
         
         document.getElementById('saveAIResultBtn').addEventListener('click', function() {
-            var names = data.dishes.map(function(d) { return d.name; }).join(' + ');
+            // Збираємо назви з інпутів
+            var inputs = document.querySelectorAll('.ai-dish-name-input');
+            var names = [];
+            inputs.forEach(function(input) {
+                names.push(input.value);
+            });
             
             Storage.addFoodEntry({
-                name: names,
+                name: names.join(' + '),
                 calories: data.totalCalories,
                 portion: 'з фото (AI)',
                 time: new Date().toLocaleTimeString('uk-UA')
