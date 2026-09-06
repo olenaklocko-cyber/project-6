@@ -866,80 +866,165 @@ var Screens = {
     },
     
     openCamera: function() {
+        this.showCustomCamera();
+    },
+    
+    showCustomCamera: function() {
+        var self = this;
+        
         var modal = document.createElement('div');
-        modal.className = 'camera-modal';
-        modal.innerHTML = '<div class="camera-modal-overlay" id="cameraOverlay"></div>' +
-            '<div class="camera-modal-sheet">' +
-            '<div class="camera-modal-handle"></div>' +
-            '<div class="camera-modal-header">' +
-            '<div class="camera-modal-icon-big">📷</div>' +
-            '<div class="camera-modal-title">Обери джерело фото</div>' +
-            '<div class="camera-modal-subtitle">Зроби нове фото або обери з галереї</div>' +
+        modal.className = 'custom-camera';
+        modal.id = 'customCamera';
+        
+        modal.innerHTML = '<video id="cameraVideo" autoplay playsinline></video>' +
+            '<div class="camera-overlay">' +
+            // Верхня панель
+            '<div class="camera-top-bar">' +
+            '<button class="camera-close-btn" id="cameraCloseBtn">✕</button>' +
+            '<div class="camera-title-badge">📷 Камера</div>' +
+            '<button class="camera-flash-btn" id="cameraFlashBtn">⚡</button>' +
             '</div>' +
-            '<div class="camera-modal-options">' +
-            '<button class="camera-option-btn camera-option-main" id="photoTakeBtn">' +
-            '<div class="camera-option-icon-wrap">' +
-            '<div class="camera-option-icon">📸</div>' +
-            '<div class="camera-option-ring"></div>' +
+            // Рамка для їжі
+            '<div class="camera-frame-area">' +
+            '<div class="camera-frame">' +
+            '<div class="frame-corner frame-tl"></div>' +
+            '<div class="frame-corner frame-tr"></div>' +
+            '<div class="frame-corner frame-bl"></div>' +
+            '<div class="frame-corner frame-br"></div>' +
             '</div>' +
-            '<div class="camera-option-text">' +
-            '<div class="camera-option-name">Зробити фото</div>' +
-            '<div class="camera-option-desc">Відкрити камеру</div>' +
+            '<div class="camera-hint-text">📱 Наведи камеру на страву</div>' +
             '</div>' +
-            '<div class="camera-option-arrow">›</div>' +
+            // Нижня панель
+            '<div class="camera-bottom-bar">' +
+            '<div class="camera-zoom-options">' +
+            '<button class="zoom-btn" data-zoom="1">1x</button>' +
+            '<button class="zoom-btn active" data-zoom="2">2x</button>' +
+            '<button class="zoom-btn" data-zoom="3">3x</button>' +
+            '</div>' +
+            '<div class="camera-controls">' +
+            '<button class="camera-gallery-small" id="cameraGallerySmall">🖼️</button>' +
+            '<button class="camera-shutter" id="cameraShutterBtn">' +
+            '<div class="shutter-ring"></div>' +
+            '<div class="shutter-center"></div>' +
             '</button>' +
-            '<button class="camera-option-btn" id="photoGalleryBtn">' +
-            '<div class="camera-option-icon-wrap">' +
-            '<div class="camera-option-icon gallery-icon">🖼️</div>' +
+            '<button class="camera-flip-btn" id="cameraFlipBtn">🔄</button>' +
             '</div>' +
-            '<div class="camera-option-text">' +
-            '<div class="camera-option-name">Обрати з галереї</div>' +
-            '<div class="camera-option-desc">Завантажити збережене фото</div>' +
+            '<div class="camera-mode-label">ФОТО</div>' +
             '</div>' +
-            '<div class="camera-option-arrow">›</div>' +
-            '</button>' +
             '</div>' +
-            '<button class="camera-modal-cancel" id="photoCancelBtn">Скасувати</button>' +
-            '</div>';
+            '<canvas id="cameraCanvas" style="display:none;"></canvas>';
         
         document.body.appendChild(modal);
         
-        // Анімація появи
         setTimeout(function() {
             modal.classList.add('active');
         }, 10);
         
+        self.startCameraStream('environment');
+        
+        // Закриття
+        document.getElementById('cameraCloseBtn').addEventListener('click', function() {
+            self.closeCustomCamera();
+        });
+        
+        // Перемикання камери
+        document.getElementById('cameraFlipBtn').addEventListener('click', function() {
+            self.flipCamera();
+        });
+        
+        // Кнопка галереї
+        document.getElementById('cameraGallerySmall').addEventListener('click', function() {
+            self.closeCustomCamera();
+            self.openGallery();
+        });
+        
+        // Кнопка зйомки
+        document.getElementById('cameraShutterBtn').addEventListener('click', function() {
+            self.capturePhoto();
+        });
+        
+        // Зум
+        document.querySelectorAll('.zoom-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.zoom-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    },
+    
+    startCameraStream: function(facingMode) {
         var self = this;
+        var video = document.getElementById('cameraVideo');
         
-        document.getElementById('photoTakeBtn').addEventListener('click', function() {
+        if (self.currentStream) {
+            self.currentStream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+        }
+        
+        var constraints = {
+            video: {
+                facingMode: facingMode,
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }
+        };
+        
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(stream) {
+                self.currentStream = stream;
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.error('Camera error:', err);
+                self.closeCustomCamera();
+                self.openCameraInput(facingMode === 'environment' ? 'environment' : 'user');
+            });
+    },
+    
+    flipCamera: function() {
+        var self = this;
+        self.currentFacingMode = self.currentFacingMode === 'environment' ? 'user' : 'environment';
+        self.startCameraStream(self.currentFacingMode);
+    },
+    
+    capturePhoto: function() {
+        var self = this;
+        var video = document.getElementById('cameraVideo');
+        var canvas = document.getElementById('cameraCanvas');
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        
+        canvas.toBlob(function(blob) {
+            var file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+            self.closeCustomCamera();
+            self.processFoodPhoto(file);
+        }, 'image/jpeg', 0.9);
+    },
+    
+    closeCustomCamera: function() {
+        var self = this;
+        var modal = document.getElementById('customCamera');
+        
+        if (self.currentStream) {
+            self.currentStream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+            self.currentStream = null;
+        }
+        
+        if (modal) {
             modal.classList.remove('active');
             setTimeout(function() {
                 modal.remove();
-                self.openCameraInput('environment');
-            }, 300);
-        });
-        
-        document.getElementById('photoGalleryBtn').addEventListener('click', function() {
-            modal.classList.remove('active');
-            setTimeout(function() {
-                modal.remove();
-                self.openCameraInput('user');
-            }, 300);
-        });
-        
-        document.getElementById('photoCancelBtn').addEventListener('click', function() {
-            modal.classList.remove('active');
-            setTimeout(function() {
-                modal.remove();
-            }, 300);
-        });
-        
-        document.getElementById('cameraOverlay').addEventListener('click', function() {
-            modal.classList.remove('active');
-            setTimeout(function() {
-                modal.remove();
-            }, 300);
-        });
+            }, 400);
+        }
     },
     
     openGallery: function() {
