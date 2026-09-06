@@ -1545,6 +1545,34 @@ body::before {
     opacity: 0.8;
 }
 
+.ai-macros {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.ai-macro {
+    text-align: center;
+}
+
+.ai-macro-val {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    color: #667eea;
+}
+
+.ai-macro-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
 .ai-dishes-title {
     font-size: 16px;
     font-weight: 800;

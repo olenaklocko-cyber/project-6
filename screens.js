@@ -986,34 +986,62 @@ var Screens = {
         
         var serverUrl = 'https://food-api-v2-git-main-olenka1.vercel.app/api/analyze';
         
-        console.log('Sending image to server...');
-        console.log('Image size:', imageBase64.length);
-        
-        fetch(serverUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: imageBase64 })
-        })
-        .then(function(response) {
-            console.log('Response status:', response.status);
-            return response.json();
-        })
-        .then(function(data) {
-            console.log('Server response:', data);
-            loading.style.display = 'none';
+        // Стискаємо зображення перед відправкою
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var maxSize = 800; // Максимальний розмір
+            var width = img.width;
+            var height = img.height;
             
-            if (data.success && data.dishes) {
-                self.showFoodResults(data, actionsDiv);
+            if (width > height) {
+                if (width > maxSize) {
+                    height = Math.round(height * maxSize / width);
+                    width = maxSize;
+                }
             } else {
-                // Якщо AI не розпізнав — показуємо швидкий вибір
-                self.showQuickFallback(imageBase64, actionsDiv);
+                if (height > maxSize) {
+                    width = Math.round(width * maxSize / height);
+                    height = maxSize;
+                }
             }
-        })
-        .catch(function(error) {
-            console.error('Fetch error:', error);
-            loading.style.display = 'none';
-            self.showQuickFallback(imageBase64, actionsDiv);
-        });
+            
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            var compressedImage = canvas.toDataURL('image/jpeg', 0.7);
+            
+            console.log('Original size:', imageBase64.length);
+            console.log('Compressed size:', compressedImage.length);
+            
+            fetch(serverUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: compressedImage })
+            })
+            .then(function(response) {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('Server response:', data);
+                loading.style.display = 'none';
+                
+                if (data.success && data.dishes) {
+                    self.showFoodResults(data, actionsDiv);
+                } else {
+                    self.showQuickFallback(compressedImage, actionsDiv);
+                }
+            })
+            .catch(function(error) {
+                console.error('Fetch error:', error);
+                loading.style.display = 'none';
+                self.showQuickFallback(compressedImage, actionsDiv);
+            });
+        };
+        img.src = imageBase64;
     },
     
     showFoodResults: function(data, container) {
@@ -1025,6 +1053,15 @@ var Screens = {
             '<div class="ai-total-cal">' + data.totalCalories + ' ккал</div>' +
             '<div class="ai-total-label">орієнтовна калорійність</div>' +
             '</div>';
+        
+        // Макронутрієнти
+        if (data.protein || data.fat || data.carbs) {
+            html += '<div class="ai-macros">';
+            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.protein || 0) + 'г</span><span class="ai-macro-label">Білок</span></div>';
+            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.fat || 0) + 'г</span><span class="ai-macro-label">Жири</span></div>';
+            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.carbs || 0) + 'г</span><span class="ai-macro-label">Вуглеводи</span></div>';
+            html += '</div>';
+        }
         
         html += '<div class="ai-dishes-title">AI побачив на фото:</div>';
         html += '<div class="ai-dishes">';
