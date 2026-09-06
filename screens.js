@@ -79,13 +79,18 @@ var Screens = {
         
         // === 1. ВЕЛИКИЙ БАНЕР КАМЕРИ (AI сканування) ===
         html += '<div class="ai-camera-banner" id="homeCameraBanner">' +
-            '<div class="ai-camera-bg">' +
-            '<div class="ai-camera-content">' +
-            '<div class="ai-camera-icon">📸</div>' +
-            '<div class="ai-camera-title">Розпізнай страву з фото</div>' +
-            '<div class="ai-camera-subtitle">Зроби фото їжи та отримай калорії автоматично</div>' +
-            '<button class="ai-camera-btn" id="homeCameraBtn">Зробити фото</button>' +
+            '<div class="ai-camera-inner">' +
+            '<div class="ai-camera-main" id="cameraMainBtn">' +
+            '<div class="ai-camera-icon-wrap">' +
+            '<div class="ai-camera-icon">📷</div>' +
+            '<div class="ai-camera-icon-pulse"></div>' +
             '</div>' +
+            '<div class="ai-camera-text">' +
+            '<div class="ai-camera-title">Сфотографувати порцію</div>' +
+            '<div class="ai-camera-subtitle">Зроби фото їжі для миттєвого AI-аналізу калорій</div>' +
+            '</div>' +
+            '</div>' +
+            '<button class="ai-gallery-btn" id="homeGalleryBtn" title="Завантажити з галереї">🖼️</button>' +
             '</div>' +
             '</div>';
         
@@ -182,12 +187,21 @@ var Screens = {
     bindHomeEvents: function() {
         var self = this;
         
-        // Кнопка камери на головній
-        var homeCameraBtn = document.getElementById('homeCameraBtn');
-        if (homeCameraBtn) {
-            homeCameraBtn.addEventListener('click', function(e) {
+        // Кнопка камери (основна зона)
+        var cameraMainBtn = document.getElementById('cameraMainBtn');
+        if (cameraMainBtn) {
+            cameraMainBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 self.openCamera();
+            });
+        }
+        
+        // Кнопка галереї
+        var homeGalleryBtn = document.getElementById('homeGalleryBtn');
+        if (homeGalleryBtn) {
+            homeGalleryBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                self.openGallery();
             });
         }
         
@@ -884,6 +898,22 @@ var Screens = {
         document.getElementById('photoCancelBtn').addEventListener('click', function() {
             modal.remove();
         });
+    },
+    
+    openGallery: function() {
+        var self = this;
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                self.processFoodPhoto(file);
+            }
+        };
+        
+        input.click();
     },
     
     openCameraInput: function(mode) {

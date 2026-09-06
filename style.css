@@ -2129,84 +2129,155 @@ body::before {
 
 /* ===== НОВИЙ ДИЗАЙН ГОЛОВНОГО ЕКРАНУ ===== */
 
-/* AI Camera Banner */
+/* AI Camera Banner - НОВИЙ ДИЗАЙН */
 .ai-camera-banner {
     margin: 15px;
     border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.ai-camera-banner:active {
-    transform: scale(0.98);
-}
-
-.ai-camera-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 30px 20px;
-    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
     position: relative;
     overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
-.ai-camera-bg::before {
+.ai-camera-banner::before {
     content: '';
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: pulse 3s ease-in-out infinite;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 50%);
+    animation: shimmer 4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 0.8; }
+.ai-camera-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
 }
 
-.ai-camera-content {
+@keyframes shimmer {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(5%, 5%) rotate(2deg); }
+}
+
+.ai-camera-banner:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.ai-camera-inner {
+    position: relative;
+    z-index: 1;
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ai-camera-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    cursor: pointer;
+}
+
+.ai-camera-icon-wrap {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+}
+
+.ai-camera-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.3);
     position: relative;
     z-index: 1;
 }
 
-.ai-camera-icon {
-    font-size: 60px;
-    margin-bottom: 15px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+.ai-camera-icon-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    animation: cameraPulse 2s ease-out infinite;
+}
+
+@keyframes cameraPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.ai-camera-text {
+    flex: 1;
 }
 
 .ai-camera-title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     color: white;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    line-height: 1.2;
 }
 
 .ai-camera-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     color: rgba(255,255,255,0.9);
-    margin-bottom: 20px;
+    line-height: 1.4;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-.ai-camera-btn {
-    background: white;
-    color: #667eea;
-    border: none;
-    padding: 14px 32px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
+.ai-gallery-btn {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.25);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 12px;
 }
 
-.ai-camera-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+.ai-gallery-btn:hover {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.1);
+}
+
+.ai-gallery-btn:active {
+    transform: scale(0.95);
 }
 
 /* Weight + Progress Strip */
