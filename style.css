@@ -2841,6 +2841,11 @@ body::before {
     background: #f0f0f0;
 }
 
+.category-header {
+    display: flex;
+    align-items: center;
+}
+
 .category-icon {
     width: 36px;
     height: 36px;
@@ -2881,6 +2886,138 @@ body::before {
     color: #666;
     min-width: 35px;
     text-align: right;
+}
+
+.category-arrow {
+    font-size: 14px;
+    color: #999;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.category-item.expanded .category-arrow {
+    transform: rotate(90deg);
+}
+
+.category-habits {
+    padding: 10px 0 0;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 10px;
+}
+
+.habit-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.habit-row:last-child {
+    border-bottom: none;
+}
+
+.habit-row-icon {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+}
+
+.habit-row-info {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.habit-row-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.habit-row-count {
+    font-size: 11px;
+    color: #888;
+}
+
+.habit-row-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 8px;
+}
+
+.habit-row-bar {
+    width: 50px;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.habit-row-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.habit-row-percent {
+    font-size: 10px;
+    color: #888;
+    min-width: 28px;
+}
+
+.habit-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.habit-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    color: white;
+    background: #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.habit-btn:active {
+    transform: scale(0.9);
+}
+
+.habit-btn.minus {
+    background: #ff6b6b;
+}
+
+.habit-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    min-width: 24px;
+    text-align: center;
+}
+
+.habit-input {
+    width: 60px;
+    height: 28px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+}
+
+.habit-save-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
 }
 
 /* Bottom Section */

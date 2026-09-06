@@ -119,15 +119,65 @@ var Screens = {
         for (var b = 0; b < blocks.length; b++) {
             var block = blocks[b];
             var blockProgress = Storage.getBlockProgress(block.id, today);
+            var isExpanded = this.expandedBlock === block.id;
             
-            html += '<div class="category-item" data-block="' + block.id + '">' +
+            html += '<div class="category-item' + (isExpanded ? ' expanded' : '') + '" data-block="' + block.id + '">' +
+                '<div class="category-header">' +
                 '<div class="category-icon" style="background: ' + block.color + '20; color: ' + block.color + '">' + block.icon + '</div>' +
                 '<div class="category-name">' + block.name + '</div>' +
                 '<div class="category-bar">' +
                 '<div class="category-bar-fill" style="width: ' + blockProgress + '%; background: ' + block.color + '"></div>' +
                 '</div>' +
                 '<div class="category-percent">' + blockProgress + '%</div>' +
+                '<div class="category-arrow">' + (isExpanded ? '▾' : '▸') + '</div>' +
                 '</div>';
+            
+            // Розгорнутий вміст звичок
+            if (isExpanded) {
+                html += '<div class="category-habits">';
+                
+                for (var i = 0; i < block.habits.length; i++) {
+                    var h = block.habits[i];
+                    var count = Storage.getCount(h.id, today);
+                    var goal = h.goal || 0;
+                    var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
+                    var isDistance = (h.unit === 'км' || h.unit === 'хвилин' || h.unit === 'годин' || h.unit === 'кроків' || h.unit === 'літрів');
+                    
+                    html += '<div class="habit-row">' +
+                        '<div class="habit-row-icon">' + h.icon + '</div>' +
+                        '<div class="habit-row-info">' +
+                        '<div class="habit-row-name">' + h.name + '</div>' +
+                        '<div class="habit-row-count">' + count + ' ' + (h.unit || 'разів') + 
+                        (goal > 0 ? ' / ' + goal : '') + '</div>' +
+                        '</div>';
+                    
+                    if (goal > 0) {
+                        html += '<div class="habit-row-progress">' +
+                            '<div class="habit-row-bar">' +
+                            '<div class="habit-row-bar-fill" style="width: ' + goalPercent + '%; background: ' + block.color + '"></div>' +
+                            '</div>' +
+                            '<div class="habit-row-percent">' + goalPercent + '%</div>' +
+                            '</div>';
+                    }
+                    
+                    html += '<div class="habit-row-actions">';
+                    
+                    if (isDistance) {
+                        html += '<input type="number" class="habit-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
+                            '<button class="habit-save-btn" data-id="' + h.id + '" style="background: ' + block.color + '">✓</button>';
+                    } else {
+                        html += '<button class="habit-btn minus" data-id="' + h.id + '">−</button>' +
+                            '<div class="habit-count">' + count + '</div>' +
+                            '<button class="habit-btn plus" data-id="' + h.id + '" style="background: ' + block.color + '">+</button>';
+                    }
+                    
+                    html += '</div></div>';
+                }
+                
+                html += '</div>';
+            }
+            
+            html += '</div>';
         }
         
         html += '</div>';
@@ -215,30 +265,32 @@ var Screens = {
         
         // Клік по категорії (розгортає блок)
         document.querySelectorAll('.category-item').forEach(function(item) {
-            item.addEventListener('click', function() {
-                var blockId = this.getAttribute('data-block');
+            item.querySelector('.category-header').addEventListener('click', function(e) {
+                e.stopPropagation();
+                var blockId = item.getAttribute('data-block');
                 self.expandedBlock = self.expandedBlock === blockId ? null : blockId;
                 self.renderHome();
             });
         });
         
         // Кнопки +/-
-        document.querySelectorAll('.counter-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
+        document.querySelectorAll('.habit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 var id = parseInt(this.getAttribute('data-id'));
                 var date = Storage.formatDate(self.selectedDate);
-                var action = this.classList.contains('plus') ? 1 : 
-                             this.classList.contains('plus-10') ? 10 : -1;
+                var action = this.classList.contains('plus') ? 1 : -1;
                 Storage.incrementCount(id, date, action);
                 self.renderHome();
             });
         });
         
-        // Кнопки "Записати"
-        document.querySelectorAll('.btn-record').forEach(function(btn) {
-            btn.addEventListener('click', function() {
+        // Кнопки збереження (для дистанції)
+        document.querySelectorAll('.habit-save-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 var id = parseInt(this.getAttribute('data-id'));
-                var input = document.querySelector('.track-input[data-id="' + id + '"]');
+                var input = document.querySelector('.habit-input[data-id="' + id + '"]');
                 var value = parseInt(input.value) || 0;
                 if (value > 0) {
                     var date = Storage.formatDate(self.selectedDate);
@@ -249,7 +301,7 @@ var Screens = {
         });
         
         // Enter в полі
-        document.querySelectorAll('.track-input').forEach(function(input) {
+        document.querySelectorAll('.habit-input').forEach(function(input) {
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     var id = parseInt(this.getAttribute('data-id'));
@@ -260,6 +312,9 @@ var Screens = {
                         self.renderHome();
                     }
                 }
+            });
+            input.addEventListener('click', function(e) {
+                e.stopPropagation();
             });
         });
     },
