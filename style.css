@@ -2907,30 +2907,33 @@ body::before {
 
 .habit-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #f8f8f8;
-}
-
-.habit-row:last-child {
-    border-bottom: none;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 8px;
 }
 
 .habit-row-icon {
-    font-size: 20px;
-    width: 32px;
+    font-size: 22px;
+    width: 36px;
     text-align: center;
 }
 
 .habit-row-info {
     flex: 1;
-    margin-left: 10px;
+    min-width: 0;
+    margin-left: 8px;
 }
 
 .habit-row-name {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .habit-row-count {
@@ -2942,41 +2945,47 @@ body::before {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin: 0 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding-left: 44px;
 }
 
 .habit-row-bar {
-    width: 50px;
-    height: 4px;
+    flex: 1;
+    height: 6px;
     background: #e0e0e0;
-    border-radius: 2px;
+    border-radius: 3px;
     overflow: hidden;
 }
 
 .habit-row-bar-fill {
     height: 100%;
-    border-radius: 2px;
+    border-radius: 3px;
     transition: width 0.3s ease;
 }
 
 .habit-row-percent {
-    font-size: 10px;
-    color: #888;
-    min-width: 28px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    min-width: 32px;
 }
 
 .habit-row-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding-left: 44px;
 }
 
 .habit-btn {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     color: white;
@@ -2993,29 +3002,29 @@ body::before {
 }
 
 .habit-count {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     color: #333;
-    min-width: 24px;
+    min-width: 32px;
     text-align: center;
 }
 
 .habit-input {
-    width: 60px;
-    height: 28px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 12px;
+    flex: 1;
+    height: 36px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
     text-align: center;
     font-family: 'Nunito', sans-serif;
 }
 
 .habit-save-btn {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border: none;
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: 10px;
+    font-size: 16px;
     cursor: pointer;
     color: white;
 }
