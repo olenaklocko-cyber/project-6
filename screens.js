@@ -1181,7 +1181,12 @@ var Screens = {
         reader.onload = function(e) {
             var photoPreview = document.getElementById('photoPreview');
             if (!photoPreview) {
-                var container = document.querySelector('.nutrition-section');
+                // Шукаємо контейнер для вставки
+                var container = document.querySelector('.nutrition-section') || 
+                               document.querySelector('.today-food-section') ||
+                               document.querySelector('.bottom-section') ||
+                               document.getElementById('screen-home');
+                
                 var previewDiv = document.createElement('div');
                 previewDiv.id = 'photoPreview';
                 previewDiv.className = 'photo-preview';
@@ -1214,6 +1219,19 @@ var Screens = {
         var self = this;
         var loading = document.getElementById('photoLoading');
         var actionsDiv = document.querySelector('.photo-preview-actions');
+        
+        // Якщо loading не знайдено — створюємо
+        if (!loading) {
+            var preview = document.getElementById('photoPreview');
+            if (preview) {
+                var loadingDiv = document.createElement('div');
+                loadingDiv.id = 'photoLoading';
+                loadingDiv.className = 'photo-loading';
+                loadingDiv.innerHTML = '<div class="loading-spinner"></div><div class="loading-text">🤖 AI аналізує їжу...</div>';
+                preview.querySelector('.photo-preview-card').appendChild(loadingDiv);
+                loading = document.getElementById('photoLoading');
+            }
+        }
         
         var serverUrl = 'https://food-api-v2-git-main-olenka1.vercel.app/api/analyze';
         
