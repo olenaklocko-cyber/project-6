@@ -1405,75 +1405,224 @@ body::before {
     border-radius: 6px;
 }
 
-.photo-modal {
+/* ===== МОДАЛКА КАМЕРИ (НОВИЙ ДИЗАЙН) ===== */
+.camera-modal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.camera-modal.active {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.camera-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.camera-modal-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 28px 28px 0 0;
+    padding: 12px 24px 40px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.camera-modal.active .camera-modal-sheet {
+    transform: translateY(0);
+}
+
+.camera-modal-handle {
+    width: 40px;
+    height: 5px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    margin: 0 auto 20px;
+}
+
+.camera-modal-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.camera-modal-icon-big {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.camera-modal-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.camera-modal-subtitle {
+    font-size: 14px;
+    color: #666;
+}
+
+.camera-modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.camera-option-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.camera-option-btn:hover {
+    background: #f0f0f0;
+    transform: translateX(5px);
+}
+
+.camera-option-btn:active {
+    transform: scale(0.98);
+}
+
+.camera-option-main {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+}
+
+.camera-option-main:hover {
+    background: linear-gradient(135deg, #5a6fd6 0%, #6a4192 100%);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.camera-option-icon-wrap {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.camera-option-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(5px);
+    font-size: 28px;
 }
 
-.photo-modal-content {
-    background: white;
-    border-radius: 24px;
-    padding: 30px;
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
+.camera-option-main .camera-option-icon {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-.photo-modal-title {
-    font-size: 20px;
-    font-weight: 900;
-    color: #333;
-    margin-bottom: 25px;
+.gallery-icon {
+    background: linear-gradient(135deg, #e0e0e0, #f5f5f5) !important;
 }
 
-.photo-modal-btn {
+.camera-option-ring {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background: #20c997;
+    border-radius: 50%;
+    border: 3px solid white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.camera-option-text {
+    flex: 1;
+    margin-left: 14px;
+}
+
+.camera-option-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 2px;
+}
+
+.camera-option-main .camera-option-name {
+    color: white;
+}
+
+.camera-option-desc {
+    font-size: 12px;
+    color: #888;
+}
+
+.camera-option-main .camera-option-desc {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.camera-option-arrow {
+    font-size: 28px;
+    color: #ccc;
+    font-weight: 300;
+}
+
+.camera-option-main .camera-option-arrow {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.camera-modal-cancel {
     width: 100%;
-    padding: 18px;
+    padding: 16px;
+    background: #f0f0f0;
     border: none;
     border-radius: 16px;
     font-size: 16px;
-    font-weight: 800;
-    font-family: 'Nunito', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #023e8a, #0096c7);
-    color: white;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.photo-modal-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(2, 62, 138, 0.3);
-}
-
-.photo-modal-icon {
-    font-size: 24px;
-}
-
-.photo-modal-cancel {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
+    color: #666;
     cursor: pointer;
-    background: #f0f0f0;
-    color: #888;
+    transition: all 0.3s ease;
+}
+
+.camera-modal-cancel:hover {
+    background: #e0e0e0;
+    color: #333;
 }
 
 .photo-preview {

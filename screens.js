@@ -867,36 +867,78 @@ var Screens = {
     
     openCamera: function() {
         var modal = document.createElement('div');
-        modal.className = 'photo-modal';
-        modal.innerHTML = '<div class="photo-modal-content">' +
-            '<div class="photo-modal-title">Обери джерело фото</div>' +
-            '<button class="photo-modal-btn" id="photoTakeBtn">' +
-            '<span class="photo-modal-icon">📸</span>' +
-            '<span>Зробити фото</span>' +
+        modal.className = 'camera-modal';
+        modal.innerHTML = '<div class="camera-modal-overlay" id="cameraOverlay"></div>' +
+            '<div class="camera-modal-sheet">' +
+            '<div class="camera-modal-handle"></div>' +
+            '<div class="camera-modal-header">' +
+            '<div class="camera-modal-icon-big">📷</div>' +
+            '<div class="camera-modal-title">Обери джерело фото</div>' +
+            '<div class="camera-modal-subtitle">Зроби нове фото або обери з галереї</div>' +
+            '</div>' +
+            '<div class="camera-modal-options">' +
+            '<button class="camera-option-btn camera-option-main" id="photoTakeBtn">' +
+            '<div class="camera-option-icon-wrap">' +
+            '<div class="camera-option-icon">📸</div>' +
+            '<div class="camera-option-ring"></div>' +
+            '</div>' +
+            '<div class="camera-option-text">' +
+            '<div class="camera-option-name">Зробити фото</div>' +
+            '<div class="camera-option-desc">Відкрити камеру</div>' +
+            '</div>' +
+            '<div class="camera-option-arrow">›</div>' +
             '</button>' +
-            '<button class="photo-modal-btn" id="photoGalleryBtn">' +
-            '<span class="photo-modal-icon">🖼️</span>' +
-            '<span>Обрати з галереї</span>' +
+            '<button class="camera-option-btn" id="photoGalleryBtn">' +
+            '<div class="camera-option-icon-wrap">' +
+            '<div class="camera-option-icon gallery-icon">🖼️</div>' +
+            '</div>' +
+            '<div class="camera-option-text">' +
+            '<div class="camera-option-name">Обрати з галереї</div>' +
+            '<div class="camera-option-desc">Завантажити збережене фото</div>' +
+            '</div>' +
+            '<div class="camera-option-arrow">›</div>' +
             '</button>' +
-            '<button class="photo-modal-cancel" id="photoCancelBtn">Скасувати</button>' +
+            '</div>' +
+            '<button class="camera-modal-cancel" id="photoCancelBtn">Скасувати</button>' +
             '</div>';
         
         document.body.appendChild(modal);
         
+        // Анімація появи
+        setTimeout(function() {
+            modal.classList.add('active');
+        }, 10);
+        
         var self = this;
         
         document.getElementById('photoTakeBtn').addEventListener('click', function() {
-            modal.remove();
-            self.openCameraInput('environment');
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.remove();
+                self.openCameraInput('environment');
+            }, 300);
         });
         
         document.getElementById('photoGalleryBtn').addEventListener('click', function() {
-            modal.remove();
-            self.openCameraInput('user');
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.remove();
+                self.openCameraInput('user');
+            }, 300);
         });
         
         document.getElementById('photoCancelBtn').addEventListener('click', function() {
-            modal.remove();
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.remove();
+            }, 300);
+        });
+        
+        document.getElementById('cameraOverlay').addEventListener('click', function() {
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.remove();
+            }, 300);
         });
     },
     
