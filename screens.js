@@ -872,6 +872,13 @@ var Screens = {
     showCustomCamera: function() {
         var self = this;
         
+        // Перевіряємо HTTPS (обов'язково для камери на iPhone)
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+            alert('Для роботи камери потрібен HTTPS. Спробуйте завантажити фото з галереї.');
+            self.openGallery();
+            return;
+        }
+        
         var modal = document.createElement('div');
         modal.className = 'custom-camera';
         modal.id = 'customCamera';
@@ -958,10 +965,20 @@ var Screens = {
         var self = this;
         var video = document.getElementById('cameraVideo');
         
+        if (!video) return;
+        
         if (self.currentStream) {
             self.currentStream.getTracks().forEach(function(track) {
                 track.stop();
             });
+        }
+        
+        // Перевіряємо підтримку
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.log('getUserMedia not supported, using fallback');
+            self.closeCustomCamera();
+            self.openCameraInput('environment');
+            return;
         }
         
         var constraints = {
@@ -969,18 +986,30 @@ var Screens = {
                 facingMode: facingMode,
                 width: { ideal: 1920 },
                 height: { ideal: 1080 }
-            }
+            },
+            audio: false
         };
         
         navigator.mediaDevices.getUserMedia(constraints)
             .then(function(stream) {
                 self.currentStream = stream;
                 video.srcObject = stream;
+                video.play();
             })
             .catch(function(err) {
                 console.error('Camera error:', err);
-                self.closeCustomCamera();
-                self.openCameraInput(facingMode === 'environment' ? 'environment' : 'user');
+                // Спробуємо без вказівки facingMode
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        self.currentStream = stream;
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(function(err2) {
+                        console.error('Camera fallback error:', err2);
+                        self.closeCustomCamera();
+                        self.openCameraInput('environment');
+                    });
             });
     },
     
