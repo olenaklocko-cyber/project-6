@@ -957,8 +957,35 @@ var Screens = {
                     b.classList.remove('active');
                 });
                 this.classList.add('active');
+                
+                var zoomLevel = parseFloat(this.getAttribute('data-zoom'));
+                self.setCameraZoom(zoomLevel);
             });
         });
+    },
+    
+    setCameraZoom: function(zoom) {
+        var self = this;
+        var video = document.getElementById('cameraVideo');
+        
+        if (video && video.srcObject) {
+            var track = video.srcObject.getVideoTracks()[0];
+            if (track && track.getCapabilities) {
+                var capabilities = track.getCapabilities();
+                if (capabilities.zoom) {
+                    var constraints = {
+                        advanced: [{ zoom: Math.min(zoom, capabilities.zoom.max) }]
+                    };
+                    track.applyConstraints(constraints)
+                        .then(function() {
+                            console.log('Zoom set to:', zoom);
+                        })
+                        .catch(function(err) {
+                            console.log('Zoom not supported:', err);
+                        });
+                }
+            }
+        }
     },
     
     startCameraStream: function(facingMode) {
