@@ -75,158 +75,104 @@ var Screens = {
         var today = Storage.formatDate(this.selectedDate);
         var blocks = Storage.getBlocks();
         
-        // Профіль
-        var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
-        var html = '<div class="profile-bar">' +
-            '<span class="profile-gender">' + genderEmoji + '</span>' +
-            '<span class="profile-weight">' + profile.weight + ' кг</span>' +
-            '<span class="profile-goal">' + profile.goal + '</span>' +
-            '</div>';
+        var html = '';
         
-        // Прогрес
-        var progress = Storage.getDayProgress(today);
-        html += '<div class="day-progress">' +
-            '<div class="day-progress-text">Мій прогрес сьогодні: <strong>' + progress + '%</strong></div>' +
-            '<div class="day-progress-bar">' +
-            '<div class="day-progress-fill" style="width: ' + progress + '%"></div>' +
+        // === 1. ВЕЛИКИЙ БАНЕР КАМЕРИ (AI сканування) ===
+        html += '<div class="ai-camera-banner" id="homeCameraBanner">' +
+            '<div class="ai-camera-bg">' +
+            '<div class="ai-camera-content">' +
+            '<div class="ai-camera-icon">📸</div>' +
+            '<div class="ai-camera-title">Розпізнай страву з фото</div>' +
+            '<div class="ai-camera-subtitle">Зроби фото їжи та отримай калорії автоматично</div>' +
+            '<button class="ai-camera-btn" id="homeCameraBtn">Зробити фото</button>' +
+            '</div>' +
             '</div>' +
             '</div>';
         
-        // Блоки
-        html += '<div class="blocks-grid">';
+        // === 2. ВАГА + ПРОГРЕС ДНЯ (компактно) ===
+        var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
+        var progress = Storage.getDayProgress(today);
+        
+        html += '<div class="weight-progress-strip">' +
+            '<div class="weight-info">' +
+            '<span class="weight-emoji">' + genderEmoji + '</span>' +
+            '<span class="weight-value">' + profile.weight + ' кг</span>' +
+            '<span class="weight-goal">' + profile.goal + '</span>' +
+            '</div>' +
+            '<div class="progress-circle" data-progress="' + progress + '">' +
+            '<svg viewBox="0 0 36 36">' +
+            '<path class="progress-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>' +
+            '<path class="progress-fill" stroke-dasharray="' + progress + ', 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>' +
+            '</svg>' +
+            '<div class="progress-text">' + progress + '%</div>' +
+            '</div>' +
+            '</div>';
+        
+        // === 3. КОМПАКТНИЙ СПИСОК КАТЕГОРІЙ ===
+        html += '<div class="categories-list">';
         
         for (var b = 0; b < blocks.length; b++) {
             var block = blocks[b];
             var blockProgress = Storage.getBlockProgress(block.id, today);
-            var isExpanded = this.expandedBlock === block.id;
             
-            html += '<div class="block' + (isExpanded ? ' expanded' : '') + '" data-block="' + block.id + '" style="border-color: ' + block.color + '">' +
-                '<div class="block-header">' +
-                '<div class="block-icon ' + this.getIconAnimation(block.icon) + '" style="background: linear-gradient(135deg, ' + block.color + ', ' + block.color + 'cc)">' + block.icon + '</div>' +
-                '<div class="block-info">' +
-                '<div class="block-name">' + block.name + '</div>' +
-                '<div class="block-progress-text">' + blockProgress + '%</div>' +
+            html += '<div class="category-item" data-block="' + block.id + '">' +
+                '<div class="category-icon" style="background: ' + block.color + '20; color: ' + block.color + '">' + block.icon + '</div>' +
+                '<div class="category-name">' + block.name + '</div>' +
+                '<div class="category-bar">' +
+                '<div class="category-bar-fill" style="width: ' + blockProgress + '%; background: ' + block.color + '"></div>' +
                 '</div>' +
-                '</div>' +
-                '<div class="block-progress-bar">' +
-                '<div class="block-progress-fill" style="width: ' + blockProgress + '%; background: linear-gradient(90deg, ' + block.color + ', ' + block.color + 'cc)"></div>' +
+                '<div class="category-percent">' + blockProgress + '%</div>' +
                 '</div>';
+        }
+        
+        html += '</div>';
+        
+        // === 4. ГРАФІК ТИЖНЯ + ЗАПИСИ ЇЖІ ===
+        html += '<div class="bottom-section">';
+        
+        // Графік активності за тиждень
+        html += '<div class="weekly-chart-section">' +
+            '<div class="section-title">Активність за тиждень</div>' +
+            '<div class="weekly-chart" id="weeklyChart"></div>' +
+            '</div>';
+        
+        // Сьогоднішні записи їжі
+        var foodEntries = Storage.getFoodEntries(today);
+        
+        html += '<div class="today-food-section">' +
+            '<div class="section-title">Сьогоднішні записи</div>';
+        
+        if (foodEntries.length === 0) {
+            html += '<div class="empty-food">Ще немає записів. Сфотографуй їжу!</div>';
+        } else {
+            html += '<div class="food-entries-list">';
             
-            if (isExpanded) {
-                html += '<div class="block-habits">';
+            var totalCal = 0;
+            for (var i = 0; i < foodEntries.length; i++) {
+                var entry = foodEntries[i];
+                totalCal += entry.calories || 0;
                 
-                for (var i = 0; i < block.habits.length; i++) {
-                    var h = block.habits[i];
-                    var count = Storage.getCount(h.id, today);
-                    var goal = h.goal || 0;
-                    var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
-                    var isDistance = (h.unit === 'км' || h.unit === 'хвилин' || h.unit === 'годин' || h.unit === 'кроків' || h.unit === 'літрів');
-                    
-                    html += '<div class="habit-card" data-id="' + h.id + '">' +
-                        '<div class="habit-header">' +
-                        '<div class="habit-icon">' + h.icon + '</div>' +
-                        '<div class="habit-info">' +
-                        '<div class="habit-name">' + h.name + '</div>' +
-                        '<div class="habit-desc">' + h.description + '</div>' +
-                        '<div class="habit-count">' + count + ' ' + (h.unit || 'разів') + 
-                        (goal > 0 ? ' / ' + goal : '') + '</div>' +
-                        '</div>' +
-                        '</div>';
-                    
-                    if (goal > 0) {
-                        html += '<div class="habit-progress-mini">' +
-                            '<div class="habit-progress-mini-bar">' +
-                            '<div class="habit-progress-mini-fill" style="width: ' + goalPercent + '%; background: ' + block.color + '"></div>' +
-                            '</div>' +
-                            '<div class="habit-progress-mini-text">' + goalPercent + '%</div>' +
-                            '</div>';
-                    }
-                    
-                    html += '<div class="habit-actions">';
-                    
-                    if (isDistance) {
-                        html += '<div class="input-group">' +
-                            '<input type="number" class="track-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
-                            '<button class="btn-record" data-id="' + h.id + '" style="background: ' + block.color + '">Записати</button>' +
-                            '</div>';
-                    } else {
-                        html += '<div class="counter-group">' +
-                            '<button class="counter-btn minus" data-id="' + h.id + '">−</button>' +
-                            '<div class="counter-value">' + count + '</div>' +
-                            '<button class="counter-btn plus" data-id="' + h.id + '" style="background: ' + block.color + '">+1</button>' +
-                            '<button class="counter-btn plus-10" data-id="' + h.id + '" style="background: ' + block.color + '">+10</button>' +
-                            '</div>';
-                    }
-                    
-                    html += '</div></div>';
-                }
-                
-                html += '</div>';
+                html += '<div class="food-entry-item">' +
+                    '<div class="food-entry-icon">🍽️</div>' +
+                    '<div class="food-entry-info">' +
+                    '<div class="food-entry-name">' + entry.name + '</div>' +
+                    '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
+                    '</div>' +
+                    '<div class="food-entry-cal">' + entry.calories + ' ккал</div>' +
+                    '</div>';
             }
+            
+            html += '<div class="food-total-strip">' +
+                '<span>Всього сьогодні:</span>' +
+                '<span class="food-total-value">' + totalCal + ' ккал</span>' +
+                '</div>';
             
             html += '</div>';
         }
         
         html += '</div>';
         
-        // Користувацькі звички
-        var customHabits = Storage.getCustomHabits();
-        
-        if (customHabits.length > 0) {
-            html += '<div class="section-header" style="margin-top: 20px;">' +
-                '<div class="section-title">⭐ Мої додаткові звички</div>' +
-                '</div>';
-            
-            html += '<div class="habits-list">';
-            
-            for (var i = 0; i < customHabits.length; i++) {
-                var h = customHabits[i];
-                var count = Storage.getCount(h.id, today);
-                var goal = h.goal || 0;
-                var goalPercent = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
-                var isDistance = (h.unit === 'км' || h.unit === 'хвилин' || h.unit === 'годин');
-                
-                html += '<div class="habit-card custom" data-id="' + h.id + '">' +
-                    '<div class="habit-header">' +
-                    '<div class="habit-icon">' + h.icon + '</div>' +
-                    '<div class="habit-info">' +
-                    '<div class="habit-name">' + h.name + '</div>' +
-                    (h.description ? '<div class="habit-desc">' + h.description + '</div>' : '') +
-                    '<div class="habit-count">' + count + ' ' + (h.unit || 'разів') + 
-                    (goal > 0 ? ' / ' + goal : '') + '</div>' +
-                    '</div>' +
-                    '</div>';
-                
-                if (goal > 0) {
-                    html += '<div class="habit-progress-mini">' +
-                        '<div class="habit-progress-mini-bar">' +
-                        '<div class="habit-progress-mini-fill" style="width: ' + goalPercent + '%"></div>' +
-                        '</div>' +
-                        '<div class="habit-progress-mini-text">' + goalPercent + '%</div>' +
-                        '</div>';
-                }
-                
-                html += '<div class="habit-actions">';
-                
-                if (isDistance) {
-                    html += '<div class="input-group">' +
-                        '<input type="number" class="track-input" data-id="' + h.id + '" placeholder="0 ' + (h.unit || '') + '">' +
-                        '<button class="btn-record" data-id="' + h.id + '">Записати</button>' +
-                        '</div>';
-                } else {
-                    html += '<div class="counter-group">' +
-                        '<button class="counter-btn minus" data-id="' + h.id + '">−</button>' +
-                        '<div class="counter-value">' + count + '</div>' +
-                        '<button class="counter-btn plus" data-id="' + h.id + '">+1</button>' +
-                        '<button class="counter-btn plus-10" data-id="' + h.id + '">+10</button>' +
-                        '</div>';
-                }
-                
-                html += '</div></div>';
-            }
-            
-            html += '</div>';
-        }
+        html += '</div>';
         
         container.innerHTML = html;
         this.bindHomeEvents();
@@ -236,9 +182,26 @@ var Screens = {
     bindHomeEvents: function() {
         var self = this;
         
-        // Розгортання блоків
-        document.querySelectorAll('.block').forEach(function(block) {
-            block.addEventListener('click', function() {
+        // Кнопка камери на головній
+        var homeCameraBtn = document.getElementById('homeCameraBtn');
+        if (homeCameraBtn) {
+            homeCameraBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                self.openCamera();
+            });
+        }
+        
+        // Банер камери (клік по всьому банеру)
+        var homeCameraBanner = document.getElementById('homeCameraBanner');
+        if (homeCameraBanner) {
+            homeCameraBanner.addEventListener('click', function() {
+                self.openCamera();
+            });
+        }
+        
+        // Клік по категорії (розгортає блок)
+        document.querySelectorAll('.category-item').forEach(function(item) {
+            item.addEventListener('click', function() {
                 var blockId = this.getAttribute('data-block');
                 self.expandedBlock = self.expandedBlock === blockId ? null : blockId;
                 self.renderHome();
