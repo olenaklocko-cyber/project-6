@@ -341,5 +341,117 @@ var Storage = {
         return this.foodDatabase.filter(function(f) {
             return f.name.toLowerCase().indexOf(q) !== -1;
         });
+    },
+    
+    // База вправ з калоріями на хвилину (для ваги 60кг)
+    exerciseDatabase: [
+        // === Кардіо ===
+        { name: 'Біг', calories: 11, icon: '🏃', category: 'Кардіо' },
+        { name: 'Ходьба швидка', calories: 6, icon: '🚶', category: 'Кардіо' },
+        { name: 'Ходьба повільна', calories: 3.5, icon: '🚶', category: 'Кардіо' },
+        { name: 'Велосипед', calories: 8, icon: '🚴', category: 'Кардіо' },
+        { name: 'Плавання', calories: 9, icon: '🏊', category: 'Кардіо' },
+        { name: 'Стрибки на скакалці', calories: 12, icon: '🤸', category: 'Кардіо' },
+        { name: 'Бігова доріжка', calories: 10, icon: '🏃', category: 'Кардіо' },
+        { name: 'Еліпс', calories: 8, icon: '🚴', category: 'Кардіо' },
+        { name: 'Сходинки', calories: 7, icon: '🚶', category: 'Кардіо' },
+        { name: 'Танці', calories: 6, icon: '💃', category: 'Кардіо' },
+        { name: 'Аеробіка', calories: 8, icon: '🤸', category: 'Кардіо' },
+        { name: 'Скакалка', calories: 12, icon: '🤸', category: 'Кардіо' },
+        { name: 'Біг на місці', calories: 10, icon: '🏃', category: 'Кардіо' },
+        { name: 'Веслування', calories: 10, icon: '🚣', category: 'Кардіо' },
+        { name: 'Гребний тренажер', calories: 9, icon: '🚣', category: 'Кардіо' },
+        
+        // === Силові ===
+        { name: 'Присідання', calories: 7, icon: '💪', category: 'Силові' },
+        { name: 'Випади', calories: 7, icon: '💪', category: 'Силові' },
+        { name: 'Підтягування', calories: 9, icon: '💪', category: 'Силові' },
+        { name: 'Віджимання', calories: 8, icon: '💪', category: 'Силові' },
+        { name: 'Планка', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Жим лежачи', calories: 6, icon: '💪', category: 'Силові' },
+        { name: 'Тяга вниз', calories: 6, icon: '💪', category: 'Силові' },
+        { name: 'Розгинання рук', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Згинання рук', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Підйом ніг', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Скручування', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Махи ногами', calories: 5, icon: '💪', category: 'Силові' },
+        { name: 'Жим ногами', calories: 7, icon: '💪', category: 'Силові' },
+        { name: 'Тяга штанги', calories: 7, icon: '💪', category: 'Силові' },
+        { name: 'Станова тяга', calories: 8, icon: '💪', category: 'Силові' },
+        
+        // === Розтяжка ===
+        { name: 'Йога', calories: 4, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Пілатес', calories: 5, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Розтяжка', calories: 3, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Медитація', calories: 2, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Тай-чі', calories: 4, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Статичні вправи', calories: 3, icon: '🧘', category: 'Розтяжка' },
+        { name: 'Баланс', calories: 3, icon: '🧘', category: 'Розтяжка' },
+        
+        // === Інтервальні ===
+        { name: 'HIIT', calories: 14, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Табата', calories: 15, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Кросфіт', calories: 13, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Бурпі', calories: 12, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Джампінг джек', calories: 10, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Mountain climbers', calories: 11, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Біг по сходах', calories: 12, icon: '🔥', category: 'Інтервальні' },
+        { name: 'Спринти', calories: 14, icon: '🔥', category: 'Інтервальні' },
+        
+        // === Спортивні ігри ===
+        { name: 'Футбол', calories: 9, icon: '⚽', category: 'Ігри' },
+        { name: 'Баскетбол', calories: 9, icon: '🏀', category: 'Ігри' },
+        { name: 'Волейбол', calories: 7, icon: '🏐', category: 'Ігри' },
+        { name: 'Теніс', calories: 8, icon: '🎾', category: 'Ігри' },
+        { name: 'Бадмінтон', calories: 7, icon: '🏸', category: 'Ігри' },
+        { name: 'Настільний теніс', calories: 5, icon: '🏓', category: 'Ігри' },
+        { name: 'Боулінг', calories: 4, icon: '🎳', category: 'Ігри' },
+        { name: 'Більярд', calories: 3, icon: '🎱', category: 'Ігри' },
+        
+        // === Побутові ===
+        { name: 'Прибирання', calories: 4, icon: '🧹', category: 'Побутові' },
+        { name: 'Миття підлоги', calories: 5, icon: '🧹', category: 'Побутові' },
+        { name: 'Прасування', calories: 3, icon: '👔', category: 'Побутові' },
+        { name: 'Миття вікон', calories: 4, icon: '🪟', category: 'Побутові' },
+        { name: 'Садівництво', calories: 5, icon: '🌱', category: 'Побутові' },
+        { name: 'Копання', calories: 7, icon: '🌱', category: 'Побутові' },
+        { name: 'Ходьба з собакою', calories: 4, icon: '🐕', category: 'Побутові' },
+        { name: 'Гра з дітьми', calories: 5, icon: '👶', category: 'Побутові' },
+        { name: 'Підйом по сходах', calories: 8, icon: '🚶', category: 'Побутові' },
+        { name: 'Перенесення речей', calories: 6, icon: '📦', category: 'Побутові' },
+        
+        // === Єдиноборства ===
+        { name: 'Бокс', calories: 11, icon: '🥊', category: 'Єдиноборства' },
+        { name: 'Кікбоксинг', calories: 12, icon: '🥊', category: 'Єдиноборства' },
+        { name: 'ММА', calories: 13, icon: '🥊', category: 'Єдиноборства' },
+        { name: 'Карате', calories: 8, icon: '🥋', category: 'Єдиноборства' },
+        { name: 'Дзюдо', calories: 9, icon: '🥋', category: 'Єдиноборства' },
+        { name: 'Тхеквондо', calories: 9, icon: '🥋', category: 'Єдиноборства' },
+        { name: 'Фехтування', calories: 8, icon: '🤺', category: 'Єдиноборства' },
+        { name: 'Йога гаряча', calories: 7, icon: '🧘', category: 'Єдиноборства' }
+    ],
+    
+    getExerciseCategories: function() {
+        var categories = [];
+        for (var i = 0; i < this.exerciseDatabase.length; i++) {
+            var cat = this.exerciseDatabase[i].category;
+            if (categories.indexOf(cat) === -1) {
+                categories.push(cat);
+            }
+        }
+        return categories;
+    },
+    
+    getExercisesByCategory: function(category) {
+        return this.exerciseDatabase.filter(function(e) {
+            return e.category === category;
+        });
+    },
+    
+    searchExercises: function(query) {
+        var q = query.toLowerCase();
+        return this.exerciseDatabase.filter(function(e) {
+            return e.name.toLowerCase().indexOf(q) !== -1;
+        });
     }
 };
