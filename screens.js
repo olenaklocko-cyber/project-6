@@ -1275,7 +1275,7 @@ var Screens = {
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            var compressedImage = canvas.toDataURL('image/jpeg', 0.7);
+            var compressedImage = canvas.toDataURL('image/jpeg', 0.85);
             
             console.log('Original size:', imageBase64.length);
             console.log('Compressed size:', compressedImage.length);
