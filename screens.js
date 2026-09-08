@@ -1225,8 +1225,14 @@ var Screens = {
         modal.className = 'food-result-modal';
         modal.id = 'foodResultModal';
         
-        modal.innerHTML = '<div class="food-result-content">' +
-            '<div class="food-result-loading">' +
+        var photoHtml = '';
+        if (this.lastFoodPhoto) {
+            photoHtml = '<div class="loading-bg-photo"><img src="' + this.lastFoodPhoto + '" alt=""></div>';
+        }
+        
+        modal.innerHTML = '<div class="loading-overlay">' +
+            photoHtml +
+            '<div class="loading-content">' +
             '<div class="loading-spinner-large"></div>' +
             '<div class="loading-text-large">🤖 AI аналізує їжу...</div>' +
             '</div>' +
