@@ -361,53 +361,58 @@ var Screens = {
         var blocks = Storage.getBlocks();
         var today = Storage.formatDate(new Date());
         
-        var html = '<div class="stats-grid">';
+        var html = '';
         
-        // Загальний прогрес
+        // === 1. СЬОГОДНІШНІЙ ПРОГРЕС (кольоровий блок) ===
         var totalProgress = Storage.getDayProgress(today);
-        html += '<div class="stats-card">' +
-            '<h3>Сьогодні</h3>' +
-            '<div class="stats-big-number">' + totalProgress + '%</div>' +
-            '<div class="stats-label">всього виконано</div>' +
+        
+        html += '<div class="stats-today-card">' +
+            '<div class="stats-today-header">' +
+            '<div class="stats-today-emoji">📊</div>' +
+            '<div class="stats-today-title">Сьогоднішній прогрес</div>' +
+            '</div>' +
+            '<div class="stats-today-circle">' +
+            '<svg viewBox="0 0 100 100">' +
+            '<circle class="stats-circle-bg" cx="50" cy="50" r="45"/>' +
+            '<circle class="stats-circle-fill" cx="50" cy="50" r="45" stroke-dasharray="' + (totalProgress * 2.83) + ' 283"/>' +
+            '</svg>' +
+            '<div class="stats-today-percent">' + totalProgress + '%</div>' +
+            '</div>' +
+            '<div class="stats-today-label">всього виконано</div>' +
             '</div>';
         
-        // Кількість блоків
-        html += '<div class="stats-card">' +
-            '<h3>Блоків</h3>' +
-            '<div class="stats-big-number">' + blocks.length + '</div>' +
-            '<div class="stats-label">відстежується</div>' +
-            '</div>';
+        // === 2. ПРОГРЕС ПО БЛОКАХ (кольорові рядки) ===
+        html += '<div class="stats-blocks-section">' +
+            '<div class="stats-section-title">Прогрес по блоках</div>';
         
-        html += '</div>';
-        
-        // Прогрес по блоках
-        html += '<div class="chart-container">' +
-            '<h3>Прогрес по блоках</h3>';
+        var colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4ecdc4', '#667eea'];
         
         for (var b = 0; b < blocks.length; b++) {
             var block = blocks[b];
             var blockProgress = Storage.getBlockProgress(block.id, today);
+            var color = colors[b % colors.length];
             
-            html += '<div class="habit-stat-row">' +
-                '<div class="habit-stat-icon" style="background: ' + block.color + '20">' + block.icon + '</div>' +
-                '<div class="habit-stat-info">' +
-                '<div class="habit-stat-name">' + block.name + '</div>' +
-                '<div class="habit-stat-bar">' +
-                '<div class="habit-stat-fill" style="width: ' + blockProgress + '%; background: ' + block.color + '"></div>' +
+            html += '<div class="stats-block-row">' +
+                '<div class="stats-block-icon" style="background: ' + color + '20; color: ' + color + '">' + block.icon + '</div>' +
+                '<div class="stats-block-info">' +
+                '<div class="stats-block-name">' + block.name + '</div>' +
+                '<div class="stats-block-bar">' +
+                '<div class="stats-block-fill" style="width: ' + blockProgress + '%; background: ' + color + '"></div>' +
                 '</div>' +
                 '</div>' +
-                '<div class="habit-stat-count">' + blockProgress + '%</div>' +
+                '<div class="stats-block-percent" style="color: ' + color + '">' + blockProgress + '%</div>' +
                 '</div>';
         }
         
         html += '</div>';
         
-        // Графік по днях
-        html += '<div class="chart-container">' +
-            '<h3>Активність за тиждень</h3>' +
-            '<div class="week-chart">';
+        // === 3. АКТИВНІСТЬ ЗА ТИЖДЕНЬ (календар) ===
+        html += '<div class="stats-week-section">' +
+            '<div class="stats-section-title">Активність за тиждень</div>' +
+            '<div class="stats-calendar">';
         
-        var dayNames = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        var dayNamesFull = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        var monthNames = ['січ', 'лют', 'бер', 'кві', 'трав', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'груд'];
         var weekData = [];
         
         for (var i = 6; i >= 0; i--) {
@@ -415,18 +420,31 @@ var Screens = {
             d.setDate(d.getDate() - i);
             var dateStr = Storage.formatDate(d);
             weekData.push({
-                day: dayNames[d.getDay()],
-                progress: Storage.getDayProgress(dateStr)
+                dayName: dayNamesFull[d.getDay()],
+                dayNum: d.getDate(),
+                month: monthNames[d.getMonth()],
+                progress: Storage.getDayProgress(dateStr),
+                isToday: i === 0
             });
         }
         
         var maxProgress = Math.max.apply(null, weekData.map(function(d) { return d.progress; }));
+        if (maxProgress === 0) maxProgress = 100;
         
         for (var i = 0; i < weekData.length; i++) {
-            var height = maxProgress > 0 ? (weekData[i].progress / maxProgress) * 100 : 0;
-            html += '<div class="week-bar">' +
-                '<div class="week-fill" style="height: ' + Math.max(height, 5) + '%"></div>' +
-                '<div class="week-label">' + weekData[i].day + '</div>' +
+            var day = weekData[i];
+            var barHeight = Math.max((day.progress / maxProgress) * 100, 8);
+            var barColor = day.progress > 0 ? 'linear-gradient(180deg, #667eea, #764ba2)' : '#e0e0e0';
+            
+            html += '<div class="stats-day' + (day.isToday ? ' today' : '') + '">' +
+                '<div class="stats-day-bar-wrap">' +
+                '<div class="stats-day-bar" style="height: ' + barHeight + '%; background: ' + barColor + '"></div>' +
+                '</div>' +
+                '<div class="stats-day-info">' +
+                '<div class="stats-day-num">' + day.dayNum + '</div>' +
+                '<div class="stats-day-name">' + day.dayName + '</div>' +
+                '</div>' +
+                '<div class="stats-day-percent">' + day.progress + '%</div>' +
                 '</div>';
         }
         

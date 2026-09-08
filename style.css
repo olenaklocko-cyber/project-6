@@ -129,6 +129,218 @@ body::before {
     letter-spacing: 0.5px;
 }
 
+/* ===== СТАТИСТИКА (НОВИЙ ДИЗАЙН) ===== */
+.stats-today-card {
+    margin: 15px;
+    padding: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+}
+
+.stats-today-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stats-today-emoji {
+    font-size: 28px;
+}
+
+.stats-today-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+.stats-today-circle {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 16px;
+    position: relative;
+}
+
+.stats-today-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.stats-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 8;
+}
+
+.stats-circle-fill {
+    fill: none;
+    stroke: white;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1s ease;
+}
+
+.stats-today-percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: 900;
+    color: white;
+}
+
+.stats-today-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.stats-blocks-section {
+    margin: 0 15px 15px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.stats-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.stats-block-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-block-row:last-child {
+    border-bottom: none;
+}
+
+.stats-block-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.stats-block-info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.stats-block-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.stats-block-bar {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.stats-block-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.stats-block-percent {
+    font-size: 16px;
+    font-weight: 800;
+    min-width: 50px;
+    text-align: right;
+}
+
+.stats-week-section {
+    margin: 0 15px 100px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.stats-calendar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 160px;
+    padding-top: 20px;
+}
+
+.stats-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.stats-day.today {
+    transform: scale(1.1);
+}
+
+.stats-day.today .stats-day-info {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 10px;
+    padding: 4px 8px;
+}
+
+.stats-day-bar-wrap {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.stats-day-bar {
+    width: 24px;
+    min-height: 8px;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.5s ease;
+}
+
+.stats-day-info {
+    text-align: center;
+    padding: 4px;
+}
+
+.stats-day-num {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+.stats-day-name {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.stats-day-percent {
+    font-size: 10px;
+    color: #999;
+    margin-top: 4px;
+}
+
 /* ===== PROFILE BAR ===== */
 .profile-bar {
     display: flex;
