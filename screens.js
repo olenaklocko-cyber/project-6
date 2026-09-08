@@ -1325,46 +1325,69 @@ var Screens = {
     showFoodResults: function(data, container) {
         var self = this;
         
-        var html = '<div class="ai-results">';
+        // Створюємо повноекранну модалку
+        var modal = document.createElement('div');
+        modal.className = 'food-result-modal';
+        modal.id = 'foodResultModal';
         
-        html += '<div class="ai-total">' +
-            '<div class="ai-total-cal">' + data.totalCalories + ' ккал</div>' +
-            '<div class="ai-total-label">орієнтовна калорійність</div>' +
+        var html = '<div class="food-result-content">' +
+            '<div class="food-result-header">' +
+            '<div class="food-result-photo" id="resultPhoto"></div>' +
+            '<div class="food-result-title">AI розпізнав страву</div>' +
+            '</div>' +
+            '<div class="food-result-body">' +
+            '<div class="food-result-calories">' +
+            '<div class="food-result-cal-number">' + data.totalCalories + '</div>' +
+            '<div class="food-result-cal-label">ккал</div>' +
+            '</div>' +
+            '<div class="food-result-macros">' +
+            '<div class="food-result-macro">' +
+            '<div class="food-result-macro-value">' + (data.protein || 0) + 'г</div>' +
+            '<div class="food-result-macro-label">Білок</div>' +
+            '</div>' +
+            '<div class="food-result-macro">' +
+            '<div class="food-result-macro-value">' + (data.fat || 0) + 'г</div>' +
+            '<div class="food-result-macro-label">Жири</div>' +
+            '</div>' +
+            '<div class="food-result-macro">' +
+            '<div class="food-result-macro-value">' + (data.carbs || 0) + 'г</div>' +
+            '<div class="food-result-macro-label">Вуглеводи</div>' +
+            '</div>' +
             '</div>';
         
-        // Макронутрієнти
-        if (data.protein || data.fat || data.carbs) {
-            html += '<div class="ai-macros">';
-            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.protein || 0) + 'г</span><span class="ai-macro-label">Білок</span></div>';
-            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.fat || 0) + 'г</span><span class="ai-macro-label">Жири</span></div>';
-            html += '<div class="ai-macro"><span class="ai-macro-val">' + (data.carbs || 0) + 'г</span><span class="ai-macro-label">Вуглеводи</span></div>';
-            html += '</div>';
-        }
-        
-        html += '<div class="ai-dishes-title">AI побачив на фото:</div>';
-        html += '<div class="ai-dishes">';
-        
+        // Назва страви (редагована)
         for (var i = 0; i < data.dishes.length; i++) {
             var dish = data.dishes[i];
-            html += '<div class="ai-dish">' +
-                '<input type="text" class="ai-dish-name-input" value="' + dish.name + '" data-index="' + i + '">' +
-                '<div class="ai-dish-info">' +
-                '<span class="ai-dish-conf">впевненість ' + dish.confidence + '%</span>' +
-                '<span class="ai-dish-cal">' + dish.calories + ' ккал</span>' +
-                '</div>' +
+            html += '<div class="food-result-dish">' +
+                '<input type="text" class="food-result-dish-input" value="' + dish.name + '" data-index="' + i + '">' +
+                '<div class="food-result-dish-cal">' + dish.calories + ' ккал</div>' +
                 '</div>';
         }
         
-        html += '</div>';
+        html += '</div>' +
+            '<div class="food-result-footer">' +
+            '<button class="food-result-save-btn" id="saveFoodResultBtn">💾 Зберегти ' + data.totalCalories + ' ккал</button>' +
+            '<button class="food-result-close-btn" id="closeFoodResultBtn">✕ Закрити</button>' +
+            '</div>' +
+            '</div>';
         
-        html += '<button class="btn-primary" id="saveAIResultBtn">💾 Зберегти ' + data.totalCalories + ' ккал</button>';
-        html += '</div>';
+        modal.innerHTML = html;
+        document.body.appendChild(modal);
         
-        container.insertAdjacentHTML('beforeend', html);
+        // Додаємо фото якщо є
+        var lastPhoto = document.querySelector('.photo-preview-img');
+        if (lastPhoto) {
+            document.getElementById('resultPhoto').innerHTML = '<img src="' + lastPhoto.src + '" alt="Їжа">';
+        }
         
-        document.getElementById('saveAIResultBtn').addEventListener('click', function() {
-            // Збираємо назви з інпутів
-            var inputs = document.querySelectorAll('.ai-dish-name-input');
+        // Анімація появи
+        setTimeout(function() {
+            modal.classList.add('active');
+        }, 10);
+        
+        // Збереження
+        document.getElementById('saveFoodResultBtn').addEventListener('click', function() {
+            var inputs = document.querySelectorAll('.food-result-dish-input');
             var names = [];
             inputs.forEach(function(input) {
                 names.push(input.value);
@@ -1377,15 +1400,31 @@ var Screens = {
                 time: new Date().toLocaleTimeString('uk-UA')
             });
             
-            this.textContent = '✓ Збережено!';
-            this.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
-            
-            setTimeout(function() {
-                var preview = document.getElementById('photoPreview');
-                if (preview) preview.remove();
-                self.renderFoodHistory();
-            }, 1000);
+            self.closeFoodResult();
+            self.renderHome();
         });
+        
+        // Закриття
+        document.getElementById('closeFoodResultBtn').addEventListener('click', function() {
+            self.closeFoodResult();
+        });
+        
+        // Закриття по фону
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                self.closeFoodResult();
+            }
+        });
+    },
+    
+    closeFoodResult: function() {
+        var modal = document.getElementById('foodResultModal');
+        if (modal) {
+            modal.classList.remove('active');
+            setTimeout(function() {
+                modal.remove();
+            }, 400);
+        }
     },
     
     showQuickFallback: function(imageBase64, container) {
