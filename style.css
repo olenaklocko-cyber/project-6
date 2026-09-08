@@ -268,6 +268,147 @@ body::before {
     text-align: right;
 }
 
+.stats-block-arrow {
+    font-size: 14px;
+    color: #999;
+    margin-left: 8px;
+}
+
+.stats-block-item {
+    margin-bottom: 12px;
+}
+
+.stats-block-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.stats-block-habits {
+    padding: 8px 0 0 56px;
+}
+
+.stats-habit-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.stats-habit-row:last-child {
+    border-bottom: none;
+}
+
+.stats-habit-icon {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+}
+
+.stats-habit-info {
+    flex: 1;
+    margin-left: 8px;
+}
+
+.stats-habit-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.stats-habit-count {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.stats-habit-progress {
+    width: 100px;
+    margin-left: 8px;
+}
+
+.stats-habit-bar {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.stats-habit-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.stats-habit-percent {
+    font-size: 11px;
+    color: #999;
+    text-align: right;
+    margin-top: 2px;
+}
+
+.stats-habit-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.stats-habit-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #666;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-habit-btn.minus {
+    background: #f0f0f0;
+    color: #999;
+}
+
+.stats-habit-btn:active {
+    transform: scale(0.95);
+}
+
+.stats-habit-count.editable {
+    width: 40px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+}
+
+.stats-habit-input {
+    width: 60px;
+    height: 32px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.stats-habit-save {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .stats-week-section {
     margin: 0 15px 100px;
     background: white;
@@ -3607,6 +3748,29 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.home-empty-food {
+    text-align: center;
+    padding: 30px 20px;
+    color: #999;
+}
+
+.home-empty-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.home-empty-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.home-empty-hint {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
 }
 
 .food-entry-item {
