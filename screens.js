@@ -182,14 +182,8 @@ var Screens = {
         
         html += '</div>';
         
-        // === 4. ГРАФІК ТИЖНЯ + ЗАПИСИ ЇЖІ ===
+        // === 4. ЗАПИСИ ЇЖІ ===
         html += '<div class="bottom-section">';
-        
-        // Графік активності за тиждень
-        html += '<div class="weekly-chart-section">' +
-            '<div class="section-title">Активність за тиждень</div>' +
-            '<div class="weekly-chart" id="weeklyChart"></div>' +
-            '</div>';
         
         // Сьогоднішні записи їжі
         var foodEntries = Storage.getFoodEntries(today);
