@@ -3805,24 +3805,33 @@ body::before {
 }
 
 .food-category-btn {
-    padding: 10px 6px;
+    padding: 12px 6px;
     border: none;
-    border-radius: 12px;
-    background: #f0f0f0;
-    color: #666;
+    border-radius: 14px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
+.food-category-btn:nth-child(1) { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); }
+.food-category-btn:nth-child(2) { background: linear-gradient(135deg, #ffd93d, #f4c430); }
+.food-category-btn:nth-child(3) { background: linear-gradient(135deg, #6bcb77, #5ab86a); }
+.food-category-btn:nth-child(4) { background: linear-gradient(135deg, #4ecdc4, #45b7aa); }
+.food-category-btn:nth-child(5) { background: linear-gradient(135deg, #667eea, #5a6fd6); }
+.food-category-btn:nth-child(6) { background: linear-gradient(135deg, #f093fb, #e577e8); }
+.food-category-btn:nth-child(7) { background: linear-gradient(135deg, #fa709a, #f05286); }
+.food-category-btn:nth-child(8) { background: linear-gradient(135deg, #a855f7, #9333ea); }
+
 .food-category-btn.active {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .food-category-btn:active {
@@ -3833,18 +3842,18 @@ body::before {
     margin: 15px;
     max-height: 300px;
     overflow-y: auto;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .food-item {
     display: flex;
     align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .food-item:last-child {
@@ -3852,34 +3861,46 @@ body::before {
 }
 
 .food-item:active {
-    background: #f8f9fa;
+    background: rgba(255,255,255,0.8);
+    transform: scale(0.98);
 }
 
 .food-item-icon {
-    font-size: 24px;
-    width: 40px;
-    text-align: center;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .food-item-name {
     flex: 1;
     margin-left: 12px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: #333;
 }
 
 .food-item-cal {
     font-size: 12px;
-    color: #888;
+    font-weight: 600;
+    color: #667eea;
+    background: #667eea15;
+    padding: 4px 10px;
+    border-radius: 20px;
 }
 
 .selected-food-section {
     margin: 15px;
-    padding: 16px;
-    background: linear-gradient(135deg, #667eea20, #764ba220);
-    border-radius: 16px;
-    border: 2px solid #667eea40;
+    padding: 18px;
+    background: linear-gradient(135deg, #667eea15, #764ba215);
+    border-radius: 18px;
+    border: 2px solid #667eea30;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
 }
 
 .selected-food-header {
@@ -3890,41 +3911,54 @@ body::before {
 }
 
 .selected-food-icon {
-    font-size: 32px;
+    font-size: 36px;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea25, #764ba225);
+    border-radius: 14px;
 }
 
 .selected-food-name {
     flex: 1;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: #333;
 }
 
 .selected-food-cal {
     font-size: 13px;
+    font-weight: 700;
     color: #667eea;
-    font-weight: 600;
+    background: #667eea20;
+    padding: 6px 12px;
+    border-radius: 20px;
 }
 
 .cal-result {
     text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 16px;
+    padding: 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    border-radius: 18px;
     margin: 16px 0;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
 }
 
 .cal-result-value {
-    font-size: 48px;
+    font-size: 56px;
     font-weight: 900;
     color: white;
     line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .cal-result-label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 4px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 6px;
+    font-weight: 600;
 }
 
 .custom-food-btn-wrap {
@@ -3990,13 +4024,23 @@ body::before {
 .food-entry-item {
     display: flex;
     align-items: center;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    margin-bottom: 10px;
+    border-left: 4px solid #667eea;
 }
 
 .food-entry-icon {
-    font-size: 24px;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea20, #764ba220);
+    border-radius: 12px;
     margin-right: 12px;
 }
 
@@ -4006,19 +4050,23 @@ body::before {
 
 .food-entry-name {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: #333;
 }
 
 .food-entry-meta {
-    font-size: 12px;
+    font-size: 11px;
     color: #888;
+    margin-top: 2px;
 }
 
 .food-entry-cal {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     color: #667eea;
+    background: linear-gradient(135deg, #667eea15, #764ba215);
+    padding: 6px 12px;
+    border-radius: 20px;
 }
 
 .food-entry-delete {
@@ -4050,17 +4098,19 @@ body::before {
     justify-content: space-between;
     align-items: center;
     margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #f0f0f0;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 14px;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: white;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
 }
 
 .food-total-value {
-    font-size: 18px;
-    font-weight: 800;
-    color: #667eea;
+    font-size: 20px;
+    font-weight: 900;
+    color: white;
 }
 
 .empty-food {
