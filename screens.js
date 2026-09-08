@@ -607,7 +607,37 @@ var Screens = {
             // Список вправ
             '<div class="food-list" id="exerciseListContainer"></div>' +
             
-            // Вибрана вправа
+            // Кнопка "Своя вправа"
+            '<div class="custom-food-btn-wrap">' +
+            '<button class="custom-food-btn" id="customExerciseBtn">✍️ Своя вправа</button>' +
+            '</div>' +
+            
+            // Форма ручного введення (прихована)
+            '<div class="custom-food-form" id="customExerciseForm" style="display: none;">' +
+            '<div class="form-group">' +
+            '<label>Назва вправи</label>' +
+            '<input type="text" id="customExerciseName" placeholder="Наприклад: Танці з собакою">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Калорії на хвилину</label>' +
+            '<input type="number" id="customExerciseCalories" placeholder="Наприклад: 8">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Час (хвилини)</label>' +
+            '<input type="number" id="customExerciseMinutes" placeholder="Наприклад: 30">' +
+            '</div>' +
+            
+            '<div class="cal-result" id="customExerciseCalResult" style="display: none;">' +
+            '<div class="cal-result-value" id="customExerciseCalResultValue">0</div>' +
+            '<div class="cal-result-label">кілокалорій спалено</div>' +
+            '</div>' +
+            
+            '<button class="btn-primary" id="addCustomExerciseBtn">Додати запис</button>' +
+            '</div>' +
+            
+            // Вибрана вправа з бази
             '<div class="selected-food-section" id="selectedExerciseSection" style="display: none;">' +
             '<div class="selected-food-header">' +
             '<span class="selected-food-icon" id="selectedExerciseIcon"></span>' +
@@ -1666,6 +1696,10 @@ var Screens = {
         function selectExercise(exercise) {
             selectedExercise = exercise;
             
+            // Ховаємо форму ручного введення
+            document.getElementById('customExerciseForm').style.display = 'none';
+            document.getElementById('customExerciseBtn').style.display = 'block';
+            
             document.getElementById('selectedExerciseSection').style.display = 'block';
             document.getElementById('selectedExerciseIcon').textContent = exercise.icon;
             document.getElementById('selectedExerciseName').textContent = exercise.name;
@@ -1674,7 +1708,7 @@ var Screens = {
             document.getElementById('exerciseCalResult').style.display = 'none';
         }
         
-        // Обчислення калорій
+        // Обчислення калорій (з бази)
         function calculateCalories() {
             if (!selectedExercise) return;
             
@@ -1689,6 +1723,20 @@ var Screens = {
             }
         }
         
+        // Обчислення калорій (своя вправа)
+        function calculateCustomExerciseCalories() {
+            var calories = parseInt(document.getElementById('customExerciseCalories').value) || 0;
+            var minutes = parseInt(document.getElementById('customExerciseMinutes').value) || 0;
+            var totalCal = Math.round(calories * minutes);
+            
+            if (calories > 0 && minutes > 0) {
+                document.getElementById('customExerciseCalResult').style.display = 'block';
+                document.getElementById('customExerciseCalResultValue').textContent = totalCal;
+            } else {
+                document.getElementById('customExerciseCalResult').style.display = 'none';
+            }
+        }
+        
         // Клік по категоріях
         document.querySelectorAll('#exerciseCategories .food-category-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -1696,6 +1744,13 @@ var Screens = {
                     b.classList.remove('active');
                 });
                 this.classList.add('active');
+                
+                // Ховаємо форму ручного введення
+                document.getElementById('customExerciseForm').style.display = 'none';
+                document.getElementById('customExerciseBtn').style.display = 'block';
+                document.getElementById('selectedExerciseSection').style.display = 'none';
+                selectedExercise = null;
+                
                 showExercisesByCategory(this.getAttribute('data-category'));
             });
         });
@@ -1734,7 +1789,7 @@ var Screens = {
         // Зміна часу
         document.getElementById('exerciseMinutes').addEventListener('input', calculateCalories);
         
-        // Додати вправу
+        // Додати вправу з бази
         document.getElementById('addExerciseBtn').addEventListener('click', function() {
             if (!selectedExercise) {
                 alert('Спочатку обери вправу з переліку!');
@@ -1749,21 +1804,88 @@ var Screens = {
             
             var totalCal = Math.round(selectedExercise.calories * minutes);
             
-            // Зберігаємо вправу як звичку
+            // Зберігаємо вправу
             var today = Storage.formatDate(new Date());
-            Storage.addHabit({
+            var exercises = JSON.parse(localStorage.getItem('exercises_' + today) || '[]');
+            exercises.push({
                 name: selectedExercise.name,
                 icon: selectedExercise.icon,
-                unit: 'хвилин',
-                goal: minutes,
-                category: 'exercise'
+                calories: totalCal,
+                minutes: minutes,
+                time: new Date().toLocaleTimeString('uk-UA')
             });
-            Storage.setCount(selectedExercise.name, today, minutes);
+            localStorage.setItem('exercises_' + today, JSON.stringify(exercises));
             
             // Очищаємо
             selectedExercise = null;
             document.getElementById('selectedExerciseSection').style.display = 'none';
             document.getElementById('exerciseSearch').value = '';
+            document.getElementById('exerciseListContainer').innerHTML = '';
+            document.querySelectorAll('#exerciseCategories .food-category-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
+            
+            alert('Вправу додано! ' + totalCal + ' ккал спалено 🔥');
+        });
+        
+        // Кнопка "Своя вправа"
+        document.getElementById('customExerciseBtn').addEventListener('click', function() {
+            selectedExercise = null;
+            document.getElementById('selectedExerciseSection').style.display = 'none';
+            document.getElementById('customExerciseBtn').style.display = 'none';
+            document.getElementById('customExerciseForm').style.display = 'block';
+            document.getElementById('customExerciseName').value = '';
+            document.getElementById('customExerciseCalories').value = '';
+            document.getElementById('customExerciseMinutes').value = '';
+            document.getElementById('customExerciseCalResult').style.display = 'none';
+        });
+        
+        // Обчислення калорій для своєї вправи
+        document.getElementById('customExerciseCalories').addEventListener('input', calculateCustomExerciseCalories);
+        document.getElementById('customExerciseMinutes').addEventListener('input', calculateCustomExerciseCalories);
+        
+        // Додати свою вправу
+        document.getElementById('addCustomExerciseBtn').addEventListener('click', function() {
+            var name = document.getElementById('customExerciseName').value.trim();
+            var calories = parseInt(document.getElementById('customExerciseCalories').value) || 0;
+            var minutes = parseInt(document.getElementById('customExerciseMinutes').value) || 0;
+            
+            if (!name) {
+                alert('Введи назву вправи!');
+                return;
+            }
+            
+            if (calories <= 0) {
+                alert('Введи калорії на хвилину!');
+                return;
+            }
+            
+            if (minutes <= 0) {
+                alert('Введи кількість хвилин!');
+                return;
+            }
+            
+            var totalCal = Math.round(calories * minutes);
+            
+            // Зберігаємо вправу
+            var today = Storage.formatDate(new Date());
+            var exercises = JSON.parse(localStorage.getItem('exercises_' + today) || '[]');
+            exercises.push({
+                name: name,
+                icon: '💪',
+                calories: totalCal,
+                minutes: minutes,
+                time: new Date().toLocaleTimeString('uk-UA')
+            });
+            localStorage.setItem('exercises_' + today, JSON.stringify(exercises));
+            
+            // Очищаємо
+            document.getElementById('customExerciseForm').style.display = 'none';
+            document.getElementById('customExerciseBtn').style.display = 'block';
+            document.getElementById('customExerciseName').value = '';
+            document.getElementById('customExerciseCalories').value = '';
+            document.getElementById('customExerciseMinutes').value = '';
+            document.getElementById('customExerciseCalResult').style.display = 'none';
             document.getElementById('exerciseListContainer').innerHTML = '';
             document.querySelectorAll('#exerciseCategories .food-category-btn').forEach(function(b) {
                 b.classList.remove('active');
