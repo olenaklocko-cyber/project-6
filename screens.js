@@ -432,6 +432,7 @@ var Screens = {
         var container = document.getElementById('screen-profile');
         var profile = Storage.getProfile();
         var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
+        var profilePhoto = localStorage.getItem('profilePhoto');
         
         // Обчислюємо статистику
         var allHabits = Storage.getAllHabits();
@@ -457,9 +458,14 @@ var Screens = {
         var html = '<div class="profile-page">' +
             
             '<div class="profile-avatar-section">' +
-            '<div class="profile-avatar">' +
-            '<div class="profile-avatar-emoji">' + genderEmoji + '</div>' +
+            '<div class="profile-avatar" id="profileAvatarBtn">' +
+            (profilePhoto ? 
+                '<img src="' + profilePhoto + '" class="profile-avatar-img">' :
+                '<div class="profile-avatar-emoji">' + genderEmoji + '</div>'
+            ) +
+            '<div class="profile-avatar-add">+</div>' +
             '</div>' +
+            '<input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">' +
             '<div class="profile-name">Мій профіль</div>' +
             '<div class="profile-status">' + (activeDays > 0 ? '🔥 Активний ' + activeDays + ' днів' : 'Почни свій шлях!') + '</div>' +
             '</div>' +
@@ -496,8 +502,8 @@ var Screens = {
             '<div class="profile-setting-icon">👤</div>' +
             '<div class="profile-setting-label">Стать</div>' +
             '<div class="gender-picker">' +
-            '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 Чоловік</div>' +
             '<div class="gender-option ' + (profile.gender === 'female' ? 'selected' : '') + '" data-gender="female">👩 Жінка</div>' +
+            '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 Чоловік</div>' +
             '</div>' +
             '</div>' +
             
@@ -531,6 +537,29 @@ var Screens = {
     bindProfileEvents: function() {
         var self = this;
         
+        // Завантаження фото профілю
+        var avatarBtn = document.getElementById('profileAvatarBtn');
+        var photoInput = document.getElementById('profilePhotoInput');
+        
+        if (avatarBtn && photoInput) {
+            avatarBtn.addEventListener('click', function() {
+                photoInput.click();
+            });
+            
+            photoInput.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        localStorage.setItem('profilePhoto', event.target.result);
+                        self.renderProfile();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Вибір статі
         document.querySelectorAll('.gender-option').forEach(function(opt) {
             opt.addEventListener('click', function() {
                 document.querySelectorAll('.gender-option').forEach(function(o) {
@@ -540,6 +569,7 @@ var Screens = {
             });
         });
         
+        // Збереження профілю
         document.getElementById('saveProfileBtn').addEventListener('click', function() {
             var gender = document.querySelector('.gender-option.selected').getAttribute('data-gender');
             var weight = parseInt(document.getElementById('profileWeight').value) || 60;
