@@ -211,5 +211,135 @@ var Storage = {
             entries.splice(index, 1);
             localStorage.setItem('food_' + date, JSON.stringify(entries));
         }
+    },
+    
+    // База страв з калорійністю на 100г
+    foodDatabase: [
+        // === Каші ===
+        { name: 'Вівсяна каша', calories: 68, icon: '🥣', category: 'Каші' },
+        { name: 'Рисова каша', calories: 130, icon: '🍚', category: 'Каші' },
+        { name: 'Гречана каша', calories: 110, icon: '🥘', category: 'Каші' },
+        { name: 'Пшоняна каша', calories: 90, icon: '🥣', category: 'Каші' },
+        { name: 'Манна каша', calories: 100, icon: '🥣', category: 'Каші' },
+        
+        // === Молочні ===
+        { name: 'Кефір 1%', calories: 40, icon: '🥛', category: 'Молочні' },
+        { name: 'Йогурт натуральний', calories: 60, icon: '🥛', category: 'Молочні' },
+        { name: 'Сир творожний', calories: 120, icon: '🧀', category: 'Молочні' },
+        { name: 'Молоко 2.5%', calories: 52, icon: '🥛', category: 'Молочні' },
+        { name: 'Сметана 15%', calories: 162, icon: '🥣', category: 'Молочні' },
+        { name: 'Сир твердий', calories: 350, icon: '🧀', category: 'Молочні' },
+        
+        // === М'ясо ===
+        { name: 'Куряча грудка', calories: 165, icon: '🍗', category: 'М\'ясо' },
+        { name: 'Куряче стегно', calories: 209, icon: '🍗', category: 'М\'ясо' },
+        { name: 'Яловичина', calories: 250, icon: '🥩', category: 'М\'ясо' },
+        { name: 'Свинина нежирна', calories: 242, icon: '🥩', category: 'М\'ясо' },
+        { name: 'Індичка', calories: 189, icon: '🦃', category: 'М\'ясо' },
+        { name: 'Ковбаса варена', calories: 260, icon: '🌭', category: 'М\'ясо' },
+        
+        // === Риба ===
+        { name: 'Лосось', calories: 208, icon: '🐟', category: 'Риба' },
+        { name: 'Тунець', calories: 184, icon: '🐟', category: 'Риба' },
+        { name: 'Тріска', calories: 82, icon: '🐟', category: 'Риба' },
+        { name: 'Минтай', calories: 72, icon: '🐟', category: 'Риба' },
+        { name: 'Скумбрія', calories: 262, icon: '🐟', category: 'Риба' },
+        
+        // === Овочі ===
+        { name: 'Помідор', calories: 18, icon: '🍅', category: 'Овочі' },
+        { name: 'Огірок', calories: 15, icon: '🥒', category: 'Овочі' },
+        { name: 'Капуста', calories: 25, icon: '🥬', category: 'Овочі' },
+        { name: 'Морква', calories: 41, icon: '🥕', category: 'Овочі' },
+        { name: 'Буряк', calories: 43, icon: '🥕', category: 'Овочі' },
+        { name: 'Картопля', calories: 77, icon: '🥔', category: 'Овочі' },
+        { name: 'Брокколі', calories: 34, icon: '🥦', category: 'Овочі' },
+        { name: 'Перець болгарський', calories: 27, icon: '🫑', category: 'Овочі' },
+        { name: 'Цибуля', calories: 40, icon: '🧅', category: 'Овочі' },
+        
+        // === Фрукти ===
+        { name: 'Яблуко', calories: 52, icon: '🍎', category: 'Фрукти' },
+        { name: 'Банан', calories: 89, icon: '🍌', category: 'Фрукти' },
+        { name: 'Апельсин', calories: 47, icon: '🍊', category: 'Фрукти' },
+        { name: 'Виноград', calories: 69, icon: '🍇', category: 'Фрукти' },
+        { name: 'Кавун', calories: 30, icon: '🍉', category: 'Фрукти' },
+        { name: 'Полуниця', calories: 33, icon: '🍓', category: 'Фрукти' },
+        { name: 'Груша', calories: 57, icon: '🍐', category: 'Фрукти' },
+        { name: 'Персик', calories: 39, icon: '🍑', category: 'Фрукти' },
+        
+        // === Випічка ===
+        { name: 'Хліб білий', calories: 265, icon: '🍞', category: 'Випічка' },
+        { name: 'Хліб чорний', calories: 200, icon: '🍞', category: 'Випічка' },
+        { name: 'Булочка', calories: 350, icon: '🥐', category: 'Випічка' },
+        { name: 'Печиво', calories: 466, icon: '🍪', category: 'Випічка' },
+        { name: 'Білий хліб тостовий', calories: 260, icon: '🍞', category: 'Випічка' },
+        
+        // === Яйця та сніданки ===
+        { name: 'Яйце куряче', calories: 155, icon: '🥚', category: 'Яйця' },
+        { name: 'Омлет з 2 яєць', calories: 154, icon: '🍳', category: 'Яйця' },
+        { name: 'Яєчня', calories: 196, icon: '🍳', category: 'Яйця' },
+        { name: 'Сирники', calories: 183, icon: '🥞', category: 'Яйця' },
+        
+        // === Напої ===
+        { name: 'Сік апельсиновий', calories: 45, icon: '🍊', category: 'Напої' },
+        { name: 'Чай без цукру', calories: 1, icon: '🍵', category: 'Напої' },
+        { name: 'Кава без цукру', calories: 2, icon: '☕', category: 'Напої' },
+        { name: 'Кава з молоком', calories: 50, icon: '☕', category: 'Напої' },
+        { name: 'Какао', calories: 100, icon: '☕', category: 'Напої' },
+        
+        // === Солодощі ===
+        { name: 'Шоколад молочний', calories: 535, icon: '🍫', category: 'Солодощі' },
+        { name: 'Шоколад чорний', calories: 546, icon: '🍫', category: 'Солодощі' },
+        { name: 'Цукерки', calories: 394, icon: '🍬', category: 'Солодощі' },
+        { name: 'Мед', calories: 304, icon: '🍯', category: 'Солодощі' },
+        { name: 'Варення', calories: 270, icon: '🍓', category: 'Солодощі' },
+        
+        // === Горіхи ===
+        { name: 'Волоський горіх', calories: 654, icon: '🥜', category: 'Горіхи' },
+        { name: 'Миндаль', calories: 579, icon: '🥜', category: 'Горіхи' },
+        { name: 'Арахіс', calories: 567, icon: '🥜', category: 'Горіхи' },
+        { name: 'Кеш\'ю', calories: 553, icon: '🥜', category: 'Горіхи' },
+        
+        // === Масла та соуси ===
+        { name: 'Олія соняшникова', calories: 884, icon: '🫒', category: 'Масла' },
+        { name: 'Оливкова олія', calories: 884, icon: '🫒', category: 'Масла' },
+        { name: 'Масло вершкове', calories: 717, icon: '🧈', category: 'Масла' },
+        { name: 'Майонез', calories: 680, icon: '🥄', category: 'Масла' },
+        
+        // === Страви ===
+        { name: 'Борщ', calories: 49, icon: '🍲', category: 'Страви' },
+        { name: 'Суп курячий', calories: 54, icon: '🍲', category: 'Страви' },
+        { name: 'Плов', calories: 150, icon: '🥘', category: 'Страви' },
+        { name: 'Паста варена', calories: 131, icon: '🍝', category: 'Страви' },
+        { name: 'Піца', calories: 266, icon: '🍕', category: 'Страви' },
+        { name: 'Бургер', calories: 295, icon: '🍔', category: 'Страви' },
+        { name: 'Салат олів\'є', calories: 197, icon: '🥗', category: 'Страви' },
+        { name: 'Вінегрет', calories: 102, icon: '🥗', category: 'Страви' },
+        { name: 'Млинці', calories: 227, icon: '🥞', category: 'Страви' },
+        { name: 'Вареники', calories: 210, icon: '🥟', category: 'Страви' },
+        { name: 'Холодець', calories: 141, icon: '🍖', category: 'Страви' }
+    ],
+    
+    getFoodCategories: function() {
+        var categories = [];
+        for (var i = 0; i < this.foodDatabase.length; i++) {
+            var cat = this.foodDatabase[i].category;
+            if (categories.indexOf(cat) === -1) {
+                categories.push(cat);
+            }
+        }
+        return categories;
+    },
+    
+    getFoodByCategory: function(category) {
+        return this.foodDatabase.filter(function(f) {
+            return f.category === category;
+        });
+    },
+    
+    searchFood: function(query) {
+        var q = query.toLowerCase();
+        return this.foodDatabase.filter(function(f) {
+            return f.name.toLowerCase().indexOf(q) !== -1;
+        });
     }
 };
