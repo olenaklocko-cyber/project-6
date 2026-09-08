@@ -201,13 +201,14 @@ var Screens = {
                 var entry = foodEntries[i];
                 totalCal += entry.calories || 0;
                 
-                html += '<div class="food-entry-item">' +
+                html += '<div class="food-entry-item" data-index="' + i + '">' +
                     '<div class="food-entry-icon">🍽️</div>' +
                     '<div class="food-entry-info">' +
                     '<div class="food-entry-name">' + entry.name + '</div>' +
                     '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
                     '</div>' +
                     '<div class="food-entry-cal">' + entry.calories + ' ккал</div>' +
+                    '<button class="food-entry-delete" data-index="' + i + '">✕</button>' +
                     '</div>';
             }
             
@@ -345,6 +346,20 @@ var Screens = {
             });
             input.addEventListener('click', function(e) {
                 e.stopPropagation();
+            });
+        });
+        
+        // Кнопки видалення страв
+        document.querySelectorAll('.food-entry-delete').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var index = parseInt(this.getAttribute('data-index'));
+                var date = Storage.formatDate(self.selectedDate);
+                
+                if (confirm('Видалити цю страву?')) {
+                    Storage.deleteFoodEntry(date, index);
+                    self.renderHome();
+                }
             });
         });
     },

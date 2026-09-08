@@ -203,5 +203,13 @@ var Storage = {
     
     getFoodEntries: function(date) {
         return JSON.parse(localStorage.getItem('food_' + date) || '[]');
+    },
+    
+    deleteFoodEntry: function(date, index) {
+        var entries = JSON.parse(localStorage.getItem('food_' + date) || '[]');
+        if (index >= 0 && index < entries.length) {
+            entries.splice(index, 1);
+            localStorage.setItem('food_' + date, JSON.stringify(entries));
+        }
     }
 };

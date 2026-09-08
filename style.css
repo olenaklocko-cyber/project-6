@@ -3643,6 +3643,30 @@ body::before {
     color: #667eea;
 }
 
+.food-entry-delete {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: #ff6b6b;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.food-entry-delete:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.food-entry-delete:active {
+    transform: scale(0.9);
+}
+
 .food-total-strip {
     display: flex;
     justify-content: space-between;
