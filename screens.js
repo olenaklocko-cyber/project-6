@@ -1208,35 +1208,11 @@ var Screens = {
         var reader = new FileReader();
         
         reader.onload = function(e) {
-            var photoPreview = document.getElementById('photoPreview');
-            if (!photoPreview) {
-                // Шукаємо контейнер для вставки
-                var container = document.querySelector('.nutrition-section') || 
-                               document.querySelector('.today-food-section') ||
-                               document.querySelector('.bottom-section') ||
-                               document.getElementById('screen-home');
-                
-                var previewDiv = document.createElement('div');
-                previewDiv.id = 'photoPreview';
-                previewDiv.className = 'photo-preview';
-                container.insertBefore(previewDiv, container.firstChild);
-                photoPreview = document.getElementById('photoPreview');
-            }
+            // Зберігаємо фото для показу в модалці
+            self.lastFoodPhoto = e.target.result;
             
-            photoPreview.innerHTML = '<div class="photo-preview-card">' +
-                '<img src="' + e.target.result + '" alt="Їжа" class="photo-preview-img">' +
-                '<div class="photo-loading" id="photoLoading">' +
-                '<div class="loading-spinner"></div>' +
-                '<div class="loading-text">🤖 AI аналізує їжу...</div>' +
-                '</div>' +
-                '<div class="photo-preview-actions">' +
-                '<button class="photo-preview-btn" id="photoRetakeBtn">📸 Нове фото</button>' +
-                '</div>' +
-                '</div>';
-            
-            document.getElementById('photoRetakeBtn').addEventListener('click', function() {
-                self.openCamera();
-            });
+            // Показуємо модалку завантаження
+            self.showLoadingModal();
             
             self.analyzeFood(e.target.result);
         };
@@ -1244,23 +1220,27 @@ var Screens = {
         reader.readAsDataURL(file);
     },
     
+    showLoadingModal: function() {
+        var modal = document.createElement('div');
+        modal.className = 'food-result-modal';
+        modal.id = 'foodResultModal';
+        
+        modal.innerHTML = '<div class="food-result-content">' +
+            '<div class="food-result-loading">' +
+            '<div class="loading-spinner-large"></div>' +
+            '<div class="loading-text-large">🤖 AI аналізує їжу...</div>' +
+            '</div>' +
+            '</div>';
+        
+        document.body.appendChild(modal);
+        
+        setTimeout(function() {
+            modal.classList.add('active');
+        }, 10);
+    },
+    
     analyzeFood: function(imageBase64) {
         var self = this;
-        var loading = document.getElementById('photoLoading');
-        var actionsDiv = document.querySelector('.photo-preview-actions');
-        
-        // Якщо loading не знайдено — створюємо
-        if (!loading) {
-            var preview = document.getElementById('photoPreview');
-            if (preview) {
-                var loadingDiv = document.createElement('div');
-                loadingDiv.id = 'photoLoading';
-                loadingDiv.className = 'photo-loading';
-                loadingDiv.innerHTML = '<div class="loading-spinner"></div><div class="loading-text">🤖 AI аналізує їжу...</div>';
-                preview.querySelector('.photo-preview-card').appendChild(loadingDiv);
-                loading = document.getElementById('photoLoading');
-            }
-        }
         
         var serverUrl = 'https://food-api-v2-git-main-olenka1.vercel.app/api/analyze';
         
@@ -1268,7 +1248,7 @@ var Screens = {
         var img = new Image();
         img.onload = function() {
             var canvas = document.createElement('canvas');
-            var maxSize = 800; // Максимальний розмір
+            var maxSize = 800;
             var width = img.width;
             var height = img.height;
             
@@ -1305,24 +1285,26 @@ var Screens = {
             })
             .then(function(data) {
                 console.log('Server response:', data);
-                loading.style.display = 'none';
+                
+                // Закриваємо модалку завантаження
+                self.closeFoodResult();
                 
                 if (data.success && data.dishes) {
-                    self.showFoodResults(data, actionsDiv);
+                    self.showFoodResults(data);
                 } else {
-                    self.showQuickFallback(compressedImage, actionsDiv);
+                    self.showQuickFallbackFullScreen(compressedImage);
                 }
             })
             .catch(function(error) {
                 console.error('Fetch error:', error);
-                loading.style.display = 'none';
-                self.showQuickFallback(compressedImage, actionsDiv);
+                self.closeFoodResult();
+                self.showQuickFallbackFullScreen(compressedImage);
             });
         };
         img.src = imageBase64;
     },
     
-    showFoodResults: function(data, container) {
+    showFoodResults: function(data) {
         var self = this;
         
         // Створюємо повноекранну модалку
@@ -1374,10 +1356,9 @@ var Screens = {
         modal.innerHTML = html;
         document.body.appendChild(modal);
         
-        // Додаємо фото якщо є
-        var lastPhoto = document.querySelector('.photo-preview-img');
-        if (lastPhoto) {
-            document.getElementById('resultPhoto').innerHTML = '<img src="' + lastPhoto.src + '" alt="Їжа">';
+        // Додаємо збережене фото
+        if (self.lastFoodPhoto) {
+            document.getElementById('resultPhoto').innerHTML = '<img src="' + self.lastFoodPhoto + '" alt="Їжа">';
         }
         
         // Анімація появи
@@ -1425,6 +1406,61 @@ var Screens = {
                 modal.remove();
             }, 400);
         }
+    },
+    
+    showQuickFallbackFullScreen: function(imageBase64) {
+        var self = this;
+        
+        // Закриваємо попередню модалку
+        self.closeFoodResult();
+        
+        // Створюємо повноекранну модалку
+        var modal = document.createElement('div');
+        modal.className = 'food-result-modal';
+        modal.id = 'foodResultModal';
+        
+        var html = '<div class="food-result-content">' +
+            '<div class="food-result-header">' +
+            '<div class="food-result-photo" id="resultPhoto"></div>' +
+            '<div class="food-result-title">AI не зміг розпізнати</div>' +
+            '</div>' +
+            '<div class="food-result-body">' +
+            '<div class="fallback-search">' +
+            '<input type="text" id="fallbackSearch" placeholder="🔍 Шукати страву...">' +
+            '</div>' +
+            '<div class="fallback-list" id="fallbackList"></div>' +
+            '<div class="fallback-selected" id="fallbackSelected"></div>' +
+            '</div>' +
+            '<div class="food-result-footer">' +
+            '<button class="food-result-save-btn" id="saveFallbackBtn" disabled>💾 Зберегти</button>' +
+            '<button class="food-result-close-btn" id="closeFoodResultBtn">✕ Закрити</button>' +
+            '</div>' +
+            '</div>';
+        
+        modal.innerHTML = html;
+        document.body.appendChild(modal);
+        
+        // Додаємо фото
+        if (self.lastFoodPhoto) {
+            document.getElementById('resultPhoto').innerHTML = '<img src="' + self.lastFoodPhoto + '" alt="Їжа">';
+        }
+        
+        setTimeout(function() {
+            modal.classList.add('active');
+        }, 10);
+        
+        self.initFallbackList();
+        
+        // Закриття
+        document.getElementById('closeFoodResultBtn').addEventListener('click', function() {
+            self.closeFoodResult();
+        });
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                self.closeFoodResult();
+            }
+        });
     },
     
     showQuickFallback: function(imageBase64, container) {
