@@ -3900,11 +3900,92 @@ body::before {
     cursor: pointer;
     transition: all 0.2s ease;
     animation: fadeIn 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateX(-10px); }
     to { opacity: 1; transform: translateX(0); }
+}
+
+.food-item.expanded {
+    flex-direction: column;
+    align-items: stretch;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-radius: 12px;
+    margin: 8px 0;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.food-item.expanded .food-item-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.food-item.expanded .food-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.food-item-details {
+    display: none;
+}
+
+.food-item.expanded .food-item-details {
+    display: flex;
+}
+
+.food-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.food-detail-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.food-detail-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+
+.food-item-select-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+}
+
+.food-item-select-btn:active {
+    transform: scale(0.98);
+}
+
+.food-item-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    color: #999;
+    transition: transform 0.3s ease;
+}
+
+.food-item.expanded .food-item-arrow {
+    transform: rotate(180deg);
 }
 
 .food-item:last-child {

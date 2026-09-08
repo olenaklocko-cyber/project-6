@@ -762,6 +762,7 @@ var Screens = {
     bindNutritionEvents: function() {
         var self = this;
         var selectedFood = null;
+        var expandedItem = null;
         
         // Показати страви за категорією
         function showFoodByCategory(category) {
@@ -771,17 +772,53 @@ var Screens = {
             
             for (var i = 0; i < foods.length; i++) {
                 html += '<div class="food-item" data-index="' + i + '" data-category="' + category + '">' +
+                    '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + foods[i].icon + '</span>' +
                     '<span class="food-item-name">' + foods[i].name + '</span>' +
                     '<span class="food-item-cal">' + foods[i].calories + ' ккал/100г</span>' +
+                    '<span class="food-item-arrow">▼</span>' +
+                    '</div>' +
+                    '<div class="food-item-details">' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">Калорії на 100г:</span>' +
+                    '<span class="food-detail-value">' + foods[i].calories + ' ккал</span>' +
+                    '</div>' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">Категорія:</span>' +
+                    '<span class="food-detail-value">' + foods[i].category + '</span>' +
+                    '</div>' +
+                    '<button class="food-item-select-btn" data-index="' + i + '" data-category="' + category + '">Обрати цю страву</button>' +
+                    '</div>' +
                     '</div>';
             }
             
             container.innerHTML = html;
             
-            // Додаємо обробники
+            // Обробники для розгортання
             container.querySelectorAll('.food-item').forEach(function(item) {
-                item.addEventListener('click', function() {
+                item.querySelector('.food-item-header').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var wasExpanded = item.classList.contains('expanded');
+                    
+                    // Згортаємо всі
+                    container.querySelectorAll('.food-item').forEach(function(el) {
+                        el.classList.remove('expanded');
+                    });
+                    
+                    // Розгортаємо якщо було згорнуте
+                    if (!wasExpanded) {
+                        item.classList.add('expanded');
+                        expandedItem = item;
+                    } else {
+                        expandedItem = null;
+                    }
+                });
+            });
+            
+            // Обробники для кнопок вибору
+            container.querySelectorAll('.food-item-select-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     var idx = parseInt(this.getAttribute('data-index'));
                     var cat = this.getAttribute('data-category');
                     var foods = Storage.getFoodByCategory(cat);
@@ -848,6 +885,7 @@ var Screens = {
                 document.getElementById('customFoodBtn').style.display = 'block';
                 document.getElementById('selectedFoodSection').style.display = 'none';
                 selectedFood = null;
+                expandedItem = null;
                 
                 showFoodByCategory(this.getAttribute('data-category'));
             });
@@ -868,16 +906,51 @@ var Screens = {
             
             for (var i = 0; i < results.length; i++) {
                 html += '<div class="food-item" data-index="' + i + '">' +
+                    '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + results[i].icon + '</span>' +
                     '<span class="food-item-name">' + results[i].name + '</span>' +
                     '<span class="food-item-cal">' + results[i].calories + ' ккал/100г</span>' +
+                    '<span class="food-item-arrow">▼</span>' +
+                    '</div>' +
+                    '<div class="food-item-details">' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">Калорії на 100г:</span>' +
+                    '<span class="food-detail-value">' + results[i].calories + ' ккал</span>' +
+                    '</div>' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">Категорія:</span>' +
+                    '<span class="food-detail-value">' + results[i].category + '</span>' +
+                    '</div>' +
+                    '<button class="food-item-select-btn" data-index="' + i + '">Обрати цю страву</button>' +
+                    '</div>' +
                     '</div>';
             }
             
             container.innerHTML = html;
             
+            // Обробники для розгортання
             container.querySelectorAll('.food-item').forEach(function(item) {
-                item.addEventListener('click', function() {
+                item.querySelector('.food-item-header').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var wasExpanded = item.classList.contains('expanded');
+                    
+                    container.querySelectorAll('.food-item').forEach(function(el) {
+                        el.classList.remove('expanded');
+                    });
+                    
+                    if (!wasExpanded) {
+                        item.classList.add('expanded');
+                        expandedItem = item;
+                    } else {
+                        expandedItem = null;
+                    }
+                });
+            });
+            
+            // Обробники для кнопок вибору
+            container.querySelectorAll('.food-item-select-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     var idx = parseInt(this.getAttribute('data-index'));
                     selectFood(results[idx]);
                 });
