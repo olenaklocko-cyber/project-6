@@ -167,7 +167,7 @@ var Screens = {
                             '<button class="habit-save-btn" data-id="' + h.id + '" style="background: ' + block.color + '">✓</button>';
                     } else {
                         html += '<button class="habit-btn minus" data-id="' + h.id + '">−</button>' +
-                            '<div class="habit-count">' + count + '</div>' +
+                            '<div class="habit-count editable" data-id="' + h.id + '" data-color="' + block.color + '">' + count + '</div>' +
                             '<button class="habit-btn plus" data-id="' + h.id + '" style="background: ' + block.color + '">+</button>';
                     }
                     
@@ -282,6 +282,42 @@ var Screens = {
                 var action = this.classList.contains('plus') ? 1 : -1;
                 Storage.incrementCount(id, date, action);
                 self.renderHome();
+            });
+        });
+        
+        // Редагування числа (натиснути на число щоб ввести вручну)
+        document.querySelectorAll('.habit-count.editable').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var id = parseInt(this.getAttribute('data-id'));
+                var color = this.getAttribute('data-color');
+                var currentCount = parseInt(this.textContent) || 0;
+                
+                // Замінюємо текст на інпут
+                var input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'habit-count-input';
+                input.value = currentCount;
+                input.style.borderColor = color;
+                
+                this.parentNode.replaceChild(input, this);
+                input.focus();
+                input.select();
+                
+                // Обробка збереження
+                function saveValue() {
+                    var value = parseInt(input.value) || 0;
+                    var date = Storage.formatDate(self.selectedDate);
+                    Storage.setCount(id, date, value);
+                    self.renderHome();
+                }
+                
+                input.addEventListener('blur', saveValue);
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        saveValue();
+                    }
+                });
             });
         });
         

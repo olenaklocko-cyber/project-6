@@ -3014,6 +3014,33 @@ body::before {
     text-align: center;
 }
 
+.habit-count.editable {
+    cursor: pointer;
+    padding: 8px 12px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    border: 2px dashed #ccc;
+    transition: all 0.2s ease;
+}
+
+.habit-count.editable:hover {
+    background: #e8e8e8;
+    border-color: #999;
+}
+
+.habit-count-input {
+    width: 70px;
+    height: 44px;
+    border: 3px solid;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    background: white;
+}
+
 .habit-input {
     flex: 1;
     height: 44px;
