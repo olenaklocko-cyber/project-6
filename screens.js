@@ -655,7 +655,37 @@ var Screens = {
             // Список страв
             '<div class="food-list" id="foodListContainer"></div>' +
             
-            // Вибрана страха
+            // Кнопка "Своя страва"
+            '<div class="custom-food-btn-wrap">' +
+            '<button class="custom-food-btn" id="customFoodBtn">✍️ Своя страва</button>' +
+            '</div>' +
+            
+            // Форма ручного введення (прихована)
+            '<div class="custom-food-form" id="customFoodForm" style="display: none;">' +
+            '<div class="form-group">' +
+            '<label>Назва страви</label>' +
+            '<input type="text" id="customFoodName" placeholder="Наприклад: Жарена риба">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Калорії на 100г</label>' +
+            '<input type="number" id="customFoodCalories" placeholder="Наприклад: 180">' +
+            '</div>' +
+            
+            '<div class="form-group">' +
+            '<label>Порція (грами)</label>' +
+            '<input type="number" id="customFoodGrams" placeholder="Наприклад: 200">' +
+            '</div>' +
+            
+            '<div class="cal-result" id="customCalResult" style="display: none;">' +
+            '<div class="cal-result-value" id="customCalResultValue">0</div>' +
+            '<div class="cal-result-label">кілокалорій</div>' +
+            '</div>' +
+            
+            '<button class="btn-primary" id="addCustomFoodBtn">Додати запис</button>' +
+            '</div>' +
+            
+            // Вибрана страва з бази
             '<div class="selected-food-section" id="selectedFoodSection" style="display: none;">' +
             '<div class="selected-food-header">' +
             '<span class="selected-food-icon" id="selectedFoodIcon"></span>' +
@@ -734,6 +764,10 @@ var Screens = {
         function selectFood(food) {
             selectedFood = food;
             
+            // Ховаємо форму ручного введення
+            document.getElementById('customFoodForm').style.display = 'none';
+            document.getElementById('customFoodBtn').style.display = 'block';
+            
             document.getElementById('selectedFoodSection').style.display = 'block';
             document.getElementById('selectedFoodIcon').textContent = food.icon;
             document.getElementById('selectedFoodName').textContent = food.name;
@@ -742,7 +776,7 @@ var Screens = {
             document.getElementById('calResult').style.display = 'none';
         }
         
-        // Обчислення калорій
+        // Обчислення калорій (з бази)
         function calculateCalories() {
             if (!selectedFood) return;
             
@@ -757,13 +791,34 @@ var Screens = {
             }
         }
         
+        // Обчислення калорій (своя страва)
+        function calculateCustomCalories() {
+            var calories = parseInt(document.getElementById('customFoodCalories').value) || 0;
+            var grams = parseInt(document.getElementById('customFoodGrams').value) || 0;
+            var totalCal = Math.round((calories / 100) * grams);
+            
+            if (calories > 0 && grams > 0) {
+                document.getElementById('customCalResult').style.display = 'block';
+                document.getElementById('customCalResultValue').textContent = totalCal;
+            } else {
+                document.getElementById('customCalResult').style.display = 'none';
+            }
+        }
+        
         // Клік по категоріях
-        document.querySelectorAll('.food-category-btn').forEach(function(btn) {
+        document.querySelectorAll('#foodCategories .food-category-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.food-category-btn').forEach(function(b) {
+                document.querySelectorAll('#foodCategories .food-category-btn').forEach(function(b) {
                     b.classList.remove('active');
                 });
                 this.classList.add('active');
+                
+                // Ховаємо форму ручного введення
+                document.getElementById('customFoodForm').style.display = 'none';
+                document.getElementById('customFoodBtn').style.display = 'block';
+                document.getElementById('selectedFoodSection').style.display = 'none';
+                selectedFood = null;
+                
                 showFoodByCategory(this.getAttribute('data-category'));
             });
         });
@@ -802,7 +857,7 @@ var Screens = {
         // Зміна порції
         document.getElementById('portionGrams').addEventListener('input', calculateCalories);
         
-        // Додати страву
+        // Додати страву з бази
         document.getElementById('addFoodBtn').addEventListener('click', function() {
             if (!selectedFood) {
                 alert('Спочатку обери страву з переліку!');
@@ -829,7 +884,68 @@ var Screens = {
             document.getElementById('selectedFoodSection').style.display = 'none';
             document.getElementById('foodSearch').value = '';
             document.getElementById('foodListContainer').innerHTML = '';
-            document.querySelectorAll('.food-category-btn').forEach(function(b) {
+            document.querySelectorAll('#foodCategories .food-category-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
+            
+            alert('Страву додано! ' + totalCal + ' ккал');
+        });
+        
+        // Кнопка "Своя страва"
+        document.getElementById('customFoodBtn').addEventListener('click', function() {
+            selectedFood = null;
+            document.getElementById('selectedFoodSection').style.display = 'none';
+            document.getElementById('customFoodBtn').style.display = 'none';
+            document.getElementById('customFoodForm').style.display = 'block';
+            document.getElementById('customFoodName').value = '';
+            document.getElementById('customFoodCalories').value = '';
+            document.getElementById('customFoodGrams').value = '';
+            document.getElementById('customCalResult').style.display = 'none';
+        });
+        
+        // Обчислення калорій для своєї страви
+        document.getElementById('customFoodCalories').addEventListener('input', calculateCustomCalories);
+        document.getElementById('customFoodGrams').addEventListener('input', calculateCustomCalories);
+        
+        // Додати свою страву
+        document.getElementById('addCustomFoodBtn').addEventListener('click', function() {
+            var name = document.getElementById('customFoodName').value.trim();
+            var calories = parseInt(document.getElementById('customFoodCalories').value) || 0;
+            var grams = parseInt(document.getElementById('customFoodGrams').value) || 0;
+            
+            if (!name) {
+                alert('Введи назву страви!');
+                return;
+            }
+            
+            if (calories <= 0) {
+                alert('Введи калорії на 100г!');
+                return;
+            }
+            
+            if (grams <= 0) {
+                alert('Введи кількість грамів!');
+                return;
+            }
+            
+            var totalCal = Math.round((calories / 100) * grams);
+            
+            Storage.addFoodEntry({
+                name: name,
+                calories: totalCal,
+                portion: grams + 'г',
+                time: new Date().toLocaleTimeString('uk-UA')
+            });
+            
+            // Очищаємо
+            document.getElementById('customFoodForm').style.display = 'none';
+            document.getElementById('customFoodBtn').style.display = 'block';
+            document.getElementById('customFoodName').value = '';
+            document.getElementById('customFoodCalories').value = '';
+            document.getElementById('customFoodGrams').value = '';
+            document.getElementById('customCalResult').style.display = 'none';
+            document.getElementById('foodListContainer').innerHTML = '';
+            document.querySelectorAll('#foodCategories .food-category-btn').forEach(function(b) {
                 b.classList.remove('active');
             });
             

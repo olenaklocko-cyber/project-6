@@ -3798,29 +3798,26 @@ body::before {
 }
 
 .food-categories {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     padding: 0 15px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-
-.food-categories::-webkit-scrollbar {
-    display: none;
 }
 
 .food-category-btn {
-    padding: 8px 16px;
+    padding: 10px 6px;
     border: none;
-    border-radius: 20px;
+    border-radius: 12px;
     background: #f0f0f0;
     color: #666;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
-    white-space: nowrap;
+    text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .food-category-btn.active {
@@ -3928,6 +3925,66 @@ body::before {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     margin-top: 4px;
+}
+
+.custom-food-btn-wrap {
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+.custom-food-btn {
+    width: 100%;
+    padding: 14px;
+    border: 2px dashed #667eea;
+    border-radius: 12px;
+    background: #667eea10;
+    color: #667eea;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-food-btn:active {
+    background: #667eea20;
+    transform: scale(0.98);
+}
+
+.custom-food-form {
+    margin: 0 15px 15px;
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 2px solid #667eea40;
+}
+
+.custom-food-form .form-group {
+    margin-bottom: 12px;
+}
+
+.custom-food-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.custom-food-form input {
+    width: 100%;
+    height: 44px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-family: 'Nunito', sans-serif;
+    transition: border-color 0.2s ease;
+}
+
+.custom-food-form input:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 .food-entry-item {
