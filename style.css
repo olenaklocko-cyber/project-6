@@ -1577,7 +1577,7 @@ body::before {
 .add-tabs {
     display: flex;
     gap: 10px;
-    background: #e8ecf1;
+    background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
     border-radius: 16px;
     padding: 6px;
 }
@@ -1596,10 +1596,26 @@ body::before {
     color: #888;
 }
 
-.add-tab.active {
-    background: white;
-    color: #333;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.add-tab:first-child {
+    background: linear-gradient(135deg, #ff9a9e20, #fad0c420);
+    color: #d47a7a;
+}
+
+.add-tab:last-child {
+    background: linear-gradient(135deg, #a8edea20, #fed6e320);
+    color: #5a8a8a;
+}
+
+.add-tab.active:first-child {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: white;
+    box-shadow: 0 4px 16px rgba(255, 154, 158, 0.4);
+}
+
+.add-tab.active:last-child {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    color: #3a6a6a;
+    box-shadow: 0 4px 16px rgba(168, 237, 234, 0.4);
 }
 
 .nutrition-section {
