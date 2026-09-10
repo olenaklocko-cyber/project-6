@@ -1,6 +1,244 @@
 // ===== STORAGE — блоки звичок =====
 
 var Storage = {
+    // Переклади назв їжі
+    foodNames: {
+        'uk': {
+            'Вівсяна каша': 'Вівсяна каша',
+            'Рисова каша': 'Рисова каша',
+            'Гречана каша': 'Гречана каша',
+            'Пшоняна каша': 'Пшоняна каша',
+            'Манна каша': 'Манна каша',
+            'Кефір 1%': 'Кефір 1%',
+            'Йогурт натуральний': 'Йогурт натуральний',
+            'Сир творожний': 'Сир творожний',
+            'Молоко 2.5%': 'Молоко 2.5%',
+            'Сметана 15%': 'Сметана 15%',
+            'Сир твердий': 'Сир твердий',
+            'Куряча грудка': 'Куряча грудка',
+            'Куряче стегно': 'Куряче стегно',
+            'Яловичина': 'Яловичина',
+            'Свинина нежирна': 'Свинина нежирна',
+            'Індичка': 'Індичка',
+            'Ковбаса варена': 'Ковбаса варена',
+            'Лосось': 'Лосось',
+            'Тунець': 'Тунець',
+            'Тріска': 'Тріска',
+            'Минтай': 'Минтай',
+            'Сьомга': 'Сьомга',
+            'Креветки': 'Креветки',
+            'Картопля': 'Картопля',
+            'Морква': 'Морква',
+            'Буряк': 'Буряк',
+            'Капуста': 'Капуста',
+            'Огірок': 'Огірок',
+            'Помідор': 'Помідор',
+            'Яблуко': 'Яблуко',
+            'Банан': 'Банан',
+            'Апельсин': 'Апельсин',
+            'Виноград': 'Виноград',
+            'Хліб білий': 'Хліб білий',
+            'Хліб чорний': 'Хліб чорний',
+            'Батон': 'Батон',
+            'Яйце': 'Яйце',
+            'Чай': 'Чай',
+            'Кава': 'Кава',
+            'Сік': 'Сік',
+            'Шоколад': 'Шоколад',
+            'Цукерки': 'Цукерки',
+            'Печиво': 'Печиво',
+            'Горіхи': 'Горіхи',
+            'Масло': 'Масло',
+            'Олія': 'Олія',
+            'Борщ': 'Борщ',
+            'Суп': 'Суп',
+            'Пельмені': 'Пельмені',
+            'Вареники': 'Вареники',
+            'Гречка з м\'ясом': 'Гречка з м\'ясом',
+            'Рис з куркою': 'Рис з куркою',
+            'Паста': 'Паста',
+            'Піца': 'Піца',
+            'Салат': 'Салат'
+        },
+        'en': {
+            'Вівсяна каша': 'Oatmeal',
+            'Рисова каша': 'Rice porridge',
+            'Гречана каша': 'Buckwheat porridge',
+            'Пшоняна каша': 'Millet porridge',
+            'Манна каша': 'Semolina porridge',
+            'Кефір 1%': 'Kefir 1%',
+            'Йогурт натуральний': 'Natural yogurt',
+            'Сир творожний': 'Cottage cheese',
+            'Молоко 2.5%': 'Milk 2.5%',
+            'Сметана 15%': 'Sour cream 15%',
+            'Сир твердий': 'Hard cheese',
+            'Куряча грудка': 'Chicken breast',
+            'Куряче стегно': 'Chicken thigh',
+            'Яловичина': 'Beef',
+            'Свинина нежирна': 'Lean pork',
+            'Індичка': 'Turkey',
+            'Ковбаса варена': 'Boiled sausage',
+            'Лосось': 'Salmon',
+            'Тунець': 'Tuna',
+            'Тріска': 'Cod',
+            'Минтай': 'Pollock',
+            'Сьомга': 'Pink salmon',
+            'Креветки': 'Shrimp',
+            'Картопля': 'Potato',
+            'Морква': 'Carrot',
+            'Буряк': 'Beetroot',
+            'Капуста': 'Cabbage',
+            'Огірок': 'Cucumber',
+            'Помідор': 'Tomato',
+            'Яблуко': 'Apple',
+            'Банан': 'Banana',
+            'Апельсин': 'Orange',
+            'Виноград': 'Grape',
+            'Хліб білий': 'White bread',
+            'Хліб чорний': 'Brown bread',
+            'Батон': 'Baguette',
+            'Яйце': 'Egg',
+            'Чай': 'Tea',
+            'Кава': 'Coffee',
+            'Сік': 'Juice',
+            'Шоколад': 'Chocolate',
+            'Цукерки': 'Candy',
+            'Печиво': 'Cookies',
+            'Горіхи': 'Nuts',
+            'Масло': 'Butter',
+            'Олія': 'Oil',
+            'Борщ': 'Borscht',
+            'Суп': 'Soup',
+            'Пельмені': 'Dumplings',
+            'Вареники': 'Varenyky',
+            'Гречка з м\'ясом': 'Buckwheat with meat',
+            'Рис з куркою': 'Rice with chicken',
+            'Паста': 'Pasta',
+            'Піца': 'Pizza',
+            'Салат': 'Salad'
+        }
+    },
+    
+    // Функція перекладу назви їжі
+    translateFoodName: function(name) {
+        var lang = I18n.currentLang || 'uk';
+        return this.foodNames[lang][name] || name;
+    },
+    
+    // Переклади назв вправ
+    exerciseNames: {
+        'uk': {
+            'Біг': 'Біг',
+            'Ходьба швидка': 'Ходьба швидка',
+            'Ходьба повільна': 'Ходьба повільна',
+            'Велосипед': 'Велосипед',
+            'Плавання': 'Плавання',
+            'Стрибки': 'Стрибки',
+            'Скакалка': 'Скакалка',
+            'Присідання': 'Присідання',
+            'Випади': 'Випади',
+            'Підтягування': 'Підтягування',
+            'Віджимання': 'Віджимання',
+            'Планка': 'Планка',
+            'Жим лежачи': 'Жим лежачи',
+            'Тяга вниз': 'Тяга вниз',
+            'Розгинання рук': 'Розгинання рук',
+            'Згинання рук': 'Згинання рук',
+            'Підйом ніг': 'Підйом ніг',
+            'Скручування': 'Скручування',
+            'Махи ногами': 'Махи ногами',
+            'Жим ногами': 'Жим ногами',
+            'Тяга штанги': 'Тяга штанги',
+            'Станова тяга': 'Станова тяга',
+            'Йога': 'Йога',
+            'Пілатес': 'Пілатес',
+            'Розтяжка': 'Розтяжка',
+            'Медитація': 'Медитація',
+            'Тай-чі': 'Тай-чі',
+            'Статичні вправи': 'Статичні вправи',
+            'Баланс': 'Баланс',
+            'HIIT': 'HIIT',
+            'Табата': 'Табата',
+            'Кросфіт': 'Кросфіт',
+            'Спринт': 'Спринт',
+            'Інтервальний біг': 'Інтервальний біг',
+            'Футбол': 'Футбол',
+            'Баскетбол': 'Баскетбол',
+            'Волейбол': 'Волейбол',
+            'Теніс': 'Теніс',
+            'Бадмінтон': 'Бадмінтон',
+            'Настільний теніс': 'Настільний теніс',
+            'Прибирання': 'Прибирання',
+            'Миття посуду': 'Миття посуду',
+            'Прасування': 'Прасування',
+            'Садівництво': 'Садівництво',
+            'Миття вікон': 'Миття вікон',
+            'Бокс': 'Бокс',
+            'Карате': 'Карате',
+            'Кікбоксинг': 'Кікбоксинг',
+            'Фехтування': 'Фехтування',
+            'Дзюдо': 'Дзюдо'
+        },
+        'en': {
+            'Біг': 'Running',
+            'Ходьба швидка': 'Brisk walking',
+            'Ходьба повільна': 'Slow walking',
+            'Велосипед': 'Cycling',
+            'Плавання': 'Swimming',
+            'Стрибки': 'Jumping',
+            'Скакалка': 'Jump rope',
+            'Присідання': 'Squats',
+            'Випади': 'Lunges',
+            'Підтягування': 'Pull-ups',
+            'Віджимання': 'Push-ups',
+            'Планка': 'Plank',
+            'Жим лежачи': 'Bench press',
+            'Тяга вниз': 'Lat pulldown',
+            'Розгинання рук': 'Tricep extensions',
+            'Згинання рук': 'Bicep curls',
+            'Підйом ніг': 'Leg raises',
+            'Скручування': 'Crunches',
+            'Махи ногами': 'Leg swings',
+            'Жим ногами': 'Leg press',
+            'Тяга штанги': 'Barbell row',
+            'Станова тяга': 'Deadlift',
+            'Йога': 'Yoga',
+            'Пілатес': 'Pilates',
+            'Розтяжка': 'Stretching',
+            'Медитація': 'Meditation',
+            'Тай-чі': 'Tai chi',
+            'Статичні вправи': 'Static exercises',
+            'Баланс': 'Balance',
+            'HIIT': 'HIIT',
+            'Табата': 'Tabata',
+            'Кросфіт': 'CrossFit',
+            'Спринт': 'Sprint',
+            'Інтервальний біг': 'Interval running',
+            'Футбол': 'Football',
+            'Баскетбол': 'Basketball',
+            'Волейбол': 'Volleyball',
+            'Теніс': 'Tennis',
+            'Бадмінтон': 'Badminton',
+            'Настільний теніс': 'Table tennis',
+            'Прибирання': 'Cleaning',
+            'Миття посуду': 'Washing dishes',
+            'Прасування': 'Ironing',
+            'Садівництво': 'Gardening',
+            'Миття вікон': 'Window cleaning',
+            'Бокс': 'Boxing',
+            'Карате': 'Karate',
+            'Кікбоксинг': 'Kickboxing',
+            'Фехтування': 'Fencing',
+            'Дзюдо': 'Judo'
+        }
+    },
+    
+    // Функція перекладу назви вправи
+    translateExerciseName: function(name) {
+        var lang = I18n.currentLang || 'uk';
+        return this.exerciseNames[lang][name] || name;
+    },
+    
     // Блоки звичок
     blocks: [
         {
@@ -323,18 +561,41 @@ var Storage = {
     
     getFoodCategories: function() {
         var categories = [];
+        var categoryMap = {
+            'Каші': 'catPorridge',
+            'Молочні': 'catDairy',
+            'М\'ясо': 'catMeat',
+            'Риба': 'catFish',
+            'Овочі': 'catVegetables',
+            'Фрукти': 'catFruits',
+            'Випічка': 'catBakery',
+            'Яйця': 'catEggs',
+            'Напої': 'catDrinks',
+            'Солодощі': 'catSweets',
+            'Горіхи': 'catNuts',
+            'Масла': 'catOils',
+            'Страви': 'catDishes'
+        };
+        
         for (var i = 0; i < this.foodDatabase.length; i++) {
             var cat = this.foodDatabase[i].category;
             if (categories.indexOf(cat) === -1) {
                 categories.push(cat);
             }
         }
-        return categories;
+        
+        // Повертаємо перекладені назви
+        return categories.map(function(cat) {
+            return {
+                id: cat,
+                name: I18n.t(categoryMap[cat]) || cat
+            };
+        });
     },
     
-    getFoodByCategory: function(category) {
+    getFoodByCategory: function(categoryId) {
         return this.foodDatabase.filter(function(f) {
-            return f.category === category;
+            return f.category === categoryId;
         });
     },
     
@@ -435,18 +696,35 @@ var Storage = {
     
     getExerciseCategories: function() {
         var categories = [];
+        var categoryMap = {
+            'Кардіо': 'exCatCardio',
+            'Силові': 'exCatStrength',
+            'Розтяжка': 'exCatFlexibility',
+            'Інтервальні': 'exCatInterval',
+            'Ігри': 'exCatGames',
+            'Побутові': 'exCatHousehold',
+            'Єдиноборства': 'exCatMartial'
+        };
+        
         for (var i = 0; i < this.exerciseDatabase.length; i++) {
             var cat = this.exerciseDatabase[i].category;
             if (categories.indexOf(cat) === -1) {
                 categories.push(cat);
             }
         }
-        return categories;
+        
+        // Повертаємо перекладені назви
+        return categories.map(function(cat) {
+            return {
+                id: cat,
+                name: I18n.t(categoryMap[cat]) || cat
+            };
+        });
     },
     
-    getExercisesByCategory: function(category) {
+    getExercisesByCategory: function(categoryId) {
         return this.exerciseDatabase.filter(function(e) {
-            return e.category === category;
+            return e.category === categoryId;
         });
     },
     

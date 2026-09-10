@@ -168,7 +168,7 @@ var Screens = {
                 html += '<div class="food-entry-item" data-index="' + i + '">' +
                     '<div class="food-entry-icon">🍽️</div>' +
                     '<div class="food-entry-info">' +
-                    '<div class="food-entry-name">' + entry.name + '</div>' +
+                    '<div class="food-entry-name">' + Storage.translateFoodName(entry.name) + '</div>' +
                     '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
                     '</div>' +
                     '<div class="food-entry-cal">' + entry.calories + ' ' + I18n.t('kcal') + '</div>' +
@@ -278,7 +278,7 @@ var Screens = {
                 '<div class="stats-block-header" data-block="stats-' + block.id + '">' +
                 '<div class="stats-block-icon" style="background: ' + color + '20; color: ' + color + '">' + block.icon + '</div>' +
                 '<div class="stats-block-info">' +
-                '<div class="stats-block-name">' + block.name + '</div>' +
+                '<div class="stats-block-name">' + I18n.t('block' + block.id.charAt(0).toUpperCase() + block.id.slice(1)) + '</div>' +
                 '<div class="stats-block-bar">' +
                 '<div class="stats-block-fill" style="width: ' + blockProgress + '%; background: ' + color + '"></div>' +
                 '</div>' +
@@ -301,8 +301,8 @@ var Screens = {
                     html += '<div class="stats-habit-row">' +
                         '<div class="stats-habit-icon">' + h.icon + '</div>' +
                         '<div class="stats-habit-info">' +
-                        '<div class="stats-habit-name">' + h.name + '</div>' +
-                        '<div class="stats-habit-count">' + count + ' ' + (h.unit || 'разів') + 
+                        '<div class="stats-habit-name">' + I18n.t('habit' + h.id) + '</div>' +
+                        '<div class="stats-habit-count">' + count + ' ' + (h.unit || I18n.t('times')) + 
                         (goal > 0 ? ' / ' + goal : '') + '</div>' +
                         '</div>';
                     
@@ -342,7 +342,7 @@ var Screens = {
             '<div class="stats-section-title">' + I18n.t('weeklyActivity') + '</div>' +
             '<div class="stats-calendar">';
         
-        var dayNamesFull = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        var dayNamesFull = [I18n.t('sun'), I18n.t('mon'), I18n.t('tue'), I18n.t('wed'), I18n.t('thu'), I18n.t('fri'), I18n.t('sat')];
         var monthNames = ['січ', 'лют', 'бер', 'кві', 'трав', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'груд'];
         var weekData = [];
         
@@ -698,7 +698,7 @@ var Screens = {
             '<div class="food-categories" id="exerciseCategories">';
         
         for (var i = 0; i < categories.length; i++) {
-            html += '<button class="food-category-btn" data-category="' + categories[i] + '">' + categories[i] + '</button>';
+            html += '<button class="food-category-btn" data-category="' + categories[i].id + '">' + categories[i].name + '</button>';
         }
         
         html += '</div>' +
@@ -715,12 +715,12 @@ var Screens = {
             '<div class="custom-food-form" id="customExerciseForm" style="display: none;">' +
             '<div class="form-group">' +
             '<label>' + I18n.t('customExerciseName') + '</label>' +
-            '<input type="text" id="customExerciseName" placeholder="Наприклад: Танці з собакою">' +
+            '<input type="text" id="customExerciseName" placeholder="' + I18n.t('customExerciseNamePlaceholder') + '">' +
             '</div>' +
             
             '<div class="form-group">' +
             '<label>' + I18n.t('customExerciseCal') + '</label>' +
-            '<input type="number" id="customExerciseCalories" placeholder="Наприклад: 8">' +
+            '<input type="number" id="customExerciseCalories" placeholder="' + I18n.t('customExerciseCalPlaceholder') + '">' +
             '</div>' +
             
             '<div class="form-group">' +
@@ -746,12 +746,12 @@ var Screens = {
             
             '<div class="form-group">' +
             '<label>Час (хвилини)</label>' +
-            '<input type="number" id="exerciseMinutes" placeholder="Скільки хвилин займалась">' +
+            '<input type="number" id="exerciseMinutes" placeholder="' + I18n.t('customExerciseTimePlaceholder') + '">' +
             '</div>' +
             
             '<div class="cal-result" id="exerciseCalResult" style="display: none;">' +
             '<div class="cal-result-value" id="exerciseCalResultValue">0</div>' +
-            '<div class="cal-result-label">кілокалорій спалено</div>' +
+            '<div class="cal-result-label">' + I18n.t('exerciseBurned') + '</div>' +
             '</div>' +
             
             '<button class="btn-primary" id="addExerciseBtn">' + I18n.t('addRecord') + '</button>' +
@@ -776,7 +776,7 @@ var Screens = {
             '<div class="food-categories" id="foodCategories">';
         
         for (var i = 0; i < categories.length; i++) {
-            html += '<button class="food-category-btn" data-category="' + categories[i] + '">' + categories[i] + '</button>';
+            html += '<button class="food-category-btn" data-category="' + categories[i].id + '">' + categories[i].name + '</button>';
         }
         
         html += '</div>' +
@@ -793,12 +793,12 @@ var Screens = {
             '<div class="custom-food-form" id="customFoodForm" style="display: none;">' +
             '<div class="form-group">' +
             '<label>' + I18n.t('customFoodName') + '</label>' +
-            '<input type="text" id="customFoodName" placeholder="Наприклад: Жарена риба">' +
+            '<input type="text" id="customFoodName" placeholder="' + I18n.t('customFoodNamePlaceholder') + '">' +
             '</div>' +
             
             '<div class="form-group">' +
             '<label>' + I18n.t('customFoodCal') + '</label>' +
-            '<input type="number" id="customFoodCalories" placeholder="Наприклад: 180">' +
+            '<input type="number" id="customFoodCalories" placeholder="' + I18n.t('customFoodCalPlaceholder') + '">' +
             '</div>' +
             
             '<div class="form-group">' +
@@ -823,13 +823,13 @@ var Screens = {
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Порція (грами)</label>' +
-            '<input type="number" id="portionGrams" placeholder="Введи кількість грамів">' +
+            '<label>' + I18n.t('customFoodGrams') + '</label>' +
+            '<input type="number" id="portionGrams" placeholder="' + I18n.t('customFoodGramsPlaceholder') + '">' +
             '</div>' +
             
             '<div class="cal-result" id="calResult" style="display: none;">' +
             '<div class="cal-result-value" id="calResultValue">0</div>' +
-            '<div class="cal-result-label">кілокалорій</div>' +
+            '<div class="cal-result-label">' + I18n.t('caloriesBurned') + '</div>' +
             '</div>' +
             
             '<button class="btn-primary" id="addFoodBtn">' + I18n.t('addRecord') + '</button>' +
@@ -873,20 +873,20 @@ var Screens = {
                 html += '<div class="food-item" data-index="' + i + '" data-category="' + category + '">' +
                     '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + foods[i].icon + '</span>' +
-                    '<span class="food-item-name">' + foods[i].name + '</span>' +
+                    '<span class="food-item-name">' + Storage.translateFoodName(foods[i].name) + '</span>' +
                     '<span class="food-item-cal">' + foods[i].calories + ' ' + I18n.t('kcal') + '/100г</span>' +
                     '<span class="food-item-arrow">▼</span>' +
                     '</div>' +
                     '<div class="food-item-details">' +
                     '<div class="food-detail-row">' +
-                    '<span class="food-detail-label">Калорії на 100г:</span>' +
+                    '<span class="food-detail-label">' + I18n.t('customFoodCal') + ':</span>' +
                     '<span class="food-detail-value">' + foods[i].calories + ' ' + I18n.t('kcal') + '</span>' +
                     '</div>' +
                     '<div class="food-detail-row">' +
-                    '<span class="food-detail-label">Категорія:</span>' +
+                    '<span class="food-detail-label">' + I18n.t('category') + ':</span>' +
                     '<span class="food-detail-value">' + foods[i].category + '</span>' +
                     '</div>' +
-                    '<button class="food-item-select-btn" data-index="' + i + '" data-category="' + category + '">Обрати цю страву</button>' +
+                    '<button class="food-item-select-btn" data-index="' + i + '" data-category="' + category + '">' + I18n.t('selectThisFood') + '</button>' +
                     '</div>' +
                     '</div>';
             }
@@ -1007,20 +1007,20 @@ var Screens = {
                 html += '<div class="food-item" data-index="' + i + '">' +
                     '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + results[i].icon + '</span>' +
-                    '<span class="food-item-name">' + results[i].name + '</span>' +
+                    '<span class="food-item-name">' + Storage.translateFoodName(results[i].name) + '</span>' +
                     '<span class="food-item-cal">' + results[i].calories + ' ' + I18n.t('kcal') + '/100г</span>' +
                     '<span class="food-item-arrow">▼</span>' +
                     '</div>' +
                     '<div class="food-item-details">' +
                     '<div class="food-detail-row">' +
-                    '<span class="food-detail-label">Калорії на 100г:</span>' +
+                    '<span class="food-detail-label">' + I18n.t('customFoodCal') + ':</span>' +
                     '<span class="food-detail-value">' + results[i].calories + ' ' + I18n.t('kcal') + '</span>' +
                     '</div>' +
                     '<div class="food-detail-row">' +
-                    '<span class="food-detail-label">Категорія:</span>' +
+                    '<span class="food-detail-label">' + I18n.t('category') + ':</span>' +
                     '<span class="food-detail-value">' + results[i].category + '</span>' +
                     '</div>' +
-                    '<button class="food-item-select-btn" data-index="' + i + '">Обрати цю страву</button>' +
+                    '<button class="food-item-select-btn" data-index="' + i + '">' + I18n.t('selectThisFood') + '</button>' +
                     '</div>' +
                     '</div>';
             }
@@ -1062,13 +1062,13 @@ var Screens = {
         // Додати страву з бази
         document.getElementById('addFoodBtn').addEventListener('click', function() {
             if (!selectedFood) {
-                alert('Спочатку обери страву з переліку!');
+                alert(I18n.t('selectFoodFirst'));
                 return;
             }
             
             var grams = parseInt(document.getElementById('portionGrams').value) || 0;
             if (grams <= 0) {
-                alert('Введи кількість грамів!');
+                alert(I18n.t('enterGrams'));
                 return;
             }
             
@@ -1126,7 +1126,7 @@ var Screens = {
             }
             
             if (grams <= 0) {
-                alert('Введи кількість грамів!');
+                alert(I18n.t('enterGrams'));
                 return;
             }
             
@@ -1174,7 +1174,7 @@ var Screens = {
             html += '<div class="food-entry">' +
                 '<div class="food-entry-time">' + e.time + '</div>' +
                 '<div class="food-entry-info">' +
-                '<div class="food-entry-name">' + e.name + '</div>' +
+                '<div class="food-entry-name">' + Storage.translateFoodName(e.name) + '</div>' +
                 (e.portion ? '<div class="food-entry-portion">' + e.portion + '</div>' : '') +
                 '</div>' +
                 '<div class="food-entry-cal">' + (e.calories || '?') + ' ' + I18n.t('kcal') + '</div>' +
@@ -1847,7 +1847,7 @@ var Screens = {
             for (var i = 0; i < exercises.length; i++) {
                 html += '<div class="food-item" data-index="' + i + '" data-category="' + category + '">' +
                     '<span class="food-item-icon">' + exercises[i].icon + '</span>' +
-                    '<span class="food-item-name">' + exercises[i].name + '</span>' +
+                    '<span class="food-item-name">' + Storage.translateExerciseName(exercises[i].name) + '</span>' +
                     '<span class="food-item-cal">' + exercises[i].calories + ' ' + I18n.t('kcal') + '/хв</span>' +
                     '</div>';
             }
@@ -1943,7 +1943,7 @@ var Screens = {
             for (var i = 0; i < results.length; i++) {
                 html += '<div class="food-item" data-index="' + i + '">' +
                     '<span class="food-item-icon">' + results[i].icon + '</span>' +
-                    '<span class="food-item-name">' + results[i].name + '</span>' +
+                    '<span class="food-item-name">' + Storage.translateExerciseName(results[i].name) + '</span>' +
                     '<span class="food-item-cal">' + results[i].calories + ' ' + I18n.t('kcal') + '/хв</span>' +
                     '</div>';
             }
@@ -1964,13 +1964,13 @@ var Screens = {
         // Додати вправу з бази
         document.getElementById('addExerciseBtn').addEventListener('click', function() {
             if (!selectedExercise) {
-                alert('Спочатку обери вправу з переліку!');
+                alert(I18n.t('selectExerciseFirst'));
                 return;
             }
             
             var minutes = parseInt(document.getElementById('exerciseMinutes').value) || 0;
             if (minutes <= 0) {
-                alert('Введи кількість хвилин!');
+                alert(I18n.t('enterMinutes'));
                 return;
             }
             
@@ -2033,7 +2033,7 @@ var Screens = {
             }
             
             if (minutes <= 0) {
-                alert('Введи кількість хвилин!');
+                alert(I18n.t('enterMinutes'));
                 return;
             }
             
