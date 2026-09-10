@@ -107,6 +107,7 @@ var I18n = {
             blockActivity: 'Активність протягом дня',
             blockStrength: 'Силова база',
             blockStatic: 'Статичні та відновлювальні',
+            blockNutrition: 'Контроль харчування та ваги',
             blockWater: 'Вода та харчування',
             blockSleep: 'Сон та відпочинок',
             blockMood: 'Настрій та думки',
@@ -200,7 +201,26 @@ var I18n = {
             sep: 'вер',
             oct: 'жов',
             nov: 'лис',
-            dec: 'груд'
+            dec: 'груд',
+            
+            // Звички
+            habit2001: 'Водний баланс',
+            habit2002: 'Вітаміни',
+            habit2003: 'Здоровий сон',
+            habit2004: 'Ранкова зарядка',
+            habit2005: 'Щоденна прогулянка',
+            habit2006: 'Кроки',
+            habit2007: 'Пробіжка',
+            habit2008: 'Присідання',
+            habit2009: 'Віджимання',
+            habit2010: 'Прес',
+            habit2011: 'Планка',
+            habit2012: 'Розтяжка',
+            habit2013: 'Йога',
+            habit2014: 'Дихальна гімнастика',
+            habit2015: 'Контроль ваги',
+            habit2016: 'Без цукру',
+            habit2017: 'Без фаст-фуду'
         },
         
         en: {
@@ -307,6 +327,7 @@ var I18n = {
             blockActivity: 'Daily Activity',
             blockStrength: 'Strength Base',
             blockStatic: 'Static & Recovery',
+            blockNutrition: 'Nutrition & Weight Control',
             blockWater: 'Water & Nutrition',
             blockSleep: 'Sleep & Rest',
             blockMood: 'Mood & Thoughts',
@@ -400,7 +421,26 @@ var I18n = {
             sep: 'Sep',
             oct: 'Oct',
             nov: 'Nov',
-            dec: 'Dec'
+            dec: 'Dec',
+            
+            // Habits
+            habit2001: 'Water balance',
+            habit2002: 'Vitamins',
+            habit2003: 'Healthy sleep',
+            habit2004: 'Morning exercise',
+            habit2005: 'Daily walk',
+            habit2006: 'Steps',
+            habit2007: 'Jogging',
+            habit2008: 'Squats',
+            habit2009: 'Push-ups',
+            habit2010: 'Abs',
+            habit2011: 'Plank',
+            habit2012: 'Stretching',
+            habit2013: 'Yoga',
+            habit2014: 'Breathing exercises',
+            habit2015: 'Weight control',
+            habit2016: 'No sugar',
+            habit2017: 'No fast food'
         }
     },
     
