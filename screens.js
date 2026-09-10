@@ -1604,9 +1604,14 @@ var Screens = {
             // Перекладаємо назву страви якщо потрібно
             var dishName = dish.name;
             if (I18n.currentLang === 'uk') {
-                // Шукаємо переклад з англійської на українську
+                // Спочатку шукаємо в нашій карті перекладів
                 var enToUk = Storage.getEnToUkTranslation(dish.name);
-                if (enToUk) dishName = enToUk;
+                if (enToUk) {
+                    dishName = enToUk;
+                } else {
+                    // Якщо немає в карті - залишаємо англійську (користувач може відредагувати)
+                    dishName = dish.name;
+                }
             }
             html += '<div class="food-result-dish">' +
                 '<input type="text" class="food-result-dish-input" value="' + dishName + '" data-index="' + i + '">' +
