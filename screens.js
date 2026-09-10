@@ -85,11 +85,11 @@ var Screens = {
             '<div class="ai-camera-icon-pulse"></div>' +
             '</div>' +
             '<div class="ai-camera-text">' +
-            '<div class="ai-camera-title">Сфотографувати порцію</div>' +
-            '<div class="ai-camera-subtitle">Зроби фото їжі для миттєвого AI-аналізу калорій</div>' +
+            '<div class="ai-camera-title">' + I18n.t('cameraTitle') + '</div>' +
+            '<div class="ai-camera-subtitle">' + I18n.t('cameraSubtitle') + '</div>' +
             '</div>' +
             '</div>' +
-            '<button class="ai-gallery-btn" id="homeGalleryBtn" title="Завантажити з галереї">🖼️</button>' +
+            '<button class="ai-gallery-btn" id="homeGalleryBtn" title="' + I18n.t('galleryBtn') + '">🖼️</button>' +
             '</div>' +
             '</div>';
         
@@ -99,9 +99,8 @@ var Screens = {
         var weight = profile.weight || 60;
         
         // Розрахунок денних калорій для схуднення
-        // Формула: Вага × 30 (консервативно) або Вага × 33 (помірна активність)
         var dailyCalories = Math.round(weight * 33);
-        var calorieDeficit = 500; // Дефіцит для схуднення
+        var calorieDeficit = 500;
         var targetCalories = dailyCalories - calorieDeficit;
         
         // Отримуємо з'їдені калорії за сьогодні
@@ -115,16 +114,16 @@ var Screens = {
         html += '<div class="weight-calories-strip">' +
             '<div class="weight-info">' +
             '<span class="weight-emoji">' + genderEmoji + '</span>' +
-            '<span class="weight-value">' + weight + ' кг</span>' +
+            '<span class="weight-value">' + weight + ' ' + I18n.t('kg') + '</span>' +
             '<span class="weight-goal">' + profile.goal + '</span>' +
             '</div>' +
             '<div class="calories-info">' +
             '<div class="calories-target">' +
             '<span class="calories-number">' + targetCalories + '</span>' +
-            '<span class="calories-label">ккал/день</span>' +
+            '<span class="calories-label">' + I18n.t('caloriesPerDay') + '</span>' +
             '</div>' +
             '<div class="calories-remaining ' + (remainingCalories < 0 ? 'over' : '') + '">' +
-            'Залишилось: ' + remainingCalories + ' ккал' +
+            I18n.t('remaining') + ' ' + remainingCalories + ' ' + I18n.t('kcal') +
             '</div>' +
             '</div>' +
             '<div class="progress-circle" data-progress="' + progress + '">' +
@@ -137,16 +136,15 @@ var Screens = {
             '</div>';
         
         // === 3. СЬОГОДНІШНІ ЗАПИСИ ЇЖІ ===
-        var foodEntries = Storage.getFoodEntries(today);
         
         html += '<div class="home-food-section">' +
-            '<div class="section-title">Сьогоднішні записи</div>';
+            '<div class="section-title">' + I18n.t('todayEntries') + '</div>';
         
         if (foodEntries.length === 0) {
             html += '<div class="home-empty-food">' +
                 '<div class="home-empty-icon">🍽️</div>' +
-                '<div class="home-empty-text">Ще немає записів</div>' +
-                '<div class="home-empty-hint">Сфотографуй їжу!</div>' +
+                '<div class="home-empty-text">' + I18n.t('noEntries') + '</div>' +
+                '<div class="home-empty-hint">' + I18n.t('noEntriesHint') + '</div>' +
                 '</div>';
         } else {
             html += '<div class="food-entries-list">';
@@ -162,14 +160,14 @@ var Screens = {
                     '<div class="food-entry-name">' + entry.name + '</div>' +
                     '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
                     '</div>' +
-                    '<div class="food-entry-cal">' + entry.calories + ' ккал</div>' +
+                    '<div class="food-entry-cal">' + entry.calories + ' ' + I18n.t('kcal') + '</div>' +
                     '<button class="food-entry-delete" data-index="' + i + '">✕</button>' +
                     '</div>';
             }
             
             html += '<div class="food-total-strip">' +
-                '<span>Всього сьогодні:</span>' +
-                '<span class="food-total-value">' + totalCal + ' ккал</span>' +
+                '<span>' + I18n.t('totalToday') + '</span>' +
+                '<span class="food-total-value">' + totalCal + ' ' + I18n.t('kcal') + '</span>' +
                 '</div>';
             
             html += '</div>';
@@ -242,7 +240,7 @@ var Screens = {
         html += '<div class="stats-today-card">' +
             '<div class="stats-today-header">' +
             '<div class="stats-today-emoji">📊</div>' +
-            '<div class="stats-today-title">Сьогоднішній прогрес</div>' +
+            '<div class="stats-today-title">' + I18n.t('todayProgress') + '</div>' +
             '</div>' +
             '<div class="stats-today-circle">' +
             '<svg viewBox="0 0 100 100">' +
@@ -251,7 +249,7 @@ var Screens = {
             '</svg>' +
             '<div class="stats-today-percent">' + totalProgress + '%</div>' +
             '</div>' +
-            '<div class="stats-today-label">всього виконано</div>' +
+            '<div class="stats-today-label">' + I18n.t('totalCompleted') + '</div>' +
             '</div>';
         
         // === 2. РОЗГОРНУТІ БЛОКИ ЗІ ЗВИЧКАМИ ===
@@ -330,7 +328,7 @@ var Screens = {
         
         // === 3. АКТИВНІСТЬ ЗА ТИЖДЕНЬ (календар) ===
         html += '<div class="stats-week-section">' +
-            '<div class="stats-section-title">Активність за тиждень</div>' +
+            '<div class="stats-section-title">' + I18n.t('weeklyActivity') + '</div>' +
             '<div class="stats-calendar">';
         
         var dayNamesFull = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
@@ -490,66 +488,75 @@ var Screens = {
             '<div class="profile-avatar-add">+</div>' +
             '</div>' +
             '<input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">' +
-            '<div class="profile-name">Мій профіль</div>' +
-            '<div class="profile-status">' + (activeDays > 0 ? '🔥 Активний ' + activeDays + ' днів' : 'Почни свій шлях!') + '</div>' +
+            '<div class="profile-name">' + I18n.t('myProfile') + '</div>' +
+            '<div class="profile-status">' + (activeDays > 0 ? '🔥 ' + I18n.t('active') + ' ' + activeDays + ' ' + I18n.t('days') : I18n.t('startJourney')) + '</div>' +
             '</div>' +
             
             '<div class="profile-stats">' +
             '<div class="profile-stat-item">' +
             '<div class="profile-stat-number">' + profile.weight + '</div>' +
-            '<div class="profile-stat-label">кг</div>' +
+            '<div class="profile-stat-label">' + I18n.t('kg') + '</div>' +
             '</div>' +
             '<div class="profile-stat-divider"></div>' +
             '<div class="profile-stat-item">' +
             '<div class="profile-stat-number">' + totalWeek + '</div>' +
-            '<div class="profile-stat-label">за тиждень</div>' +
+            '<div class="profile-stat-label">' + I18n.t('perWeek') + '</div>' +
             '</div>' +
             '<div class="profile-stat-divider"></div>' +
             '<div class="profile-stat-item">' +
             '<div class="profile-stat-number">' + activeDays + '</div>' +
-            '<div class="profile-stat-label">днів</div>' +
+            '<div class="profile-stat-label">' + I18n.t('days') + '</div>' +
             '</div>' +
             '</div>' +
             
             '<div class="profile-goal-card">' +
             '<div class="profile-goal-icon">🎯</div>' +
             '<div class="profile-goal-info">' +
-            '<div class="profile-goal-title">Моя мета</div>' +
+            '<div class="profile-goal-title">' + I18n.t('myGoal') + '</div>' +
             '<div class="profile-goal-text">' + profile.goal + '</div>' +
             '</div>' +
             '</div>' +
             
             '<div class="profile-settings">' +
-            '<div class="profile-settings-title">Налаштування</div>' +
+            '<div class="profile-settings-title">' + I18n.t('settings') + '</div>' +
             
             '<div class="profile-setting-item">' +
             '<div class="profile-setting-icon">👤</div>' +
-            '<div class="profile-setting-label">Стать</div>' +
+            '<div class="profile-setting-label">' + I18n.t('gender') + '</div>' +
             '<div class="gender-picker">' +
-            '<div class="gender-option ' + (profile.gender === 'female' ? 'selected' : '') + '" data-gender="female">👩 Жінка</div>' +
-            '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 Чоловік</div>' +
+            '<div class="gender-option ' + (profile.gender === 'female' ? 'selected' : '') + '" data-gender="female">👩 ' + I18n.t('female') + '</div>' +
+            '<div class="gender-option ' + (profile.gender === 'male' ? 'selected' : '') + '" data-gender="male">👨 ' + I18n.t('male') + '</div>' +
             '</div>' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
             '<div class="profile-setting-icon">⚖️</div>' +
-            '<div class="profile-setting-label">Вага</div>' +
+            '<div class="profile-setting-label">' + I18n.t('weight') + '</div>' +
             '<input type="number" id="profileWeight" value="' + profile.weight + '" class="profile-input">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
             '<div class="profile-setting-icon">🎯</div>' +
-            '<div class="profile-setting-label">Мета</div>' +
+            '<div class="profile-setting-label">' + I18n.t('goal') + '</div>' +
             '<input type="text" id="profileGoal" value="' + profile.goal + '" class="profile-input">' +
             '</div>' +
             
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">🌍</div>' +
+            '<div class="profile-setting-label">' + I18n.t('language') + '</div>' +
+            '<div class="language-picker">' +
+            '<button class="lang-btn ' + (I18n.currentLang === 'uk' ? 'active' : '') + '" data-lang="uk">🇺🇦 Українська</button>' +
+            '<button class="lang-btn ' + (I18n.currentLang === 'en' ? 'active' : '') + '" data-lang="en">🇬🇧 English</button>' +
+            '</div>' +
             '</div>' +
             
-            '<button class="btn-primary btn-full" id="saveProfileBtn">Зберегти зміни</button>' +
+            '</div>' +
+            
+            '<button class="btn-primary btn-full" id="saveProfileBtn">' + I18n.t('saveChanges') + '</button>' +
             
             '<div class="profile-motivation">' +
             '<div class="motivation-emoji">💪</div>' +
-            '<div class="motivation-text">Кожен крок наближає тебе до мети!</div>' +
+            '<div class="motivation-text">' + I18n.t('motivationText') + '</div>' +
             '</div>' +
             
             '</div>';
@@ -593,20 +600,33 @@ var Screens = {
             });
         });
         
+        // Вибір мови
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var lang = this.getAttribute('data-lang');
+                I18n.setLang(lang);
+                updatePageTranslations();
+                self.renderProfile();
+                self.renderHome();
+                self.renderStats();
+                self.renderAdd();
+            });
+        });
+        
         // Збереження профілю
         document.getElementById('saveProfileBtn').addEventListener('click', function() {
             var gender = document.querySelector('.gender-option.selected').getAttribute('data-gender');
             var weight = parseInt(document.getElementById('profileWeight').value) || 60;
-            var goal = document.getElementById('profileGoal').value.trim() || 'Здоров\'я та форма';
+            var goal = document.getElementById('profileGoal').value.trim() || I18n.t('goalHealth');
             
             Storage.saveProfile({ gender: gender, weight: weight, goal: goal });
             
             var btn = document.getElementById('saveProfileBtn');
-            btn.textContent = '✓ Збережено!';
+            btn.textContent = '✓ ' + I18n.t('saved');
             btn.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
             
             setTimeout(function() {
-                btn.textContent = 'Зберегти зміни';
+                btn.textContent = I18n.t('saveChanges');
                 btn.style.background = '';
                 self.renderProfile();
             }, 1500);
@@ -646,7 +666,7 @@ var Screens = {
             
             // Пошук вправи
             '<div class="food-search-box">' +
-            '<input type="text" id="exerciseSearch" placeholder="🔍 Знайти вправу..." autocomplete="off">' +
+            '<input type="text" id="exerciseSearch" placeholder="' + I18n.t('searchExercise') + '" autocomplete="off">' +
             '</div>' +
             
             // Категорії
@@ -663,32 +683,32 @@ var Screens = {
             
             // Кнопка "Своя вправа"
             '<div class="custom-food-btn-wrap">' +
-            '<button class="custom-food-btn" id="customExerciseBtn">✍️ Своя вправа</button>' +
+            '<button class="custom-food-btn" id="customExerciseBtn">' + I18n.t('customExercise') + '</button>' +
             '</div>' +
             
             // Форма ручного введення (прихована)
             '<div class="custom-food-form" id="customExerciseForm" style="display: none;">' +
             '<div class="form-group">' +
-            '<label>Назва вправи</label>' +
+            '<label>' + I18n.t('customExerciseName') + '</label>' +
             '<input type="text" id="customExerciseName" placeholder="Наприклад: Танці з собакою">' +
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Калорії на хвилину</label>' +
+            '<label>' + I18n.t('customExerciseCal') + '</label>' +
             '<input type="number" id="customExerciseCalories" placeholder="Наприклад: 8">' +
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Час (хвилини)</label>' +
-            '<input type="number" id="customExerciseMinutes" placeholder="Наприклад: 30">' +
+            '<label>' + I18n.t('customExerciseTime') + '</label>' +
+            '<input type="number" id="customExerciseMinutes" placeholder="' + I18n.t('customExerciseTimePlaceholder') + '">' +
             '</div>' +
             
             '<div class="cal-result" id="customExerciseCalResult" style="display: none;">' +
             '<div class="cal-result-value" id="customExerciseCalResultValue">0</div>' +
-            '<div class="cal-result-label">кілокалорій спалено</div>' +
+            '<div class="cal-result-label">' + I18n.t('exerciseBurned') + '</div>' +
             '</div>' +
             
-            '<button class="btn-primary" id="addCustomExerciseBtn">Додати запис</button>' +
+            '<button class="btn-primary" id="addCustomExerciseBtn">' + I18n.t('addRecord') + '</button>' +
             '</div>' +
             
             // Вибрана вправа з бази
@@ -709,7 +729,7 @@ var Screens = {
             '<div class="cal-result-label">кілокалорій спалено</div>' +
             '</div>' +
             
-            '<button class="btn-primary" id="addExerciseBtn">Додати запис</button>' +
+            '<button class="btn-primary" id="addExerciseBtn">' + I18n.t('addRecord') + '</button>' +
             '</div>' +
             
             '</div>';
@@ -724,7 +744,7 @@ var Screens = {
             
             // Пошук страви
             '<div class="food-search-box">' +
-            '<input type="text" id="foodSearch" placeholder="🔍 Знайти страву..." autocomplete="off">' +
+            '<input type="text" id="foodSearch" placeholder="' + I18n.t('searchFood') + '" autocomplete="off">' +
             '</div>' +
             
             // Категорії
@@ -741,32 +761,32 @@ var Screens = {
             
             // Кнопка "Своя страва"
             '<div class="custom-food-btn-wrap">' +
-            '<button class="custom-food-btn" id="customFoodBtn">✍️ Своя страва</button>' +
+            '<button class="custom-food-btn" id="customFoodBtn">' + I18n.t('customFood') + '</button>' +
             '</div>' +
             
             // Форма ручного введення (прихована)
             '<div class="custom-food-form" id="customFoodForm" style="display: none;">' +
             '<div class="form-group">' +
-            '<label>Назва страви</label>' +
+            '<label>' + I18n.t('customFoodName') + '</label>' +
             '<input type="text" id="customFoodName" placeholder="Наприклад: Жарена риба">' +
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Калорії на 100г</label>' +
+            '<label>' + I18n.t('customFoodCal') + '</label>' +
             '<input type="number" id="customFoodCalories" placeholder="Наприклад: 180">' +
             '</div>' +
             
             '<div class="form-group">' +
-            '<label>Порція (грами)</label>' +
-            '<input type="number" id="customFoodGrams" placeholder="Наприклад: 200">' +
+            '<label>' + I18n.t('customFoodGrams') + '</label>' +
+            '<input type="number" id="customFoodGrams" placeholder="' + I18n.t('customFoodGramsPlaceholder') + '">' +
             '</div>' +
             
             '<div class="cal-result" id="customCalResult" style="display: none;">' +
             '<div class="cal-result-value" id="customCalResultValue">0</div>' +
-            '<div class="cal-result-label">кілокалорій</div>' +
+            '<div class="cal-result-label">' + I18n.t('caloriesBurned') + '</div>' +
             '</div>' +
             
-            '<button class="btn-primary" id="addCustomFoodBtn">Додати запис</button>' +
+            '<button class="btn-primary" id="addCustomFoodBtn">' + I18n.t('addRecord') + '</button>' +
             '</div>' +
             
             // Вибрана страва з бази
@@ -787,7 +807,7 @@ var Screens = {
             '<div class="cal-result-label">кілокалорій</div>' +
             '</div>' +
             
-            '<button class="btn-primary" id="addFoodBtn">Додати запис</button>' +
+            '<button class="btn-primary" id="addFoodBtn">' + I18n.t('addRecord') + '</button>' +
             '</div>' +
             
             '</div>';
@@ -829,13 +849,13 @@ var Screens = {
                     '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + foods[i].icon + '</span>' +
                     '<span class="food-item-name">' + foods[i].name + '</span>' +
-                    '<span class="food-item-cal">' + foods[i].calories + ' ккал/100г</span>' +
+                    '<span class="food-item-cal">' + foods[i].calories + ' ' + I18n.t('kcal') + '/100г</span>' +
                     '<span class="food-item-arrow">▼</span>' +
                     '</div>' +
                     '<div class="food-item-details">' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">Калорії на 100г:</span>' +
-                    '<span class="food-detail-value">' + foods[i].calories + ' ккал</span>' +
+                    '<span class="food-detail-value">' + foods[i].calories + ' ' + I18n.t('kcal') + '</span>' +
                     '</div>' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">Категорія:</span>' +
@@ -892,7 +912,7 @@ var Screens = {
             document.getElementById('selectedFoodSection').style.display = 'block';
             document.getElementById('selectedFoodIcon').textContent = food.icon;
             document.getElementById('selectedFoodName').textContent = food.name;
-            document.getElementById('selectedFoodCal').textContent = food.calories + ' ккал/100г';
+            document.getElementById('selectedFoodCal').textContent = food.calories + ' ' + I18n.t('kcal') + '/100г';
             document.getElementById('portionGrams').value = '';
             document.getElementById('calResult').style.display = 'none';
         }
@@ -963,13 +983,13 @@ var Screens = {
                     '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + results[i].icon + '</span>' +
                     '<span class="food-item-name">' + results[i].name + '</span>' +
-                    '<span class="food-item-cal">' + results[i].calories + ' ккал/100г</span>' +
+                    '<span class="food-item-cal">' + results[i].calories + ' ' + I18n.t('kcal') + '/100г</span>' +
                     '<span class="food-item-arrow">▼</span>' +
                     '</div>' +
                     '<div class="food-item-details">' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">Калорії на 100г:</span>' +
-                    '<span class="food-detail-value">' + results[i].calories + ' ккал</span>' +
+                    '<span class="food-detail-value">' + results[i].calories + ' ' + I18n.t('kcal') + '</span>' +
                     '</div>' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">Категорія:</span>' +
@@ -1045,7 +1065,7 @@ var Screens = {
                 b.classList.remove('active');
             });
             
-            alert('Страву додано! ' + totalCal + ' ккал');
+            alert(I18n.t('foodAdded') + ' ' + totalCal + ' ' + I18n.t('kcal'));
         });
         
         // Кнопка "Своя страва"
@@ -1106,7 +1126,7 @@ var Screens = {
                 b.classList.remove('active');
             });
             
-            alert('Страву додано! ' + totalCal + ' ккал');
+            alert(I18n.t('foodAdded') + ' ' + totalCal + ' ' + I18n.t('kcal'));
         });
     },
     
@@ -1132,11 +1152,11 @@ var Screens = {
                 '<div class="food-entry-name">' + e.name + '</div>' +
                 (e.portion ? '<div class="food-entry-portion">' + e.portion + '</div>' : '') +
                 '</div>' +
-                '<div class="food-entry-cal">' + (e.calories || '?') + ' ккал</div>' +
+                '<div class="food-entry-cal">' + (e.calories || '?') + ' ' + I18n.t('kcal') + '</div>' +
                 '</div>';
         }
         
-        html = '<div class="food-total">Всього сьогодні: <strong>' + totalCal + ' ккал</strong></div>' + html;
+        html = '<div class="food-total">' + I18n.t('totalToday') + ' <strong>' + totalCal + ' ' + I18n.t('kcal') + '</strong></div>' + html;
         container.innerHTML = html;
     },
     
@@ -1512,12 +1532,12 @@ var Screens = {
         var html = '<div class="food-result-content">' +
             '<div class="food-result-header">' +
             '<div class="food-result-photo" id="resultPhoto"></div>' +
-            '<div class="food-result-title">AI розпізнав страву</div>' +
+            '<div class="food-result-title">' + I18n.t('aiRecognized') + '</div>' +
             '</div>' +
             '<div class="food-result-body">' +
             '<div class="food-result-calories">' +
             '<div class="food-result-cal-number">' + data.totalCalories + '</div>' +
-            '<div class="food-result-cal-label">ккал</div>' +
+            '<div class="food-result-cal-label">' + I18n.t('kcal') + '</div>' +
             '</div>' +
             '<div class="food-result-macros">' +
             '<div class="food-result-macro">' +
@@ -1539,14 +1559,14 @@ var Screens = {
             var dish = data.dishes[i];
             html += '<div class="food-result-dish">' +
                 '<input type="text" class="food-result-dish-input" value="' + dish.name + '" data-index="' + i + '">' +
-                '<div class="food-result-dish-cal">' + dish.calories + ' ккал</div>' +
+                '<div class="food-result-dish-cal">' + dish.calories + ' ' + I18n.t('kcal') + '</div>' +
                 '</div>';
         }
         
         html += '</div>' +
             '<div class="food-result-footer">' +
-            '<button class="food-result-save-btn" id="saveFoodResultBtn">💾 Зберегти ' + data.totalCalories + ' ккал</button>' +
-            '<button class="food-result-close-btn" id="closeFoodResultBtn">✕ Закрити</button>' +
+            '<button class="food-result-save-btn" id="saveFoodResultBtn">💾 ' + I18n.t('save') + ' ' + data.totalCalories + ' ' + I18n.t('kcal') + '</button>' +
+            '<button class="food-result-close-btn" id="closeFoodResultBtn">✕ ' + I18n.t('close') + '</button>' +
             '</div>' +
             '</div>';
         
@@ -1717,7 +1737,7 @@ var Screens = {
             html += '<div class="fallback-item" data-name="' + f.name + '" data-cal="' + f.cal + '">' +
                 '<span class="fallback-icon">' + f.icon + '</span>' +
                 '<span class="fallback-name">' + f.name + '</span>' +
-                '<span class="fallback-cal">' + f.cal + ' ккал</span>' +
+                '<span class="fallback-cal">' + f.cal + ' ' + I18n.t('kcal') + '</span>' +
                 '</div>';
         });
         
@@ -1775,10 +1795,10 @@ var Screens = {
         var saveBtn = document.getElementById('saveFallbackBtn');
         
         if (this.fallbackSelected.length === 0) {
-            totalDiv.textContent = 'Обери страви';
+            totalDiv.textContent = I18n.t('selectFood');
             saveBtn.disabled = true;
         } else {
-            totalDiv.innerHTML = 'Разом: <strong>' + total + ' ккал</strong>';
+            totalDiv.innerHTML = I18n.t('total') + ': <strong>' + total + ' ' + I18n.t('kcal') + '</strong>';
             saveBtn.disabled = false;
         }
         
@@ -1803,7 +1823,7 @@ var Screens = {
                 html += '<div class="food-item" data-index="' + i + '" data-category="' + category + '">' +
                     '<span class="food-item-icon">' + exercises[i].icon + '</span>' +
                     '<span class="food-item-name">' + exercises[i].name + '</span>' +
-                    '<span class="food-item-cal">' + exercises[i].calories + ' ккал/хв</span>' +
+                    '<span class="food-item-cal">' + exercises[i].calories + ' ' + I18n.t('kcal') + '/хв</span>' +
                     '</div>';
             }
             
@@ -1830,7 +1850,7 @@ var Screens = {
             document.getElementById('selectedExerciseSection').style.display = 'block';
             document.getElementById('selectedExerciseIcon').textContent = exercise.icon;
             document.getElementById('selectedExerciseName').textContent = exercise.name;
-            document.getElementById('selectedExerciseCal').textContent = exercise.calories + ' ккал/хв';
+            document.getElementById('selectedExerciseCal').textContent = exercise.calories + ' ' + I18n.t('kcal') + '/хв';
             document.getElementById('exerciseMinutes').value = '';
             document.getElementById('exerciseCalResult').style.display = 'none';
         }
@@ -1899,7 +1919,7 @@ var Screens = {
                 html += '<div class="food-item" data-index="' + i + '">' +
                     '<span class="food-item-icon">' + results[i].icon + '</span>' +
                     '<span class="food-item-name">' + results[i].name + '</span>' +
-                    '<span class="food-item-cal">' + results[i].calories + ' ккал/хв</span>' +
+                    '<span class="food-item-cal">' + results[i].calories + ' ' + I18n.t('kcal') + '/хв</span>' +
                     '</div>';
             }
             
@@ -1952,7 +1972,7 @@ var Screens = {
                 b.classList.remove('active');
             });
             
-            alert('Вправу додано! ' + totalCal + ' ккал спалено 🔥');
+            alert(I18n.t('exerciseAdded') + ' ' + totalCal + ' ' + I18n.t('kcal') + ' 🔥');
         });
         
         // Кнопка "Своя вправа"
@@ -2018,7 +2038,7 @@ var Screens = {
                 b.classList.remove('active');
             });
             
-            alert('Вправу додано! ' + totalCal + ' ккал спалено 🔥');
+            alert(I18n.t('exerciseAdded') + ' ' + totalCal + ' ' + I18n.t('kcal') + ' 🔥');
         });
     }
 };
