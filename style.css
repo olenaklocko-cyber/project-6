@@ -3145,40 +3145,79 @@ body::before {
     transform: scale(0.95);
 }
 
-/* Weight + Progress Strip */
-.weight-progress-strip {
+/* Weight + Calories + Progress Strip */
+.weight-calories-strip {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin: 0 15px 15px;
-    padding: 15px 20px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 .weight-info {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .weight-emoji {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .weight-value {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 800;
     color: #333;
 }
 
 .weight-goal {
-    font-size: 13px;
+    font-size: 11px;
+    color: #666;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #a8edea40, #fed6e340);
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.calories-info {
+    text-align: center;
+    flex: 1;
+}
+
+.calories-target {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+.calories-number {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.calories-label {
+    font-size: 12px;
     color: #888;
-    padding: 4px 10px;
-    background: #f0f0f0;
-    border-radius: 20px;
+    font-weight: 600;
+}
+
+.calories-remaining {
+    font-size: 12px;
+    color: #20c997;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.calories-remaining.over {
+    color: #ff6b6b;
 }
 
 .progress-circle {

@@ -93,15 +93,39 @@ var Screens = {
             '</div>' +
             '</div>';
         
-        // === 2. ВАГА + ПРОГРЕС ДНЯ (компактно) ===
+        // === 2. ВАГА + ПРОГРЕС ДНЯ + ДЕННІ КАЛОРІЇ ===
         var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
         var progress = Storage.getDayProgress(today);
+        var weight = profile.weight || 60;
         
-        html += '<div class="weight-progress-strip">' +
+        // Розрахунок денних калорій для схуднення
+        // Формула: Вага × 30 (консервативно) або Вага × 33 (помірна активність)
+        var dailyCalories = Math.round(weight * 33);
+        var calorieDeficit = 500; // Дефіцит для схуднення
+        var targetCalories = dailyCalories - calorieDeficit;
+        
+        // Отримуємо з'їдені калорії за сьогодні
+        var foodEntries = Storage.getFoodEntries(today);
+        var eatenCalories = 0;
+        for (var i = 0; i < foodEntries.length; i++) {
+            eatenCalories += foodEntries[i].calories || 0;
+        }
+        var remainingCalories = targetCalories - eatenCalories;
+        
+        html += '<div class="weight-calories-strip">' +
             '<div class="weight-info">' +
             '<span class="weight-emoji">' + genderEmoji + '</span>' +
-            '<span class="weight-value">' + profile.weight + ' кг</span>' +
+            '<span class="weight-value">' + weight + ' кг</span>' +
             '<span class="weight-goal">' + profile.goal + '</span>' +
+            '</div>' +
+            '<div class="calories-info">' +
+            '<div class="calories-target">' +
+            '<span class="calories-number">' + targetCalories + '</span>' +
+            '<span class="calories-label">ккал/день</span>' +
+            '</div>' +
+            '<div class="calories-remaining ' + (remainingCalories < 0 ? 'over' : '') + '">' +
+            'Залишилось: ' + remainingCalories + ' ккал' +
+            '</div>' +
             '</div>' +
             '<div class="progress-circle" data-progress="' + progress + '">' +
             '<svg viewBox="0 0 36 36">' +
