@@ -687,8 +687,8 @@ var Screens = {
         
         var html = '<div class="add-form">' +
             '<div class="add-tabs">' +
-            '<button class="add-tab' + (this.addTab === 'nutrition' ? ' active' : '') + '" data-tab="nutrition">🍎 Харчування</button>' +
-            '<button class="add-tab' + (this.addTab === 'exercises' ? ' active' : '') + '" data-tab="exercises">🏋️ Вправи</button>' +
+            '<button class="add-tab' + (this.addTab === 'nutrition' ? ' active' : '') + '" data-tab="nutrition">' + I18n.t('tabNutrition') + '</button>' +
+            '<button class="add-tab' + (this.addTab === 'exercises' ? ' active' : '') + '" data-tab="exercises">' + I18n.t('tabExercises') + '</button>' +
             '</div>';
         
         if (this.addTab === 'nutrition') {

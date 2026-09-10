@@ -18,6 +18,8 @@ var I18n = {
             navStats: 'Статистика',
             navAdd: 'Додати',
             navProfile: 'Профіль',
+            tabNutrition: '🍎 Харчування',
+            tabExercises: '💪 Вправи',
             
             // Головна
             cameraTitle: 'Сфотографувати порцію',
@@ -213,6 +215,8 @@ var I18n = {
             navStats: 'Statistics',
             navAdd: 'Add',
             navProfile: 'Profile',
+            tabNutrition: '🍎 Nutrition',
+            tabExercises: '💪 Exercises',
             
             // Home
             cameraTitle: 'Scan a meal',
