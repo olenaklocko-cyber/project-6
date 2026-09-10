@@ -89,7 +89,7 @@ var Screens = {
             '<p class="scanner-subtitle">' + I18n.t('cameraSubtitle') + '</p>' +
             '</div>';
         
-        // === 2. ВАГА + ПРОГРЕС ДНЯ + ДЕННІ КАЛОРІЇ ===
+        // === 2. КІЛЬЦЕ КАЛОРІЙ + ВАГА ===
         var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
         var progress = Storage.getDayProgress(today);
         var weight = profile.weight || 60;
@@ -118,27 +118,36 @@ var Screens = {
         }
         var remainingCalories = targetCalories - eatenCalories;
         
-        html += '<div class="weight-calories-strip">' +
-            '<div class="weight-info">' +
-            '<span class="weight-emoji">' + genderEmoji + '</span>' +
-            '<span class="weight-value">' + weight + ' ' + I18n.t('kg') + '</span>' +
-            '<span class="weight-goal">' + profile.goal + '</span>' +
-            '</div>' +
-            '<div class="calories-info">' +
-            '<div class="calories-target">' +
-            '<span class="calories-number">' + targetCalories + '</span>' +
-            '<span class="calories-label">' + I18n.t('caloriesPerDay') + '</span>' +
-            '</div>' +
-            '<div class="calories-remaining ' + (remainingCalories < 0 ? 'over' : '') + '">' +
-            I18n.t('remaining') + ' ' + remainingCalories + ' ' + I18n.t('kcal') +
-            '</div>' +
-            '</div>' +
-            '<div class="progress-circle" data-progress="' + progress + '">' +
-            '<svg viewBox="0 0 36 36">' +
-            '<path class="progress-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>' +
-            '<path class="progress-fill" stroke-dasharray="' + progress + ', 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>' +
+        // Розрахунок прогресу для кільця
+        var progressPercent = Math.min(Math.round((eatenCalories / targetCalories) * 100), 100);
+        var circumference = 502; // 2 * PI * 80
+        var offset = circumference - (progressPercent / 100) * circumference;
+        
+        // Кільце калорій
+        html += '<div class="calorie-ring-section">' +
+            '<div class="calorie-ring-container">' +
+            '<svg class="calorie-ring-svg" viewBox="0 0 180 180">' +
+            '<defs>' +
+            '<linearGradient id="calorieGradient" x1="0%" y1="0%" x2="100%" y2="100%">' +
+            '<stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />' +
+            '<stop offset="100%" style="stop-color:#4DD0E1;stop-opacity:1" />' +
+            '</linearGradient>' +
+            '</defs>' +
+            '<circle class="calorie-ring-bg" cx="90" cy="90" r="80"/>' +
+            '<circle class="calorie-ring-progress" cx="90" cy="90" r="80" style="stroke-dashoffset: ' + offset + '"/>' +
             '</svg>' +
-            '<div class="progress-text">' + progress + '%</div>' +
+            '<div class="calorie-ring-content">' +
+            '<div class="calorie-ring-number">' + eatenCalories + '</div>' +
+            '<div class="calorie-ring-unit">' + I18n.t('kcal') + '</div>' +
+            '<div class="calorie-ring-remaining">' + I18n.t('remaining') + ': ' + remainingCalories + ' ' + I18n.t('kcal') + '</div>' +
+            '</div>' +
+            '</div>' +
+            
+            // Віджет ваги
+            '<div class="weight-widget">' +
+            '<div class="weight-widget-emoji">⚖️</div>' +
+            '<div class="weight-widget-value">' + weight + ' ' + I18n.t('kg') + '</div>' +
+            '<div class="weight-widget-label">' + I18n.t('weight') + '</div>' +
             '</div>' +
             '</div>';
         

@@ -133,42 +133,62 @@ body::before {
 .ai-scanner-card {
     margin: 20px;
     padding: 40px 24px;
-    background: linear-gradient(145deg, #F5F2FC 0%, #EDE7F9 100%);
+    background: linear-gradient(145deg, rgba(241, 238, 249, 0.8) 0%, rgba(232, 224, 245, 0.6) 100%);
     border-radius: 24px;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(102, 126, 234, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 1px rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     position: relative;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .ai-scanner-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.ai-scanner-card::after {
     content: '';
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
-.ai-scanner-card:hover::before {
+.ai-scanner-card:hover::after {
     opacity: 1;
 }
 
 .ai-scanner-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 
+        0 16px 48px rgba(102, 126, 234, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9),
+        inset 0 -1px 1px rgba(102, 126, 234, 0.15);
 }
 
 /* Контейнер іконки камери */
 .scanner-icon-container {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     margin: 0 auto 24px;
     position: relative;
     display: flex;
@@ -181,41 +201,44 @@ body::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 2px solid rgba(102, 126, 234, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     border-radius: 50%;
     animation: scanPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
 .scanner-ring::before {
     content: '';
     position: absolute;
-    top: -4px;
+    top: -5px;
     left: 50%;
-    width: 8px;
-    height: 8px;
-    background: #667eea;
+    width: 10px;
+    height: 10px;
+    background: white;
     border-radius: 50%;
     transform: translateX(-50%);
     animation: scanDot 2s linear infinite;
-    box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 25px rgba(102, 126, 234, 0.6);
 }
 
 @keyframes scanPulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 1; }
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.08); opacity: 1; }
 }
 
 @keyframes scanDot {
-    0% { transform: translateX(-50%) rotate(0deg) translateX(48px); }
-    100% { transform: translateX(-50%) rotate(360deg) translateX(48px); }
+    0% { transform: translateX(-50%) rotate(0deg) translateX(52px); }
+    100% { transform: translateX(-50%) rotate(360deg) translateX(52px); }
 }
 
 /* Іконка камери */
 .scanner-icon {
-    width: 48px;
-    height: 48px;
-    color: #667eea;
-    filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+    width: 52px;
+    height: 52px;
+    color: white;
+    filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.8)) drop-shadow(0 4px 12px rgba(102, 126, 234, 0.4));
+    position: relative;
+    z-index: 2;
 }
 
 /* Заголовок картки */
@@ -225,6 +248,9 @@ body::before {
     color: #2D1B69;
     margin-bottom: 8px;
     line-height: 1.3;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    position: relative;
+    z-index: 2;
 }
 
 /* Підзаголовок картки */
@@ -233,6 +259,8 @@ body::before {
     font-weight: 600;
     color: #6B5B95;
     line-height: 1.4;
+    position: relative;
+    z-index: 2;
 }
 .stats-today-card {
     margin: 15px;
@@ -4517,4 +4545,116 @@ body::before {
     #bottomNav {
         padding-bottom: calc(20px + env(safe-area-inset-bottom));
     }
+}
+
+/* ===== CALORIE RING PROGRESS ===== */
+.calorie-ring-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px;
+    margin: 0 20px 20px;
+}
+
+.calorie-ring-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calorie-ring-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    filter: drop-shadow(0 4px 12px rgba(76, 175, 80, 0.3));
+}
+
+.calorie-ring-bg {
+    fill: none;
+    stroke: rgba(200, 195, 220, 0.3);
+    stroke-width: 12;
+}
+
+.calorie-ring-progress {
+    fill: none;
+    stroke: url(#calorieGradient);
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-dasharray: 502;
+    stroke-dashoffset: 502;
+    transition: stroke-dashoffset 1.5s ease-out;
+}
+
+.calorie-ring-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.calorie-ring-number {
+    font-size: 42px;
+    font-weight: 900;
+    color: #2D1B69;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.calorie-ring-unit {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6B5B95;
+    margin-top: 2px;
+}
+
+.calorie-ring-remaining {
+    font-size: 12px;
+    font-weight: 700;
+    color: #4CAF50;
+    margin-top: 8px;
+    padding: 4px 10px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 12px;
+}
+
+/* ===== WEIGHT WIDGET ===== */
+.weight-widget {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 
+        0 8px 24px rgba(102, 126, 234, 0.12),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    min-width: 90px;
+}
+
+.weight-widget-emoji {
+    font-size: 32px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.weight-widget-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #2D1B69;
+    line-height: 1;
+}
+
+.weight-widget-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9B8EC4;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
