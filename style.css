@@ -1310,28 +1310,27 @@ body::before {
     flex-direction: column;
     align-items: center;
     padding: 30px 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
     border-radius: 24px;
-    color: white;
-    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    color: #3D2A6A;
+    box-shadow: 0 8px 30px rgba(162, 140, 220, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .profile-avatar {
     width: 100px;
     height: 100px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 15px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
+    border: 4px solid rgba(255, 255, 255, 0.7);
     animation: avatarPulse 3s ease-in-out infinite;
-}
-
-@keyframes avatarPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-    50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.1); }
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .profile-avatar-emoji {
@@ -1351,7 +1350,7 @@ body::before {
     right: 0;
     width: 28px;
     height: 28px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(145deg, #C8B6E2, #A898D0);
     color: white;
     border-radius: 50%;
     font-size: 18px;
@@ -1360,24 +1359,19 @@ body::before {
     align-items: center;
     justify-content: center;
     border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.profile-avatar {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(162, 140, 220, 0.3);
 }
 
 .profile-name {
     font-size: 22px;
     font-weight: 900;
     margin-bottom: 5px;
+    color: #3D2A6A;
 }
 
 .profile-status {
     font-size: 14px;
-    opacity: 0.9;
+    color: #5A4A7A;
     font-weight: 600;
 }
 
@@ -1385,10 +1379,11 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background: white;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.1);
 }
 
 .profile-stat-item {
@@ -1398,7 +1393,7 @@ body::before {
 .profile-stat-number {
     font-size: 28px;
     font-weight: 900;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #B8A9D4, #8B7CB8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1406,14 +1401,14 @@ body::before {
 
 .profile-stat-label {
     font-size: 12px;
-    color: #888;
+    color: #9B8EC4;
     font-weight: 600;
 }
 
 .profile-stat-divider {
     width: 1px;
     height: 40px;
-    background: #e8ecf1;
+    background: rgba(200, 195, 220, 0.3);
 }
 
 .profile-goal-card {
@@ -1610,16 +1605,17 @@ body::before {
 }
 
 .stats-card {
-    background: white;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
     border-radius: 20px;
     padding: 20px;
     text-align: center;
-    border: 2px solid #e8ecf1;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.1);
 }
 
 .stats-card h3 {
     font-size: 12px;
-    color: #999;
+    color: #9B8EC4;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
@@ -1629,7 +1625,7 @@ body::before {
 .stats-big-number {
     font-size: 40px;
     font-weight: 900;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #B8A9D4, #8B7CB8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1637,22 +1633,23 @@ body::before {
 
 .stats-label {
     font-size: 13px;
-    color: #888;
+    color: #9B8EC4;
     font-weight: 600;
     margin-top: 5px;
 }
 
 .chart-container {
-    background: white;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
-    border: 2px solid #e8ecf1;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.1);
 }
 
 .chart-container h3 {
     font-size: 14px;
-    color: #999;
+    color: #9B8EC4;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 20px;
@@ -1664,7 +1661,7 @@ body::before {
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(200, 195, 220, 0.2);
 }
 
 .habit-stat-row:last-child {
@@ -1678,7 +1675,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5f7fa;
+    background: rgba(226, 219, 247, 0.5);
     border-radius: 12px;
 }
 
@@ -1689,19 +1686,19 @@ body::before {
 .habit-stat-name {
     font-size: 14px;
     font-weight: 700;
-    color: #333;
+    color: #3D2A6A;
     margin-bottom: 6px;
 }
 
 .habit-stat-bar {
-    background: #e8ecf1;
+    background: rgba(200, 195, 220, 0.3);
     border-radius: 6px;
     height: 8px;
     overflow: hidden;
 }
 
 .habit-stat-fill {
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: linear-gradient(90deg, #C8B6E2, #A898D0);
     height: 100%;
     border-radius: 6px;
 }
@@ -1709,7 +1706,7 @@ body::before {
 .habit-stat-count {
     font-size: 14px;
     font-weight: 800;
-    color: #667eea;
+    color: #8B7CB8;
     min-width: 80px;
     text-align: right;
 }
@@ -1731,7 +1728,7 @@ body::before {
 
 .week-fill {
     width: 100%;
-    background: linear-gradient(180deg, #667eea, #764ba2);
+    background: linear-gradient(180deg, #C8B6E2, #A898D0);
     border-radius: 8px 8px 4px 4px;
     min-height: 5px;
     transition: height 0.5s ease;
@@ -1739,7 +1736,7 @@ body::before {
 
 .week-label {
     font-size: 12px;
-    color: #888;
+    color: #9B8EC4;
     font-weight: 800;
 }
 
@@ -1748,7 +1745,7 @@ body::before {
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(200, 195, 220, 0.2);
 }
 
 .manage-row:last-child {
@@ -1768,17 +1765,17 @@ body::before {
 .manage-name {
     font-size: 15px;
     font-weight: 700;
-    color: #333;
+    color: #3D2A6A;
 }
 
 .manage-desc {
     font-size: 12px;
-    color: #999;
+    color: #9B8EC4;
 }
 
 .btn-danger {
-    background: #ff6b6b;
-    color: white;
+    background: linear-gradient(135deg, #FFB5B5, #FF9999);
+    color: #8B3A3A;
     border: none;
     padding: 10px 16px;
     border-radius: 10px;
@@ -1790,7 +1787,7 @@ body::before {
 }
 
 .btn-danger:hover {
-    background: #ee5a5a;
+    background: linear-gradient(135deg, #FF9999, #FF8080);
     transform: scale(1.05);
 }
 
@@ -1804,9 +1801,10 @@ body::before {
 .add-tabs {
     display: flex;
     gap: 10px;
-    background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+    background: linear-gradient(145deg, rgba(226, 219, 247, 0.5) 0%, rgba(236, 223, 251, 0.5) 100%);
     border-radius: 16px;
     padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .add-tab {
@@ -1820,29 +1818,29 @@ body::before {
     cursor: pointer;
     transition: all 0.3s ease;
     background: transparent;
-    color: #888;
+    color: #9B8EC4;
 }
 
 .add-tab:first-child {
-    background: linear-gradient(135deg, #ff9a9e20, #fad0c420);
-    color: #d47a7a;
+    background: transparent;
+    color: #9B8EC4;
 }
 
 .add-tab:last-child {
-    background: linear-gradient(135deg, #a8edea20, #fed6e320);
-    color: #5a8a8a;
+    background: transparent;
+    color: #9B8EC4;
 }
 
 .add-tab.active:first-child {
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    color: white;
-    box-shadow: 0 4px 16px rgba(255, 154, 158, 0.4);
+    background: linear-gradient(145deg, #E2DBF7, #ECDFFB);
+    color: #3D2A6A;
+    box-shadow: 0 4px 16px rgba(162, 140, 220, 0.3);
 }
 
 .add-tab.active:last-child {
-    background: linear-gradient(135deg, #a8edea, #fed6e3);
-    color: #3a6a6a;
-    box-shadow: 0 4px 16px rgba(168, 237, 234, 0.4);
+    background: linear-gradient(145deg, #E2DBF7, #ECDFFB);
+    color: #3D2A6A;
+    box-shadow: 0 4px 16px rgba(162, 140, 220, 0.3);
 }
 
 .nutrition-section {
@@ -1859,17 +1857,17 @@ body::before {
 .camera-btn {
     width: 100%;
     padding: 40px 20px;
-    background: linear-gradient(135deg, #023e8a, #0096c7);
-    border: none;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 24px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(2, 62, 138, 0.3);
+    box-shadow: 0 10px 30px rgba(162, 140, 220, 0.2);
 }
 
 .camera-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(2, 62, 138, 0.4);
+    box-shadow: 0 15px 40px rgba(162, 140, 220, 0.3);
 }
 
 .camera-icon {
@@ -1880,25 +1878,29 @@ body::before {
 .camera-text {
     font-size: 22px;
     font-weight: 900;
-    color: white;
+    color: #3D2A6A;
     margin-bottom: 8px;
 }
 
 .camera-hint {
     font-size: 14px;
-    color: rgba(255,255,255,0.8);
+    color: #5A4A7A;
 }
 
 .nutrition-manual {
-    background: white;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
     border-radius: 20px;
     padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.1);
 }
 
 .food-history {
-    background: white;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
     border-radius: 20px;
     padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.1);
 }
 
 .food-entry {
@@ -1906,7 +1908,7 @@ body::before {
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(200, 195, 220, 0.2);
 }
 
 .food-entry:last-child {
@@ -1915,7 +1917,7 @@ body::before {
 
 .food-entry-time {
     font-size: 12px;
-    color: #888;
+    color: #9B8EC4;
     min-width: 60px;
 }
 
@@ -1925,35 +1927,36 @@ body::before {
 
 .food-entry-name {
     font-weight: 700;
-    color: #333;
+    color: #3D2A6A;
     margin-bottom: 2px;
 }
 
 .food-entry-portion {
     font-size: 12px;
-    color: #888;
+    color: #9B8EC4;
 }
 
 .food-entry-cal {
     font-weight: 800;
-    color: #023e8a;
+    color: #8B7CB8;
     font-size: 16px;
 }
 
 .food-total {
     text-align: center;
     padding: 15px;
-    background: linear-gradient(135deg, #d4e8e5, #b8d4d0);
+    background: linear-gradient(145deg, rgba(226, 219, 247, 0.6) 0%, rgba(236, 223, 251, 0.6) 100%);
     border-radius: 12px;
     margin-bottom: 15px;
     font-size: 16px;
-    color: #2d5a5a;
+    color: #3D2A6A;
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .empty-food {
     text-align: center;
     padding: 30px;
-    color: #888;
+    color: #9B8EC4;
     font-style: italic;
 }
 
