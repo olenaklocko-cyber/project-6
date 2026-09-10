@@ -136,6 +136,7 @@ var Screens = {
         var progressPercent = Math.min(Math.round((eatenCalories / targetCalories) * 100), 100);
         var circumference = 502; // 2 * PI * 80
         var offset = circumference - (progressPercent / 100) * circumference;
+        var isOver = eatenCalories > targetCalories;
         
         // Кільце калорій
         html += '<div class="calorie-ring-section">' +
@@ -143,17 +144,22 @@ var Screens = {
             '<svg class="calorie-ring-svg" viewBox="0 0 180 180">' +
             '<defs>' +
             '<linearGradient id="calorieGradient" x1="0%" y1="0%" x2="100%" y2="100%">' +
-            '<stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />' +
-            '<stop offset="100%" style="stop-color:#4DD0E1;stop-opacity:1" />' +
+            (isOver ? 
+                '<stop offset="0%" style="stop-color:#E53935;stop-opacity:1" />' +
+                '<stop offset="100%" style="stop-color:#FF7043;stop-opacity:1" />' :
+                '<stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />' +
+                '<stop offset="100%" style="stop-color:#4DD0E1;stop-opacity:1" />') +
             '</linearGradient>' +
             '</defs>' +
             '<circle class="calorie-ring-bg" cx="90" cy="90" r="80"/>' +
             '<circle class="calorie-ring-progress" cx="90" cy="90" r="80" style="stroke-dashoffset: ' + offset + '"/>' +
             '</svg>' +
             '<div class="calorie-ring-content">' +
-            '<div class="calorie-ring-number">' + eatenCalories + '</div>' +
+            '<div class="calorie-ring-number ' + (isOver ? 'over' : '') + '">' + eatenCalories + '</div>' +
             '<div class="calorie-ring-unit">' + I18n.t('kcal') + '</div>' +
-            '<div class="calorie-ring-remaining">' + I18n.t('remaining') + ': ' + remainingCalories + ' ' + I18n.t('kcal') + '</div>' +
+            '<div class="calorie-ring-remaining ' + (isOver ? 'over' : '') + '">' + 
+            (isOver ? 'Перевищено: +' + (eatenCalories - targetCalories) : I18n.t('remaining') + ': ' + remainingCalories) + ' ' + I18n.t('kcal') + 
+            '</div>' +
             '</div>' +
             '</div>' +
             
@@ -162,6 +168,59 @@ var Screens = {
             '<div class="weight-widget-emoji">⚖️</div>' +
             '<div class="weight-widget-value">' + weight + ' ' + I18n.t('kg') + '</div>' +
             '<div class="weight-widget-label">' + I18n.t('weight') + '</div>' +
+            '</div>' +
+            '</div>';
+        
+        // Розрахунок макронутрієнтів
+        var totalProtein = 0, totalFat = 0, totalCarbs = 0;
+        for (var i = 0; i < foodEntries.length; i++) {
+            totalProtein += foodEntries[i].protein || 0;
+            totalFat += foodEntries[i].fat || 0;
+            totalCarbs += foodEntries[i].carbs || 0;
+        }
+        
+        // Норми макронутрієнтів (білки: 2г на кг, жири: 1г на кг, вуглеводи: решта)
+        var targetProtein = Math.round(weight * 2);
+        var targetFat = Math.round(weight * 1);
+        var targetCarbs = Math.round((targetCalories - (targetProtein * 4) - (targetFat * 9)) / 4);
+        if (targetCarbs < 0) targetCarbs = 0;
+        
+        var proteinPercent = Math.min(Math.round((totalProtein / targetProtein) * 100), 100);
+        var fatPercent = Math.min(Math.round((totalFat / targetFat) * 100), 100);
+        var carbsPercent = Math.min(Math.round((totalCarbs / targetCarbs) * 100), 100);
+        
+        // Блок макронутрієнтів
+        html += '<div class="macros-section">' +
+            '<div class="macros-title">📊 Макронутрієнти за день</div>' +
+            '<div class="macros-grid">' +
+            
+            // Білки
+            '<div class="macro-item">' +
+            '<div class="macro-icon">🥩</div>' +
+            '<div class="macro-value">' + Math.round(totalProtein) + 'г</div>' +
+            '<div class="macro-label">Білки</div>' +
+            '<div class="macro-bar"><div class="macro-bar-fill protein" style="width: ' + proteinPercent + '%"></div></div>' +
+            '<div class="macro-label">' + Math.round(totalProtein) + ' / ' + targetProtein + 'г</div>' +
+            '</div>' +
+            
+            // Жири
+            '<div class="macro-item">' +
+            '<div class="macro-icon">🥑</div>' +
+            '<div class="macro-value">' + Math.round(totalFat) + 'г</div>' +
+            '<div class="macro-label">Жири</div>' +
+            '<div class="macro-bar"><div class="macro-bar-fill fat" style="width: ' + fatPercent + '%"></div></div>' +
+            '<div class="macro-label">' + Math.round(totalFat) + ' / ' + targetFat + 'г</div>' +
+            '</div>' +
+            
+            // Вуглеводи
+            '<div class="macro-item">' +
+            '<div class="macro-icon">🍚</div>' +
+            '<div class="macro-value">' + Math.round(totalCarbs) + 'г</div>' +
+            '<div class="macro-label">Вуглеводи</div>' +
+            '<div class="macro-bar"><div class="macro-bar-fill carbs" style="width: ' + carbsPercent + '%"></div></div>' +
+            '<div class="macro-label">' + Math.round(totalCarbs) + ' / ' + targetCarbs + 'г</div>' +
+            '</div>' +
+            
             '</div>' +
             '</div>';
         

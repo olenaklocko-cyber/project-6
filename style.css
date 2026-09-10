@@ -4600,6 +4600,97 @@ body::before {
     border-radius: 12px;
 }
 
+.calorie-ring-remaining.over {
+    color: #E53935;
+    background: rgba(229, 57, 53, 0.1);
+}
+
+.calorie-ring-number.over {
+    color: #E53935;
+}
+
+/* ===== MACROS SECTION ===== */
+.macros-section {
+    margin: 0 20px 20px;
+    padding: 20px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
+    border-radius: 20px;
+    box-shadow: 
+        0 8px 24px rgba(102, 126, 234, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.macros-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #2D1B69;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.macros-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.macro-item {
+    text-align: center;
+    padding: 12px 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.macro-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.macro-value {
+    font-size: 18px;
+    font-weight: 900;
+    color: #2D1B69;
+    line-height: 1;
+}
+
+.macro-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #9B8EC4;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.macro-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(200, 195, 220, 0.3);
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.macro-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+}
+
+.macro-bar-fill.protein {
+    background: linear-gradient(90deg, #64B5F6, #42A5F5);
+}
+
+.macro-bar-fill.fat {
+    background: linear-gradient(90deg, #FFD54F, #FFC107);
+}
+
+.macro-bar-fill.carbs {
+    background: linear-gradient(90deg, #81C784, #66BB6A);
+}
+
 /* ===== WEIGHT WIDGET ===== */
 .weight-widget {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 238, 249, 0.8) 100%);
