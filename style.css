@@ -4744,3 +4744,19 @@ body::before {
     background: rgba(129, 199, 132, 0.2);
     color: #388E3C;
 }
+
+/* ===== FOOD ENTRY THUMBNAIL ===== */
+.food-entry-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.food-entry-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

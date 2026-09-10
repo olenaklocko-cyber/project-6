@@ -257,8 +257,12 @@ var Screens = {
                         '</div>';
                 }
                 
+                var entryIcon = entry.photo ? 
+                    '<div class="food-entry-thumb"><img src="' + entry.photo + '" alt="Їжа"></div>' : 
+                    '<div class="food-entry-icon">🍽️</div>';
+                
                 html += '<div class="food-entry-item" data-index="' + i + '">' +
-                    '<div class="food-entry-icon">🍽️</div>' +
+                    entryIcon +
                     '<div class="food-entry-info">' +
                     '<div class="food-entry-name">' + Storage.translateFoodName(entry.name) + '</div>' +
                     '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
@@ -1786,15 +1790,51 @@ var Screens = {
                 names.push(input.value);
             });
             
-            Storage.addFoodEntry({
-                name: names.join(' + '),
-                calories: data.totalCalories,
-                portion: 'з фото (AI)',
-                time: new Date().toLocaleTimeString('uk-UA')
-            });
-            
-            self.closeFoodResult();
-            self.renderHome();
+            // Створюємо міні-фото (thumbnail)
+            var thumbnail = null;
+            if (self.lastFoodPhoto) {
+                var thumbCanvas = document.createElement('canvas');
+                var thumbImg = new Image();
+                thumbImg.onload = function() {
+                    thumbCanvas.width = 80;
+                    thumbCanvas.height = 80;
+                    var ctx = thumbCanvas.getContext('2d');
+                    // Обрізаємо по центру
+                    var size = Math.min(thumbImg.width, thumbImg.height);
+                    var sx = (thumbImg.width - size) / 2;
+                    var sy = (thumbImg.height - size) / 2;
+                    ctx.drawImage(thumbImg, sx, sy, size, size, 0, 0, 80, 80);
+                    thumbnail = thumbCanvas.toDataURL('image/jpeg', 0.7);
+                    
+                    Storage.addFoodEntry({
+                        name: names.join(' + '),
+                        calories: data.totalCalories,
+                        protein: data.protein || 0,
+                        fat: data.fat || 0,
+                        carbs: data.carbs || 0,
+                        portion: 'з фото (AI)',
+                        time: new Date().toLocaleTimeString('uk-UA'),
+                        photo: thumbnail
+                    });
+                    
+                    self.closeFoodResult();
+                    self.renderHome();
+                };
+                thumbImg.src = self.lastFoodPhoto;
+            } else {
+                Storage.addFoodEntry({
+                    name: names.join(' + '),
+                    calories: data.totalCalories,
+                    protein: data.protein || 0,
+                    fat: data.fat || 0,
+                    carbs: data.carbs || 0,
+                    portion: 'з фото (AI)',
+                    time: new Date().toLocaleTimeString('uk-UA')
+                });
+                
+                self.closeFoodResult();
+                self.renderHome();
+            }
         });
         
         // Закриття
