@@ -444,11 +444,10 @@ var Screens = {
         
         // === 3. АКТИВНІСТЬ ЗА ТИЖДЕНЬ (календар) ===
         html += '<div class="stats-week-section">' +
-            '<div class="stats-section-title">' + I18n.t('weeklyActivity') + '</div>' +
-            '<div class="stats-calendar">';
+            '<div class="stats-week-title">' + I18n.t('weeklyActivity') + '</div>' +
+            '<div class="stats-week-calendar">';
         
         var dayNamesFull = [I18n.t('sun'), I18n.t('mon'), I18n.t('tue'), I18n.t('wed'), I18n.t('thu'), I18n.t('fri'), I18n.t('sat')];
-        var monthNames = ['січ', 'лют', 'бер', 'кві', 'трав', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'груд'];
         var weekData = [];
         
         for (var i = 6; i >= 0; i--) {
@@ -458,7 +457,6 @@ var Screens = {
             weekData.push({
                 dayName: dayNamesFull[d.getDay()],
                 dayNum: d.getDate(),
-                month: monthNames[d.getMonth()],
                 progress: Storage.getDayProgress(dateStr),
                 isToday: i === 0
             });
@@ -469,18 +467,17 @@ var Screens = {
         
         for (var i = 0; i < weekData.length; i++) {
             var day = weekData[i];
-            var barHeight = Math.max((day.progress / maxProgress) * 100, 8);
-            var barColor = day.progress > 0 ? 'linear-gradient(180deg, #667eea, #764ba2)' : '#e0e0e0';
+            var barHeight = Math.max((day.progress / maxProgress) * 40, 4);
+            var barClass = day.isToday ? ' today' : '';
             
-            html += '<div class="stats-day' + (day.isToday ? ' today' : '') + '">' +
-                '<div class="stats-day-bar-wrap">' +
-                '<div class="stats-day-bar" style="height: ' + barHeight + '%; background: ' + barColor + '"></div>' +
+            html += '<div class="stats-week-day">' +
+                '<div class="stats-week-bar">' +
+                '<div class="stats-week-bar-fill' + barClass + '" style="height: ' + barHeight + 'px"></div>' +
                 '</div>' +
-                '<div class="stats-day-info">' +
-                '<div class="stats-day-num">' + day.dayNum + '</div>' +
-                '<div class="stats-day-name">' + day.dayName + '</div>' +
+                '<div class="stats-week-day-circle' + (day.isToday ? ' active' : '') + '">' +
+                '<div class="stats-week-day-num">' + day.dayNum + '</div>' +
+                '<div class="stats-week-day-name">' + day.dayName + '</div>' +
                 '</div>' +
-                '<div class="stats-day-percent">' + day.progress + '%</div>' +
                 '</div>';
         }
         

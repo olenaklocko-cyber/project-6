@@ -1634,7 +1634,7 @@ body::before {
 .stats-today-ring-progress {
     fill: none;
     stroke: url(#statsRingGradient);
-    stroke-width: 8;
+    stroke-width: 10;
     stroke-linecap: round;
     stroke-dasharray: 502;
     stroke-dashoffset: 502;
@@ -1654,6 +1654,7 @@ body::before {
     font-weight: 900;
     color: #3D2A6A;
     line-height: 1;
+    margin-bottom: 8px;
 }
 
 .stats-today-label {
@@ -1661,6 +1662,87 @@ body::before {
     font-weight: 700;
     color: #9B8EC4;
     margin-top: 4px;
+}
+
+/* ===== WEEK CALENDAR ===== */
+.stats-week-section {
+    padding: 0 20px 20px;
+}
+
+.stats-week-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #5A4A7A;
+    margin-bottom: 16px;
+}
+
+.stats-week-calendar {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.stats-week-day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-week-day-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.stats-week-day-circle.active {
+    background: #E2DBF7;
+    box-shadow: 0 4px 12px rgba(162, 140, 220, 0.25);
+}
+
+.stats-week-day-num {
+    font-size: 16px;
+    font-weight: 800;
+    color: #5A4A7A;
+    line-height: 1;
+}
+
+.stats-week-day-circle.active .stats-week-day-num {
+    color: #3D2A6A;
+}
+
+.stats-week-day-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: #9B8EC4;
+    text-transform: uppercase;
+}
+
+.stats-week-bar {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.stats-week-bar-fill {
+    width: 20px;
+    border-radius: 6px 6px 2px 2px;
+    min-height: 4px;
+    background: linear-gradient(180deg, #C8B6E2, #A898D0);
+    transition: height 0.5s ease;
+}
+
+.stats-week-bar-fill.today {
+    background: linear-gradient(180deg, #80DEEA, #4DD0E1);
 }
 
 .stats-card {
