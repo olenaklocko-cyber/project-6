@@ -3294,6 +3294,38 @@ body::before {
     color: #667eea;
 }
 
+/* Calorie Calculation Info */
+.calorie-calc-info {
+    margin: 0 15px 15px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.calc-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.calc-info-row:not(:last-child) {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.calc-info-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+}
+
+.calc-info-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+}
+
 /* Categories List */
 .categories-list {
     margin: 0 15px 15px;

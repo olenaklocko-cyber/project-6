@@ -146,6 +146,22 @@ var Screens = {
             '</div>' +
             '</div>';
         
+        // Інформація про розрахунок калорій
+        html += '<div class="calorie-calc-info">' +
+            '<div class="calc-info-row">' +
+            '<span class="calc-info-label">' + I18n.t('bmr') + ':</span>' +
+            '<span class="calc-info-value">' + Math.round(bmr) + ' ' + I18n.t('kcal') + '</span>' +
+            '</div>' +
+            '<div class="calc-info-row">' +
+            '<span class="calc-info-label">' + I18n.t('dailyCalories') + ':</span>' +
+            '<span class="calc-info-value">' + dailyCalories + ' ' + I18n.t('kcal') + '</span>' +
+            '</div>' +
+            '<div class="calc-info-row">' +
+            '<span class="calc-info-label">' + I18n.t('deficit') + ':</span>' +
+            '<span class="calc-info-value">-500 ' + I18n.t('kcal') + '</span>' +
+            '</div>' +
+            '</div>';
+        
         // === 3. СЬОГОДНІШНІ ЗАПИСИ ЇЖІ ===
         
         html += '<div class="home-food-section">' +
@@ -649,6 +665,9 @@ var Screens = {
             var btn = document.getElementById('saveProfileBtn');
             btn.textContent = '✓ ' + I18n.t('saved');
             btn.style.background = 'linear-gradient(135deg, #20c997, #17a589)';
+            
+            // Оновлюємо головну сторінку для перерахунку калорій
+            self.renderHome();
             
             setTimeout(function() {
                 btn.textContent = I18n.t('saveChanges');
