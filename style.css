@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(180deg, #F1EEF9 0%, #FFFFFF 100%);
     background-attachment: fixed;
     min-height: 100vh;
     overflow-x: hidden;
@@ -30,27 +30,27 @@ body::before {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
+    background: transparent;
 }
 
 /* ===== HEADER ===== */
 #header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 18px 20px;
+    background: linear-gradient(135deg, #F1EEF9 0%, #E8E0F5 100%);
+    color: #2D1B69;
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 15px rgba(102, 126, 234, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 #header h1 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    color: #2D1B69;
+    letter-spacing: 0.5px;
 }
 
 /* ===== SCREENS ===== */
@@ -81,13 +81,14 @@ body::before {
     background: rgba(255, 255, 255, 0.95);
     padding: 10px 8px;
     padding-bottom: 25px;
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 20px rgba(0,0,0,0.05);
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 .nav-btn {
@@ -107,15 +108,14 @@ body::before {
 }
 
 .nav-btn.active {
-    color: white;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    transform: translateY(-3px);
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
 }
 
 .nav-btn:hover:not(.active) {
     color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(102, 126, 234, 0.05);
 }
 
 .nav-icon {
@@ -129,7 +129,111 @@ body::before {
     letter-spacing: 0.5px;
 }
 
-/* ===== СТАТИСТИКА (НОВИЙ ДИЗАЙН) ===== */
+/* ===== AI SCANNER CARD ===== */
+.ai-scanner-card {
+    margin: 20px;
+    padding: 40px 24px;
+    background: linear-gradient(145deg, #F5F2FC 0%, #EDE7F9 100%);
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ai-scanner-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ai-scanner-card:hover::before {
+    opacity: 1;
+}
+
+.ai-scanner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2);
+}
+
+/* Контейнер іконки камери */
+.scanner-icon-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кругова лінія сканування */
+.scanner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-radius: 50%;
+    animation: scanPulse 2s ease-in-out infinite;
+}
+
+.scanner-ring::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #667eea;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: scanDot 2s linear infinite;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+}
+
+@keyframes scanPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes scanDot {
+    0% { transform: translateX(-50%) rotate(0deg) translateX(48px); }
+    100% { transform: translateX(-50%) rotate(360deg) translateX(48px); }
+}
+
+/* Іконка камери */
+.scanner-icon {
+    width: 48px;
+    height: 48px;
+    color: #667eea;
+    filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+}
+
+/* Заголовок картки */
+.scanner-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #2D1B69;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+/* Підзаголовок картки */
+.scanner-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B5B95;
+    line-height: 1.4;
+}
 .stats-today-card {
     margin: 15px;
     padding: 24px;

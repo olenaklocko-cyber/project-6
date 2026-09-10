@@ -76,21 +76,17 @@ var Screens = {
         
         var html = '';
         
-        // === 1. ВЕЛИКИЙ БАНЕР КАМЕРИ (AI сканування) ===
-        html += '<div class="ai-camera-banner" id="homeCameraBanner">' +
-            '<div class="ai-camera-inner">' +
-            '<div class="ai-camera-main" id="cameraMainBtn">' +
-            '<div class="ai-camera-icon-wrap">' +
-            '<div class="ai-camera-icon">📷</div>' +
-            '<div class="ai-camera-icon-pulse"></div>' +
+        // === 1. КАРТКА AI-СКАНЕРА ===
+        html += '<div class="ai-scanner-card" id="aiScannerCard">' +
+            '<div class="scanner-icon-container">' +
+            '<div class="scanner-ring"></div>' +
+            '<svg class="scanner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>' +
+            '<circle cx="12" cy="13" r="4"></circle>' +
+            '</svg>' +
             '</div>' +
-            '<div class="ai-camera-text">' +
-            '<div class="ai-camera-title">' + I18n.t('cameraTitle') + '</div>' +
-            '<div class="ai-camera-subtitle">' + I18n.t('cameraSubtitle') + '</div>' +
-            '</div>' +
-            '</div>' +
-            '<button class="ai-gallery-btn" id="homeGalleryBtn" title="' + I18n.t('galleryBtn') + '">🖼️</button>' +
-            '</div>' +
+            '<h2 class="scanner-title">' + I18n.t('cameraTitle') + '</h2>' +
+            '<p class="scanner-subtitle">' + I18n.t('cameraSubtitle') + '</p>' +
             '</div>';
         
         // === 2. ВАГА + ПРОГРЕС ДНЯ + ДЕННІ КАЛОРІЇ ===
@@ -231,9 +227,9 @@ var Screens = {
         }
         
         // Банер камери (клік по всьому банеру)
-        var homeCameraBanner = document.getElementById('homeCameraBanner');
-        if (homeCameraBanner) {
-            homeCameraBanner.addEventListener('click', function() {
+        var aiScannerCard = document.getElementById('aiScannerCard');
+        if (aiScannerCard) {
+            aiScannerCard.addEventListener('click', function() {
                 self.openCamera();
             });
         }

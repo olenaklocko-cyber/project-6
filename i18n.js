@@ -23,7 +23,7 @@ var I18n = {
             
             // Головна
             cameraTitle: 'Сфотографувати порцію',
-            cameraSubtitle: 'Зроби фото їжі для миттєвого AI-аналізу калорій',
+            cameraSubtitle: 'Миттєвий AI-аналіз калорій за фото',
             galleryBtn: '🖼️',
             todayEntries: 'Сьогоднішні записи',
             noEntries: 'Ще немає записів',
