@@ -4766,15 +4766,18 @@ body::before {
 }
 
 .macro-bar-fill.protein {
-    background: linear-gradient(90deg, #64B5F6, #42A5F5);
+    background: linear-gradient(90deg, #FF8A80, #FF5252);
+    box-shadow: 0 0 8px rgba(255, 82, 82, 0.4);
 }
 
 .macro-bar-fill.fat {
-    background: linear-gradient(90deg, #FFD54F, #FFC107);
+    background: linear-gradient(90deg, #FFE082, #FFD54F);
+    box-shadow: 0 0 8px rgba(255, 213, 79, 0.4);
 }
 
 .macro-bar-fill.carbs {
-    background: linear-gradient(90deg, #81C784, #66BB6A);
+    background: linear-gradient(90deg, #80DEEA, #4DD0E1);
+    box-shadow: 0 0 8px rgba(77, 208, 225, 0.4);
 }
 
 /* ===== WEIGHT WIDGET ===== */
@@ -4829,18 +4832,18 @@ body::before {
 }
 
 .food-macro.protein {
-    background: rgba(100, 181, 246, 0.2);
-    color: #1976D2;
+    background: rgba(255, 138, 128, 0.2);
+    color: #D32F2F;
 }
 
 .food-macro.fat {
-    background: rgba(255, 213, 79, 0.2);
-    color: #F9A825;
+    background: rgba(255, 224, 130, 0.2);
+    color: #F57F17;
 }
 
 .food-macro.carbs {
-    background: rgba(129, 199, 132, 0.2);
-    color: #388E3C;
+    background: rgba(128, 222, 234, 0.2);
+    color: #00838F;
 }
 
 /* ===== FOOD ENTRY THUMBNAIL ===== */
