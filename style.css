@@ -4715,3 +4715,32 @@ body::before {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+/* ===== FOOD ENTRY MACROS ===== */
+.food-entry-macros {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.food-macro {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.food-macro.protein {
+    background: rgba(100, 181, 246, 0.2);
+    color: #1976D2;
+}
+
+.food-macro.fat {
+    background: rgba(255, 213, 79, 0.2);
+    color: #F9A825;
+}
+
+.food-macro.carbs {
+    background: rgba(129, 199, 132, 0.2);
+    color: #388E3C;
+}

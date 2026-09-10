@@ -240,15 +240,29 @@ var Screens = {
             html += '<div class="food-entries-list">';
             
             var totalCal = 0;
+            var totalProtein = 0, totalFat = 0, totalCarbs = 0;
             for (var i = 0; i < foodEntries.length; i++) {
                 var entry = foodEntries[i];
                 totalCal += entry.calories || 0;
+                totalProtein += entry.protein || 0;
+                totalFat += entry.fat || 0;
+                totalCarbs += entry.carbs || 0;
+                
+                var entryMacros = '';
+                if (entry.protein || entry.fat || entry.carbs) {
+                    entryMacros = '<div class="food-entry-macros">' +
+                        '<span class="food-macro protein">Б: ' + Math.round(entry.protein || 0) + 'г</span>' +
+                        '<span class="food-macro fat">Ж: ' + Math.round(entry.fat || 0) + 'г</span>' +
+                        '<span class="food-macro carbs">В: ' + Math.round(entry.carbs || 0) + 'г</span>' +
+                        '</div>';
+                }
                 
                 html += '<div class="food-entry-item" data-index="' + i + '">' +
                     '<div class="food-entry-icon">🍽️</div>' +
                     '<div class="food-entry-info">' +
                     '<div class="food-entry-name">' + Storage.translateFoodName(entry.name) + '</div>' +
                     '<div class="food-entry-meta">' + entry.portion + ' · ' + entry.time + '</div>' +
+                    entryMacros +
                     '</div>' +
                     '<div class="food-entry-cal">' + entry.calories + ' ' + I18n.t('kcal') + '</div>' +
                     '<button class="food-entry-delete" data-index="' + i + '">✕</button>' +
