@@ -1597,11 +1597,70 @@ body::before {
 }
 
 /* ===== STATS SCREEN ===== */
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 25px;
+.stats-today-section {
+    text-align: center;
+    padding: 20px 0 30px;
+}
+
+.stats-today-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #5A4A7A;
+    margin-bottom: 20px;
+}
+
+.stats-today-ring {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-today-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.stats-today-ring-bg {
+    fill: none;
+    stroke: rgba(200, 195, 220, 0.3);
+    stroke-width: 8;
+}
+
+.stats-today-ring-progress {
+    fill: none;
+    stroke: url(#statsRingGradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 502;
+    stroke-dashoffset: 502;
+    transition: stroke-dashoffset 1.5s ease-out;
+}
+
+.stats-today-ring-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.stats-today-percent {
+    font-size: 48px;
+    font-weight: 900;
+    color: #3D2A6A;
+    line-height: 1;
+}
+
+.stats-today-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #9B8EC4;
+    margin-top: 4px;
 }
 
 .stats-card {

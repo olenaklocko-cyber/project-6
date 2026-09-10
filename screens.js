@@ -343,22 +343,29 @@ var Screens = {
         
         var html = '';
         
-        // === 1. СЬОГОДНІШНІЙ ПРОГРЕС (кольоровий блок) ===
+        // === 1. СЬОГОДНІШНІЙ ПРОГРЕС (тонке кільце) ===
         var totalProgress = Storage.getDayProgress(today);
+        var circumference = 502;
+        var offset = circumference - (totalProgress / 100) * circumference;
         
-        html += '<div class="stats-today-card">' +
-            '<div class="stats-today-header">' +
-            '<div class="stats-today-emoji">📊</div>' +
+        html += '<div class="stats-today-section">' +
             '<div class="stats-today-title">' + I18n.t('todayProgress') + '</div>' +
-            '</div>' +
-            '<div class="stats-today-circle">' +
-            '<svg viewBox="0 0 100 100">' +
-            '<circle class="stats-circle-bg" cx="50" cy="50" r="45"/>' +
-            '<circle class="stats-circle-fill" cx="50" cy="50" r="45" stroke-dasharray="' + (totalProgress * 2.83) + ' 283"/>' +
+            '<div class="stats-today-ring">' +
+            '<svg viewBox="0 0 180 180">' +
+            '<defs>' +
+            '<linearGradient id="statsRingGradient" x1="0%" y1="0%" x2="100%" y2="100%">' +
+            '<stop offset="0%" style="stop-color:#C8B6E2;stop-opacity:1" />' +
+            '<stop offset="100%" style="stop-color:#80DEEA;stop-opacity:1" />' +
+            '</linearGradient>' +
+            '</defs>' +
+            '<circle class="stats-today-ring-bg" cx="90" cy="90" r="80"/>' +
+            '<circle class="stats-today-ring-progress" cx="90" cy="90" r="80" style="stroke-dashoffset: ' + offset + '"/>' +
             '</svg>' +
+            '<div class="stats-today-ring-content">' +
             '<div class="stats-today-percent">' + totalProgress + '%</div>' +
+            '<div class="stats-today-label">всього виконано</div>' +
             '</div>' +
-            '<div class="stats-today-label">' + I18n.t('totalCompleted') + '</div>' +
+            '</div>' +
             '</div>';
         
         // === 2. РОЗГОРНУТІ БЛОКИ ЗІ ЗВИЧКАМИ ===
