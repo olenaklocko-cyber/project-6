@@ -132,7 +132,7 @@ body::before {
 /* ===== AI SCANNER CARD ===== */
 .ai-scanner-card {
     margin: 20px;
-    padding: 32px 24px;
+    padding: 40px 24px;
     background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
     border-radius: 24px;
     text-align: center;
@@ -143,6 +143,7 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.5);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
@@ -155,6 +156,56 @@ body::before {
     bottom: 0;
     background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.6) 0%, transparent 50%);
     pointer-events: none;
+}
+
+.ai-scanner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 16px 50px rgba(162, 140, 220, 0.35),
+        0 6px 16px rgba(162, 140, 220, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+/* Велика кнопка камери */
+.scanner-main-btn {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.1); }
+}
+
+.scanner-main-btn::before {
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.scanner-main-btn svg {
+    width: 44px;
+    height: 44px;
+    color: #5A4A7A;
+    filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.8));
 }
 
 /* Заголовок картки */
@@ -174,71 +225,8 @@ body::before {
     font-weight: 600;
     color: #5A4A7A;
     line-height: 1.4;
-    margin-bottom: 24px;
     position: relative;
     z-index: 2;
-}
-
-/* Контейнер кнопок */
-.scanner-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-}
-
-/* Кнопка камери/галереї */
-.scanner-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 20px 16px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.scanner-btn:hover {
-    background: rgba(255, 255, 255, 0.75);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(162, 140, 220, 0.25);
-}
-
-.scanner-btn:active {
-    transform: translateY(-1px);
-}
-
-/* Іконка в круглій плашці */
-.scanner-btn-icon {
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.scanner-btn-icon svg {
-    width: 28px;
-    height: 28px;
-    color: #5A4A7A;
-    filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
-}
-
-/* Підпис кнопки */
-.scanner-btn-text {
-    font-size: 13px;
-    font-weight: 700;
-    color: #3D2A6A;
 }
 .stats-today-card {
     margin: 15px;

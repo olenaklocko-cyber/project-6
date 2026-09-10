@@ -77,30 +77,15 @@ var Screens = {
         var html = '';
         
         // === 1. КАРТКА AI-СКАНЕРА ===
-        html += '<div class="ai-scanner-card">' +
-            '<h2 class="scanner-title">AI-аналіз страви</h2>' +
-            '<p class="scanner-subtitle">Сфотографуй або завантаж фото їжі для миттєвого розрахунку калорій</p>' +
-            '<div class="scanner-buttons">' +
-            '<div class="scanner-btn" id="homeCameraBtn">' +
-            '<div class="scanner-btn-icon">' +
+        html += '<div class="ai-scanner-card" id="aiScannerCard">' +
+            '<div class="scanner-main-btn">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
             '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>' +
             '<circle cx="12" cy="13" r="4"></circle>' +
             '</svg>' +
             '</div>' +
-            '<span class="scanner-btn-text">Зробити фото</span>' +
-            '</div>' +
-            '<div class="scanner-btn" id="homeGalleryBtn">' +
-            '<div class="scanner-btn-icon">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
-            '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>' +
-            '<circle cx="8.5" cy="8.5" r="1.5"></circle>' +
-            '<polyline points="21 15 16 10 5 21"></polyline>' +
-            '</svg>' +
-            '</div>' +
-            '<span class="scanner-btn-text">Обрати з галереї</span>' +
-            '</div>' +
-            '</div>' +
+            '<h2 class="scanner-title">AI-аналіз страви</h2>' +
+            '<p class="scanner-subtitle">Натисни щоб сфотографувати або обрати з галереї</p>' +
             '</div>';
         
         // === 2. КІЛЬЦЕ КАЛОРІЙ + ВАГА ===
@@ -308,19 +293,11 @@ var Screens = {
             });
         }
         
-        // Кнопка камери
-        var homeCameraBtn = document.getElementById('homeCameraBtn');
-        if (homeCameraBtn) {
-            homeCameraBtn.addEventListener('click', function() {
-                self.openCamera();
-            });
-        }
-        
-        // Кнопка галереї
-        var homeGalleryBtn = document.getElementById('homeGalleryBtn');
-        if (homeGalleryBtn) {
-            homeGalleryBtn.addEventListener('click', function() {
-                self.openGallery();
+        // Картка сканера (відкриває модалку вибору)
+        var aiScannerCard = document.getElementById('aiScannerCard');
+        if (aiScannerCard) {
+            aiScannerCard.addEventListener('click', function() {
+                self.showSourceModal();
             });
         }
         
@@ -1288,6 +1265,68 @@ var Screens = {
         
         html = '<div class="food-total">' + I18n.t('totalToday') + ' <strong>' + totalCal + ' ' + I18n.t('kcal') + '</strong></div>' + html;
         container.innerHTML = html;
+    },
+    
+    // Модалка вибору джерела фото
+    showSourceModal: function() {
+        var self = this;
+        
+        // Видаляємо попередню модалку
+        var oldModal = document.getElementById('sourceModal');
+        if (oldModal) oldModal.remove();
+        
+        var modal = document.createElement('div');
+        modal.id = 'sourceModal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px);';
+        
+        var content = document.createElement('div');
+        content.style.cssText = 'background:white;width:100%;max-width:400px;border-radius:24px 24px 0 0;padding:24px 24px 40px;animation:slideUp 0.3s ease;';
+        
+        content.innerHTML = 
+            '<div style="width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 20px;"></div>' +
+            '<div style="font-size:18px;font-weight:800;color:#2D1B69;text-align:center;margin-bottom:20px;">Обери джерело фото</div>' +
+            '<div style="display:flex;gap:12px;">' +
+            '<div id="modalCameraBtn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;background:linear-gradient(145deg,#E2DBF7,#ECDFFB);border-radius:20px;cursor:pointer;transition:all 0.3s ease;">' +
+            '<div style="width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.6);border-radius:50%;">' +
+            '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5A4A7A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>' +
+            '</div>' +
+            '<div style="font-size:14px;font-weight:700;color:#3D2A6A;">📷 Камера</div>' +
+            '</div>' +
+            '<div id="modalGalleryBtn" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;background:linear-gradient(145deg,#E2DBF7,#ECDFFB);border-radius:20px;cursor:pointer;transition:all 0.3s ease;">' +
+            '<div style="width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.6);border-radius:50%;">' +
+            '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5A4A7A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>' +
+            '</div>' +
+            '<div style="font-size:14px;font-weight:700;color:#3D2A6A;">🖼️ Галерея</div>' +
+            '</div>' +
+            '</div>' +
+            '<div id="modalCancelBtn" style="margin-top:16px;padding:16px;text-align:center;font-size:16px;font-weight:700;color:#999;cursor:pointer;">Скасувати</div>';
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Анімація появи
+        var style = document.createElement('style');
+        style.textContent = '@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}';
+        document.head.appendChild(style);
+        
+        // Обробники
+        document.getElementById('modalCameraBtn').onclick = function() {
+            modal.remove();
+            self.openCamera();
+        };
+        
+        document.getElementById('modalGalleryBtn').onclick = function() {
+            modal.remove();
+            self.openGallery();
+        };
+        
+        document.getElementById('modalCancelBtn').onclick = function() {
+            modal.remove();
+        };
+        
+        modal.onclick = function(e) {
+            if (e.target === modal) modal.remove();
+        };
     },
     
     openCamera: function() {
