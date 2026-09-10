@@ -97,11 +97,22 @@ var Screens = {
         var genderEmoji = profile.gender === 'male' ? '👨' : '👩';
         var progress = Storage.getDayProgress(today);
         var weight = profile.weight || 60;
+        var height = profile.height || 170;
+        var age = profile.age || 25;
         
-        // Розрахунок денних калорій для схуднення
-        var dailyCalories = Math.round(weight * 33);
+        // Формула Mifflin-St Jeor (найточніша)
+        var bmr;
+        if (profile.gender === 'male') {
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+        } else {
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+        }
+        
+        // Коефіцієнт активності (середній = 1.4 для сидячого способу життя)
+        var activityFactor = 1.4;
+        var dailyCalories = Math.round(bmr * activityFactor);
         var calorieDeficit = 500;
-        var targetCalories = dailyCalories - calorieDeficit;
+        var targetCalories = Math.max(dailyCalories - calorieDeficit, profile.gender === 'male' ? 1500 : 1200);
         
         // Отримуємо з'їдені калорії за сьогодні
         var foodEntries = Storage.getFoodEntries(today);
@@ -532,7 +543,19 @@ var Screens = {
             '<div class="profile-setting-item">' +
             '<div class="profile-setting-icon">⚖️</div>' +
             '<div class="profile-setting-label">' + I18n.t('weight') + '</div>' +
-            '<input type="number" id="profileWeight" value="' + profile.weight + '" class="profile-input">' +
+            '<input type="number" id="profileWeight" value="' + profile.weight + '" class="profile-input" placeholder="60">' +
+            '</div>' +
+            
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">📏</div>' +
+            '<div class="profile-setting-label">' + I18n.t('height') + '</div>' +
+            '<input type="number" id="profileHeight" value="' + (profile.height || '') + '" class="profile-input" placeholder="170">' +
+            '</div>' +
+            
+            '<div class="profile-setting-item">' +
+            '<div class="profile-setting-icon">🎂</div>' +
+            '<div class="profile-setting-label">' + I18n.t('age') + '</div>' +
+            '<input type="number" id="profileAge" value="' + (profile.age || '') + '" class="profile-input" placeholder="25">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
@@ -617,9 +640,11 @@ var Screens = {
         document.getElementById('saveProfileBtn').addEventListener('click', function() {
             var gender = document.querySelector('.gender-option.selected').getAttribute('data-gender');
             var weight = parseInt(document.getElementById('profileWeight').value) || 60;
+            var height = parseInt(document.getElementById('profileHeight').value) || 170;
+            var age = parseInt(document.getElementById('profileAge').value) || 25;
             var goal = document.getElementById('profileGoal').value.trim() || I18n.t('goalHealth');
             
-            Storage.saveProfile({ gender: gender, weight: weight, goal: goal });
+            Storage.saveProfile({ gender: gender, weight: weight, height: height, age: age, goal: goal });
             
             var btn = document.getElementById('saveProfileBtn');
             btn.textContent = '✓ ' + I18n.t('saved');

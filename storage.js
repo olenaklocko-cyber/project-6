@@ -68,6 +68,8 @@ var Storage = {
         return data ? JSON.parse(data) : {
             gender: 'female',
             weight: 60,
+            height: 170,
+            age: 25,
             goal: 'Здоров\'я та форма'
         };
     },
