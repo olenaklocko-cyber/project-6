@@ -1586,23 +1586,30 @@ var Screens = {
             '<div class="food-result-macros">' +
             '<div class="food-result-macro">' +
             '<div class="food-result-macro-value">' + (data.protein || 0) + 'г</div>' +
-            '<div class="food-result-macro-label">Білок</div>' +
+            '<div class="food-result-macro-label">' + I18n.t('protein') + '</div>' +
             '</div>' +
             '<div class="food-result-macro">' +
             '<div class="food-result-macro-value">' + (data.fat || 0) + 'г</div>' +
-            '<div class="food-result-macro-label">Жири</div>' +
+            '<div class="food-result-macro-label">' + I18n.t('fat') + '</div>' +
             '</div>' +
             '<div class="food-result-macro">' +
             '<div class="food-result-macro-value">' + (data.carbs || 0) + 'г</div>' +
-            '<div class="food-result-macro-label">Вуглеводи</div>' +
+            '<div class="food-result-macro-label">' + I18n.t('carbs') + '</div>' +
             '</div>' +
             '</div>';
         
         // Назва страви (редагована)
         for (var i = 0; i < data.dishes.length; i++) {
             var dish = data.dishes[i];
+            // Перекладаємо назву страви якщо потрібно
+            var dishName = dish.name;
+            if (I18n.currentLang === 'uk') {
+                // Шукаємо переклад з англійської на українську
+                var enToUk = Storage.getEnToUkTranslation(dish.name);
+                if (enToUk) dishName = enToUk;
+            }
             html += '<div class="food-result-dish">' +
-                '<input type="text" class="food-result-dish-input" value="' + dish.name + '" data-index="' + i + '">' +
+                '<input type="text" class="food-result-dish-input" value="' + dishName + '" data-index="' + i + '">' +
                 '<div class="food-result-dish-cal">' + dish.calories + ' ' + I18n.t('kcal') + '</div>' +
                 '</div>';
         }

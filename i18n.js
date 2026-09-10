@@ -38,6 +38,9 @@ var I18n = {
             total: 'Разом',
             category: 'Категорія',
             selectThisFood: 'Обрати цю страву',
+            protein: 'Білок',
+            fat: 'Жири',
+            carbs: 'Вуглеводи',
             
             // Категорії їжі
             catPorridge: 'Каші',
@@ -235,6 +238,9 @@ var I18n = {
             total: 'Total',
             category: 'Category',
             selectThisFood: 'Select this food',
+            protein: 'Protein',
+            fat: 'Fat',
+            carbs: 'Carbs',
             
             // Food categories
             catPorridge: 'Porridge',
