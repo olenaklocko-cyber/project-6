@@ -1647,6 +1647,11 @@ body::before {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
 }
 
 .stats-today-percent {
@@ -1654,14 +1659,13 @@ body::before {
     font-weight: 900;
     color: #3D2A6A;
     line-height: 1;
-    margin-bottom: 8px;
 }
 
 .stats-today-label {
     font-size: 12px;
     font-weight: 700;
     color: #9B8EC4;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 /* ===== WEEK CALENDAR ===== */
