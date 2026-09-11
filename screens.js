@@ -906,6 +906,24 @@ var Screens = {
             '<input type="number" id="customFoodCalories" placeholder="' + I18n.t('customFoodCalPlaceholder') + '">' +
             '</div>' +
             
+            '<div class="form-group macros-group">' +
+            '<label>' + I18n.t('macronutrients') + '</label>' +
+            '<div class="macros-inputs">' +
+            '<div class="macro-input-item">' +
+            '<span class="macro-input-label" style="color:#2E7D32">' + I18n.t('protein') + ' (г)</span>' +
+            '<input type="number" id="customFoodProtein" placeholder="0" step="0.1">' +
+            '</div>' +
+            '<div class="macro-input-item">' +
+            '<span class="macro-input-label" style="color:#E65100">' + I18n.t('fat') + ' (г)</span>' +
+            '<input type="number" id="customFoodFat" placeholder="0" step="0.1">' +
+            '</div>' +
+            '<div class="macro-input-item">' +
+            '<span class="macro-input-label" style="color:#1565C0">' + I18n.t('carbs') + ' (г)</span>' +
+            '<input type="number" id="customFoodCarbs" placeholder="0" step="0.1">' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            
             '<div class="form-group">' +
             '<label>' + I18n.t('customFoodGrams') + '</label>' +
             '<input type="number" id="customFoodGrams" placeholder="' + I18n.t('customFoodGramsPlaceholder') + '">' +
@@ -986,6 +1004,11 @@ var Screens = {
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">' + I18n.t('customFoodCal') + ':</span>' +
                     '<span class="food-detail-value">' + foods[i].calories + ' ' + I18n.t('kcal') + '</span>' +
+                    '</div>' +
+                    '<div class="food-detail-macros">' +
+                    '<span class="food-detail-macro protein"><span class="macro-dot" style="background:#4CAF50"></span>' + I18n.t('protein') + ': ' + (foods[i].protein || 0) + 'г</span>' +
+                    '<span class="food-detail-macro fat"><span class="macro-dot" style="background:#FF9800"></span>' + I18n.t('fat') + ': ' + (foods[i].fat || 0) + 'г</span>' +
+                    '<span class="food-detail-macro carbs"><span class="macro-dot" style="background:#2196F3"></span>' + I18n.t('carbs') + ': ' + (foods[i].carbs || 0) + 'г</span>' +
                     '</div>' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">' + I18n.t('category') + ':</span>' +
@@ -1121,6 +1144,11 @@ var Screens = {
                     '<span class="food-detail-label">' + I18n.t('customFoodCal') + ':</span>' +
                     '<span class="food-detail-value">' + results[i].calories + ' ' + I18n.t('kcal') + '</span>' +
                     '</div>' +
+                    '<div class="food-detail-macros">' +
+                    '<span class="food-detail-macro protein"><span class="macro-dot" style="background:#4CAF50"></span>' + I18n.t('protein') + ': ' + (results[i].protein || 0) + 'г</span>' +
+                    '<span class="food-detail-macro fat"><span class="macro-dot" style="background:#FF9800"></span>' + I18n.t('fat') + ': ' + (results[i].fat || 0) + 'г</span>' +
+                    '<span class="food-detail-macro carbs"><span class="macro-dot" style="background:#2196F3"></span>' + I18n.t('carbs') + ': ' + (results[i].carbs || 0) + 'г</span>' +
+                    '</div>' +
                     '<div class="food-detail-row">' +
                     '<span class="food-detail-label">' + I18n.t('category') + ':</span>' +
                     '<span class="food-detail-value">' + results[i].category + '</span>' +
@@ -1178,10 +1206,16 @@ var Screens = {
             }
             
             var totalCal = Math.round((selectedFood.calories / 100) * grams);
+            var totalProtein = Math.round((selectedFood.protein || 0) / 100 * grams * 10) / 10;
+            var totalFat = Math.round((selectedFood.fat || 0) / 100 * grams * 10) / 10;
+            var totalCarbs = Math.round((selectedFood.carbs || 0) / 100 * grams * 10) / 10;
             
             Storage.addFoodEntry({
                 name: selectedFood.name,
                 calories: totalCal,
+                protein: totalProtein,
+                fat: totalFat,
+                carbs: totalCarbs,
                 portion: grams + 'г',
                 time: new Date().toLocaleTimeString('uk-UA')
             });
@@ -1206,6 +1240,9 @@ var Screens = {
             document.getElementById('customFoodForm').style.display = 'block';
             document.getElementById('customFoodName').value = '';
             document.getElementById('customFoodCalories').value = '';
+            document.getElementById('customFoodProtein').value = '';
+            document.getElementById('customFoodFat').value = '';
+            document.getElementById('customFoodCarbs').value = '';
             document.getElementById('customFoodGrams').value = '';
             document.getElementById('customCalResult').style.display = 'none';
         });
@@ -1218,6 +1255,9 @@ var Screens = {
         document.getElementById('addCustomFoodBtn').addEventListener('click', function() {
             var name = document.getElementById('customFoodName').value.trim();
             var calories = parseInt(document.getElementById('customFoodCalories').value) || 0;
+            var protein = parseFloat(document.getElementById('customFoodProtein').value) || 0;
+            var fat = parseFloat(document.getElementById('customFoodFat').value) || 0;
+            var carbs = parseFloat(document.getElementById('customFoodCarbs').value) || 0;
             var grams = parseInt(document.getElementById('customFoodGrams').value) || 0;
             
             if (!name) {
@@ -1236,10 +1276,16 @@ var Screens = {
             }
             
             var totalCal = Math.round((calories / 100) * grams);
+            var totalProtein = Math.round((protein / 100) * grams * 10) / 10;
+            var totalFat = Math.round((fat / 100) * grams * 10) / 10;
+            var totalCarbs = Math.round((carbs / 100) * grams * 10) / 10;
             
             Storage.addFoodEntry({
                 name: name,
                 calories: totalCal,
+                protein: totalProtein,
+                fat: totalFat,
+                carbs: totalCarbs,
                 portion: grams + 'г',
                 time: new Date().toLocaleTimeString('uk-UA')
             });
@@ -1249,6 +1295,9 @@ var Screens = {
             document.getElementById('customFoodBtn').style.display = 'block';
             document.getElementById('customFoodName').value = '';
             document.getElementById('customFoodCalories').value = '';
+            document.getElementById('customFoodProtein').value = '';
+            document.getElementById('customFoodFat').value = '';
+            document.getElementById('customFoodCarbs').value = '';
             document.getElementById('customFoodGrams').value = '';
             document.getElementById('customCalResult').style.display = 'none';
             document.getElementById('foodListContainer').innerHTML = '';
