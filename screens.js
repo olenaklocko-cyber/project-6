@@ -2119,16 +2119,50 @@ var Screens = {
             
             for (var i = 0; i < exercises.length; i++) {
                 html += '<div class="food-item" data-index="' + i + '" data-category="' + category + '">' +
+                    '<div class="food-item-header">' +
                     '<span class="food-item-icon">' + exercises[i].icon + '</span>' +
                     '<span class="food-item-name">' + Storage.translateExerciseName(exercises[i].name) + '</span>' +
                     '<span class="food-item-cal">' + exercises[i].calories + ' ' + I18n.t('kcal') + '/хв</span>' +
+                    '<span class="food-item-arrow">▼</span>' +
+                    '</div>' +
+                    '<div class="food-item-details">' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">' + I18n.t('caloriesPerMin') + ':</span>' +
+                    '<span class="food-detail-value">' + exercises[i].calories + ' ' + I18n.t('kcal') + '</span>' +
+                    '</div>' +
+                    '<div class="food-detail-row">' +
+                    '<span class="food-detail-label">' + I18n.t('category') + ':</span>' +
+                    '<span class="food-detail-value">' + exercises[i].category + '</span>' +
+                    '</div>' +
+                    '<button class="food-item-select-btn exercise-select-btn" data-index="' + i + '" data-category="' + category + '">' + I18n.t('selectThisExercise') + '</button>' +
+                    '</div>' +
                     '</div>';
             }
             
             container.innerHTML = html;
             
+            // Обробники для розгортання
             container.querySelectorAll('.food-item').forEach(function(item) {
-                item.addEventListener('click', function() {
+                item.querySelector('.food-item-header').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var wasExpanded = item.classList.contains('expanded');
+                    
+                    // Згортаємо всі
+                    container.querySelectorAll('.food-item').forEach(function(el) {
+                        el.classList.remove('expanded');
+                    });
+                    
+                    // Розгортаємо якщо було згорнуте
+                    if (!wasExpanded) {
+                        item.classList.add('expanded');
+                    }
+                });
+            });
+            
+            // Обробники для кнопок вибору
+            container.querySelectorAll('.exercise-select-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     var idx = parseInt(this.getAttribute('data-index'));
                     var cat = this.getAttribute('data-category');
                     var exercises = Storage.getExercisesByCategory(cat);
