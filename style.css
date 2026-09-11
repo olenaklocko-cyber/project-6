@@ -2014,7 +2014,7 @@ body::before {
     display: flex;
     gap: 0;
     background: #E8E0F0;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 4px;
 }
 
@@ -2022,14 +2022,18 @@ body::before {
     flex: 1;
     padding: 12px;
     border: none;
-    border-radius: 10px;
-    font-size: 15px;
+    border-radius: 12px;
+    font-size: 14px;
     font-weight: 800;
     font-family: 'Nunito', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     background: transparent;
     color: #8B7BB5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .add-tab:first-child {
@@ -2042,16 +2046,19 @@ body::before {
     color: #8B7BB5;
 }
 
-.add-tab.active:first-child {
-    background: #FFFFFF;
-    color: #3D2A6A;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.add-tab.active:first-child,
+.add-tab.active:last-child {
+    background: linear-gradient(135deg, #E8DFFB 0%, #F5E6F8 25%, #E0F0E8 50%, #F8E8F0 75%, #E4DCF8 100%);
+    background-size: 200% 200%;
+    animation: auroraFlow 6s ease-in-out infinite;
+    color: #2D1B69;
+    box-shadow:
+        0 4px 16px rgba(162, 140, 220, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
-.add-tab.active:last-child {
-    background: #FFFFFF;
-    color: #3D2A6A;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.add-tab.active svg {
+    stroke: #2D1B69;
 }
 
 .nutrition-section {
@@ -4685,17 +4692,20 @@ body::before {
     width: 100%;
     padding: 14px;
     border: 2px dashed #C8B6E2;
-    border-radius: 12px;
-    background: #F5F2FB;
-    color: #6A5A8A;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(232, 223, 251, 0.15) 0%, rgba(245, 230, 248, 0.15) 25%, rgba(224, 240, 232, 0.15) 50%, rgba(248, 232, 240, 0.15) 75%, rgba(228, 220, 248, 0.15) 100%);
+    background-size: 200% 200%;
+    animation: auroraFlow 8s ease-in-out infinite;
+    color: #7B5EA7;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(162, 140, 220, 0.1);
 }
 
 .custom-food-btn:active {
-    background: #E8E0F0;
+    background: linear-gradient(135deg, rgba(200, 182, 226, 0.3) 0%, rgba(224, 240, 232, 0.3) 100%);
     transform: scale(0.98);
 }
 
