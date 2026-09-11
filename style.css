@@ -1946,47 +1946,46 @@ body::before {
 
 .add-tabs {
     display: flex;
-    gap: 10px;
-    background: linear-gradient(145deg, rgba(226, 219, 247, 0.5) 0%, rgba(236, 223, 251, 0.5) 100%);
-    border-radius: 16px;
-    padding: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    gap: 0;
+    background: #E8E0F0;
+    border-radius: 12px;
+    padding: 4px;
 }
 
 .add-tab {
     flex: 1;
-    padding: 14px;
+    padding: 12px;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 15px;
     font-weight: 800;
     font-family: 'Nunito', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     background: transparent;
-    color: #9B8EC4;
+    color: #8B7BB5;
 }
 
 .add-tab:first-child {
     background: transparent;
-    color: #9B8EC4;
+    color: #8B7BB5;
 }
 
 .add-tab:last-child {
     background: transparent;
-    color: #9B8EC4;
+    color: #8B7BB5;
 }
 
 .add-tab.active:first-child {
-    background: linear-gradient(145deg, #E2DBF7, #ECDFFB);
+    background: #FFFFFF;
     color: #3D2A6A;
-    box-shadow: 0 4px 16px rgba(162, 140, 220, 0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .add-tab.active:last-child {
-    background: linear-gradient(145deg, #E2DBF7, #ECDFFB);
+    background: #FFFFFF;
     color: #3D2A6A;
-    box-shadow: 0 4px 16px rgba(162, 140, 220, 0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .nutrition-section {
@@ -4278,24 +4277,26 @@ body::before {
 
 /* Food Selection Interface */
 .food-search-box {
-    margin: 15px;
+    margin: 0 15px;
 }
 
 .food-search-box input {
     width: 100%;
     height: 48px;
-    border: 2px solid #e0e0e0;
+    border: 1px solid #E2DBF7;
     border-radius: 12px;
     padding: 0 16px;
     font-size: 16px;
     font-family: 'Nunito', sans-serif;
-    background: white;
-    transition: border-color 0.3s ease;
+    background: #FFFFFF;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .food-search-box input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #C8B6E2;
+    box-shadow: 0 2px 12px rgba(200, 182, 226, 0.2);
 }
 
 .food-categories {
