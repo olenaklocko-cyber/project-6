@@ -1415,10 +1415,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: linear-gradient(135deg, #fff3cd, #ffeeba);
+    background: linear-gradient(135deg, #F1EEF9, #E2DBF7);
     border-radius: 16px;
     padding: 18px;
-    border: 2px solid #ffc107;
+    border: 2px solid #C8B6E2;
 }
 
 .profile-goal-icon {
@@ -1437,7 +1437,7 @@ body::before {
 
 .profile-goal-title {
     font-size: 12px;
-    color: #856404;
+    color: #8B7BB5;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 3px;
@@ -1445,7 +1445,7 @@ body::before {
 
 .profile-goal-text {
     font-size: 16px;
-    color: #856404;
+    color: #2D1B69;
     font-weight: 800;
 }
 
@@ -1522,10 +1522,10 @@ body::before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
     border-radius: 16px;
     padding: 18px;
-    border: 2px solid #28a745;
+    border: 2px solid #A5D6A7;
 }
 
 .motivation-emoji {
@@ -1540,7 +1540,7 @@ body::before {
 
 .motivation-text {
     font-size: 14px;
-    color: #155724;
+    color: #2E7D32;
     font-weight: 700;
 }
 
@@ -3204,8 +3204,8 @@ body::before {
 .icon-option.selected,
 .unit-option.selected,
 .gender-option.selected {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #C8B6E2;
+    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
     color: white;
     transform: scale(1.05);
 }
@@ -3249,7 +3249,7 @@ body::before {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
     color: white;
     border: none;
     padding: 18px;
@@ -3265,7 +3265,7 @@ body::before {
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 30px rgba(200, 182, 226, 0.4);
 }
 
 .btn-primary:active {
