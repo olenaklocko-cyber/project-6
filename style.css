@@ -1415,11 +1415,11 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: #FAFAFE;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
     border-radius: 20px;
     padding: 18px;
-    border: 1px solid #E8E0F0;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
 }
 
 .profile-goal-icon {
@@ -1438,7 +1438,7 @@ body::before {
 
 .profile-goal-title {
     font-size: 12px;
-    color: #8B7BB5;
+    color: #5A4A7A;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 3px;
@@ -1451,11 +1451,11 @@ body::before {
 }
 
 .profile-settings {
-    background: #FAFAFE;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    border: 1px solid #E8E0F0;
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .profile-settings-title {
@@ -1523,10 +1523,11 @@ body::before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(135deg, #F1EEF9, #E8F0FE);
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
     border-radius: 16px;
     padding: 18px;
-    border: 2px solid #D0C4E8;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
 }
 
 .motivation-emoji {
@@ -1541,7 +1542,7 @@ body::before {
 
 .motivation-text {
     font-size: 14px;
-    color: #5A4A7A;
+    color: #3D2A6A;
     font-weight: 700;
 }
 
@@ -3205,8 +3206,8 @@ body::before {
 .unit-option.selected,
 .gender-option.selected {
     border-color: #C8B6E2;
-    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
-    color: white;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    color: #3D2A6A;
     transform: scale(1.05);
 }
 
@@ -3243,14 +3244,14 @@ body::before {
 
 .lang-btn.active {
     border-color: #C8B6E2;
-    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
-    color: white;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    color: #3D2A6A;
     transform: scale(1.05);
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
-    color: white;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    color: #3D2A6A;
     border: none;
     padding: 18px;
     border-radius: 16px;
@@ -3261,11 +3262,12 @@ body::before {
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(200, 182, 226, 0.4);
+    box-shadow: 0 12px 32px rgba(162, 140, 220, 0.35);
 }
 
 .btn-primary:active {
