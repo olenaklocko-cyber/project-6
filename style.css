@@ -397,16 +397,17 @@ body::before {
 
 .stats-blocks-section {
     margin: 0 15px 15px;
-    background: white;
+    background: linear-gradient(145deg, #FAFAFE 0%, #F5F2FB 100%);
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(162, 140, 220, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .stats-section-title {
     font-size: 16px;
     font-weight: 700;
-    color: #333;
+    color: #3D2A6A;
     margin-bottom: 16px;
 }
 
@@ -414,7 +415,7 @@ body::before {
     display: flex;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #E8E0F0;
 }
 
 .stats-block-row:last-child {
@@ -440,13 +441,13 @@ body::before {
 .stats-block-name {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: #3D2A6A;
     margin-bottom: 6px;
 }
 
 .stats-block-bar {
     height: 8px;
-    background: #f0f0f0;
+    background: #E8E0F0;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -455,18 +456,20 @@ body::before {
     height: 100%;
     border-radius: 4px;
     transition: width 0.5s ease;
+    background: linear-gradient(90deg, #C8B6E2, #E2DBF7) !important;
 }
 
 .stats-block-percent {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 14px;
+    font-weight: 700;
     min-width: 50px;
     text-align: right;
+    color: #5A4A7A !important;
 }
 
 .stats-block-arrow {
-    font-size: 14px;
-    color: #999;
+    font-size: 12px;
+    color: #9B8EC4;
     margin-left: 8px;
 }
 

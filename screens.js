@@ -385,10 +385,10 @@ var Screens = {
                 '<div class="stats-block-info">' +
                 '<div class="stats-block-name">' + I18n.t('block' + block.id.charAt(0).toUpperCase() + block.id.slice(1)) + '</div>' +
                 '<div class="stats-block-bar">' +
-                '<div class="stats-block-fill" style="width: ' + blockProgress + '%; background: ' + color + '"></div>' +
+                '<div class="stats-block-fill" style="width: ' + blockProgress + '%"></div>' +
                 '</div>' +
                 '</div>' +
-                '<div class="stats-block-percent" style="color: ' + color + '">' + blockProgress + '%</div>' +
+                '<div class="stats-block-percent">' + blockProgress + '%</div>' +
                 '<div class="stats-block-arrow">' + (isExpanded ? '▾' : '▸') + '</div>' +
                 '</div>';
             
