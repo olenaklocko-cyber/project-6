@@ -1657,7 +1657,7 @@ var Screens = {
         var img = new Image();
         img.onload = function() {
             var canvas = document.createElement('canvas');
-            var maxSize = 800;
+            var maxSize = 600;
             var width = img.width;
             var height = img.height;
             
@@ -1678,7 +1678,7 @@ var Screens = {
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            var compressedImage = canvas.toDataURL('image/jpeg', 0.85);
+            var compressedImage = canvas.toDataURL('image/jpeg', 0.7);
             
             console.log('Original size:', imageBase64.length);
             console.log('Compressed size:', compressedImage.length);
