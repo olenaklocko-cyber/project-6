@@ -1522,10 +1522,10 @@ body::before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+    background: linear-gradient(135deg, #F1EEF9, #E8F0FE);
     border-radius: 16px;
     padding: 18px;
-    border: 2px solid #A5D6A7;
+    border: 2px solid #D0C4E8;
 }
 
 .motivation-emoji {
@@ -1540,7 +1540,7 @@ body::before {
 
 .motivation-text {
     font-size: 14px;
-    color: #2E7D32;
+    color: #5A4A7A;
     font-weight: 700;
 }
 
@@ -3242,8 +3242,8 @@ body::before {
 }
 
 .lang-btn.active {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #C8B6E2;
+    background: linear-gradient(135deg, #C8B6E2, #8B7BB5);
     color: white;
     transform: scale(1.05);
 }
