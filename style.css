@@ -4326,7 +4326,7 @@ body::before {
 
 .food-category-btn {
     padding: 12px 6px;
-    border: none;
+    border: 1px solid #E2DBF7;
     border-radius: 14px;
     font-size: 11px;
     font-weight: 700;
@@ -4336,30 +4336,32 @@ body::before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #5A4A7A;
+    color: #2A2050;
     text-shadow: none;
-    animation: breathe 3s ease-in-out infinite;
+    box-shadow: none;
 }
 
-.food-category-btn:nth-child(1) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); animation-delay: 0s; }
-.food-category-btn:nth-child(2) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); animation-delay: 0.15s; }
-.food-category-btn:nth-child(3) { background: linear-gradient(135deg, #d4fc79, #96e6a1); animation-delay: 0.3s; }
-.food-category-btn:nth-child(4) { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); animation-delay: 0.45s; }
-.food-category-btn:nth-child(5) { background: linear-gradient(135deg, #ffeaa7, #dfe6e9); animation-delay: 0.6s; }
-.food-category-btn:nth-child(6) { background: linear-gradient(135deg, #a8edea, #fed6e3); animation-delay: 0.75s; }
-.food-category-btn:nth-child(7) { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); animation-delay: 0.9s; }
-.food-category-btn:nth-child(8) { background: linear-gradient(135deg, #fab1a0, #ffeaa7); animation-delay: 1.05s; }
-.food-category-btn:nth-child(9) { background: linear-gradient(135deg, #c7ecee, #dff9fb); animation-delay: 1.2s; }
-.food-category-btn:nth-child(10) { background: linear-gradient(135deg, #fdcbf1, #e6dee9); animation-delay: 1.35s; }
-.food-category-btn:nth-child(11) { background: linear-gradient(135deg, #ffecd2, #fcb69f); animation-delay: 1.5s; }
-.food-category-btn:nth-child(12) { background: linear-gradient(135deg, #dfe6e9, #b2bec3); animation-delay: 1.65s; }
-.food-category-btn:nth-child(13) { background: linear-gradient(135deg, #f8e8ee, #f3e8ff); animation-delay: 1.8s; }
+.food-category-btn:nth-child(1) { background: #FDE8E8; animation-delay: 0s; }
+.food-category-btn:nth-child(2) { background: #E0F0FF; animation-delay: 0.15s; }
+.food-category-btn:nth-child(3) { background: #E0F8E8; animation-delay: 0.3s; }
+.food-category-btn:nth-child(4) { background: #F0E0FF; animation-delay: 0.45s; }
+.food-category-btn:nth-child(5) { background: #FFF8E0; animation-delay: 0.6s; }
+.food-category-btn:nth-child(6) { background: #E0F8F4; animation-delay: 0.75s; }
+.food-category-btn:nth-child(7) { background: #E8E0FF; animation-delay: 0.9s; }
+.food-category-btn:nth-child(8) { background: #FFE8E0; animation-delay: 1.05s; }
+.food-category-btn:nth-child(9) { background: #E0FFF8; animation-delay: 1.2s; }
+.food-category-btn:nth-child(10) { background: #F8E0F8; animation-delay: 1.35s; }
+.food-category-btn:nth-child(11) { background: #FFF0E0; animation-delay: 1.5s; }
+.food-category-btn:nth-child(12) { background: #E8F0F8; animation-delay: 1.65s; }
+.food-category-btn:nth-child(13) { background: #F0E8F8; animation-delay: 1.8s; }
 
 .food-category-btn.active {
-    transform: scale(1.1);
-    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    transform: scale(1.08);
+    box-shadow: 0 0 16px rgba(200, 182, 226, 0.4);
     animation: none;
-    border: 3px solid #333;
+    border: 2px solid #C8B6E2;
+    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%) !important;
+    color: #2A2050;
     position: relative;
 }
 
@@ -4370,7 +4372,7 @@ body::before {
     right: -8px;
     width: 20px;
     height: 20px;
-    background: #333;
+    background: linear-gradient(135deg, #C8B6E2, #A898D0);
     color: white;
     border-radius: 50%;
     font-size: 12px;
@@ -4616,10 +4618,10 @@ body::before {
 .custom-food-btn {
     width: 100%;
     padding: 14px;
-    border: 2px dashed #667eea;
+    border: 2px dashed #C8B6E2;
     border-radius: 12px;
-    background: #667eea10;
-    color: #667eea;
+    background: #F5F2FB;
+    color: #6A5A8A;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
@@ -4627,17 +4629,17 @@ body::before {
 }
 
 .custom-food-btn:active {
-    background: #667eea20;
+    background: #E8E0F0;
     transform: scale(0.98);
 }
 
 .custom-food-form {
     margin: 0 15px 15px;
     padding: 16px;
-    background: white;
+    background: linear-gradient(145deg, #FAFAFE 0%, #F5F2FB 100%);
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border: 2px solid #667eea40;
+    box-shadow: 0 4px 20px rgba(162, 140, 220, 0.12);
+    border: 1px solid #E2DBF7;
 }
 
 .custom-food-form .form-group {
