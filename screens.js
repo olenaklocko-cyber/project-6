@@ -2001,91 +2001,97 @@ var Screens = {
         var self = this;
         this.fallbackSelected = [];
         
-        var foods = [
-            { name: 'Сосиска', cal: 150, icon: '🌭' },
-            { name: 'Помідор', cal: 18, icon: '🍅' },
-            { name: 'Хліб', cal: 80, icon: '🍞' },
-            { name: 'Сир', cal: 105, icon: '🧀' },
-            { name: 'Масло', cal: 72, icon: '🧈' },
-            { name: 'Яйце', cal: 78, icon: '🥚' },
-            { name: 'Ковбаса', cal: 78, icon: '🥓' },
-            { name: 'Огірок', cal: 15, icon: '🥒' },
-            { name: 'Картопля', cal: 95, icon: '🥔' },
-            { name: 'Морква', cal: 41, icon: '🥕' },
-            { name: 'Курка', cal: 165, icon: '🍗' },
-            { name: 'Рис', cal: 130, icon: '🍚' },
-            { name: 'Макарони', cal: 130, icon: '🍝' },
-            { name: 'Салат', cal: 20, icon: '🥗' },
-            { name: 'Суп', cal: 50, icon: '🍲' },
-            { name: 'Піца', cal: 266, icon: '🍕' },
-            { name: 'Бургер', cal: 295, icon: '🍔' },
-            { name: 'Сирники', cal: 180, icon: '🥞' },
-            { name: 'Каша', cal: 100, icon: '🥣' },
-            { name: 'Фрукти', cal: 50, icon: '🍎' },
-            { name: 'Йогурт', cal: 60, icon: '🥛' },
-            { name: 'Сік', cal: 45, icon: '🧃' },
-            { name: 'Кава', cal: 5, icon: '☕' },
-            { name: 'Чай', cal: 2, icon: '🍵' }
-        ];
+        // Використовуємо повну базу страв
+        var allFoods = Storage.foodDatabase;
         
         var list = document.getElementById('fallbackList');
         var html = '';
         
-        foods.forEach(function(f) {
-            html += '<div class="fallback-item" data-name="' + f.name + '" data-cal="' + f.cal + '">' +
+        // Показуємо перші 30 страв
+        var foodsToShow = allFoods.slice(0, 30);
+        
+        foodsToShow.forEach(function(f) {
+            html += '<div class="fallback-item" data-name="' + f.name + '" data-cal="' + f.calories + '" data-protein="' + (f.protein || 0) + '" data-fat="' + (f.fat || 0) + '" data-carbs="' + (f.carbs || 0) + '">' +
                 '<span class="fallback-icon">' + f.icon + '</span>' +
-                '<span class="fallback-name">' + f.name + '</span>' +
-                '<span class="fallback-cal">' + f.cal + ' ' + I18n.t('kcal') + '</span>' +
+                '<span class="fallback-name">' + Storage.translateFoodName(f.name) + '</span>' +
+                '<span class="fallback-cal">' + f.calories + ' ' + I18n.t('kcal') + '</span>' +
                 '</div>';
         });
         
         list.innerHTML = html;
         
+        // Пошук по базі
+        var searchInput = document.getElementById('fallbackSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                var query = this.value.toLowerCase().trim();
+                var filtered = query ? Storage.searchFood(query) : allFoods.slice(0, 30);
+                
+                var newHtml = '';
+                filtered.forEach(function(f) {
+                    newHtml += '<div class="fallback-item" data-name="' + f.name + '" data-cal="' + f.calories + '" data-protein="' + (f.protein || 0) + '" data-fat="' + (f.fat || 0) + '" data-carbs="' + (f.carbs || 0) + '">' +
+                        '<span class="fallback-icon">' + f.icon + '</span>' +
+                        '<span class="fallback-name">' + Storage.translateFoodName(f.name) + '</span>' +
+                        '<span class="fallback-cal">' + f.calories + ' ' + I18n.t('kcal') + '</span>' +
+                        '</div>';
+                });
+                
+                list.innerHTML = newHtml;
+                self.bindFallbackItems();
+            });
+        }
+        
+        self.bindFallbackItems();
+    },
+    
+    bindFallbackItems: function() {
+        var self = this;
+        
         document.querySelectorAll('.fallback-item').forEach(function(item) {
             item.addEventListener('click', function() {
                 var name = this.getAttribute('data-name');
                 var cal = parseInt(this.getAttribute('data-cal'));
-                self.toggleFallbackItem(name, cal);
-            });
-        });
-        
-        document.getElementById('fallbackSearch').addEventListener('input', function() {
-            var query = this.value.toLowerCase();
-            document.querySelectorAll('.fallback-item').forEach(function(item) {
-                var name = item.getAttribute('data-name').toLowerCase();
-                item.style.display = name.indexOf(query) > -1 ? 'flex' : 'none';
+                var protein = parseFloat(this.getAttribute('data-protein')) || 0;
+                var fat = parseFloat(this.getAttribute('data-fat')) || 0;
+                var carbs = parseFloat(this.getAttribute('data-carbs')) || 0;
+                self.toggleFallbackItem(name, cal, protein, fat, carbs);
             });
         });
         
         document.getElementById('saveFallbackBtn').addEventListener('click', function() {
             if (self.fallbackSelected.length === 0) return;
             
-            var total = self.fallbackSelected.reduce(function(sum, f) { return sum + f.cal; }, 0);
+            var totalCal = self.fallbackSelected.reduce(function(sum, f) { return sum + f.cal; }, 0);
+            var totalProtein = self.fallbackSelected.reduce(function(sum, f) { return sum + (f.protein || 0); }, 0);
+            var totalFat = self.fallbackSelected.reduce(function(sum, f) { return sum + (f.fat || 0); }, 0);
+            var totalCarbs = self.fallbackSelected.reduce(function(sum, f) { return sum + (f.carbs || 0); }, 0);
             var names = self.fallbackSelected.map(function(f) { return f.name; }).join(' + ');
             
             Storage.addFoodEntry({
                 name: names,
-                calories: total,
+                calories: totalCal,
+                protein: totalProtein,
+                fat: totalFat,
+                carbs: totalCarbs,
                 portion: 'з фото',
                 time: new Date().toLocaleTimeString('uk-UA')
             });
             
             this.textContent = '✓ Збережено!';
             setTimeout(function() {
-                var preview = document.getElementById('photoPreview');
-                if (preview) preview.remove();
-                self.renderFoodHistory();
+                self.closeFoodResult();
+                self.renderHomeScreen();
             }, 1000);
         });
     },
     
-    toggleFallbackItem: function(name, cal) {
+    toggleFallbackItem: function(name, cal, protein, fat, carbs) {
         var index = this.fallbackSelected.findIndex(function(f) { return f.name === name; });
         
         if (index > -1) {
             this.fallbackSelected.splice(index, 1);
         } else {
-            this.fallbackSelected.push({ name: name, cal: cal });
+            this.fallbackSelected.push({ name: name, cal: cal, protein: protein || 0, fat: fat || 0, carbs: carbs || 0 });
         }
         
         var total = this.fallbackSelected.reduce(function(sum, f) { return sum + f.cal; }, 0);

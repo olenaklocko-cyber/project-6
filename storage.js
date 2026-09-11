@@ -845,7 +845,16 @@ var Storage = {
         { name: 'Вінегрет', calories: 102, icon: '🥗', category: 'Страви', protein: 1.5, fat: 7, carbs: 9 },
         { name: 'Млинці', calories: 227, icon: '🥞', category: 'Страви', protein: 6, fat: 12, carbs: 23 },
         { name: 'Вареники', calories: 210, icon: '🥟', category: 'Страви', protein: 7, fat: 8, carbs: 28 },
-        { name: 'Холодець', calories: 141, icon: '🍖', category: 'Страви', protein: 12, fat: 10, carbs: 1 }
+        { name: 'Холодець', calories: 141, icon: '🍖', category: 'Страви', protein: 12, fat: 10, carbs: 1 },
+        
+        // === Морепродукти ===
+        { name: 'Креветки', calories: 99, icon: '🦐', category: 'Морепродукти', protein: 24, fat: 0.3, carbs: 0.2 },
+        { name: 'Кальмар', calories: 92, icon: '🦑', category: 'Морепродукти', protein: 18, fat: 1.4, carbs: 1.5 },
+        { name: 'Краб', calories: 97, icon: '🦀', category: 'Морепродукти', protein: 19, fat: 1, carbs: 0 },
+        { name: 'Мідії', calories: 86, icon: '🦪', category: 'Морепродукти', protein: 12, fat: 3, carbs: 4 },
+        { name: 'Устриці', calories: 68, icon: '🦪', category: 'Морепродукти', protein: 7, fat: 2, carbs: 4 },
+        { name: 'Гарбузове насіння', calories: 559, icon: '🎃', category: 'Горіхи', protein: 30, fat: 49, carbs: 11 },
+        { name: 'Соняшникове насіння', calories: 584, icon: '🌻', category: 'Горіхи', protein: 21, fat: 51, carbs: 20 }
     ],
     
     getFoodCategories: function() {
@@ -863,7 +872,8 @@ var Storage = {
             'Солодощі': 'catSweets',
             'Горіхи': 'catNuts',
             'Масла': 'catOils',
-            'Страви': 'catDishes'
+            'Страви': 'catDishes',
+            'Морепродукти': 'catSeafood'
         };
         
         for (var i = 0; i < this.foodDatabase.length; i++) {

@@ -56,6 +56,7 @@ var I18n = {
             catNuts: 'Горіхи',
             catOils: 'Масла',
             catDishes: 'Страви',
+            catSeafood: 'Морепродукти',
             
             // Додавання їжі
             searchFood: '🔍 Знайти страву...',
@@ -279,6 +280,7 @@ var I18n = {
             catNuts: 'Nuts',
             catOils: 'Oils',
             catDishes: 'Dishes',
+            catSeafood: 'Seafood',
             
             // Adding food
             searchFood: '🔍 Search food...',
