@@ -1657,7 +1657,7 @@ var Screens = {
         var img = new Image();
         img.onload = function() {
             var canvas = document.createElement('canvas');
-            var maxSize = 600;
+            var maxSize = 500;
             var width = img.width;
             var height = img.height;
             
@@ -1678,10 +1678,18 @@ var Screens = {
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            var compressedImage = canvas.toDataURL('image/jpeg', 0.7);
+            var compressedImage = canvas.toDataURL('image/jpeg', 0.6);
             
             console.log('Original size:', imageBase64.length);
             console.log('Compressed size:', compressedImage.length);
+            
+            // Якщо зображення занадто велике ( > 500KB base64 ) — відхиляємо
+            if (compressedImage.length > 500000) {
+                console.error('Image too large:', compressedImage.length);
+                self.closeFoodResult();
+                alert('Зображення занадто велике. Спробуйте зробити фото меншої якості.');
+                return;
+            }
             
             fetch(serverUrl, {
                 method: 'POST',
