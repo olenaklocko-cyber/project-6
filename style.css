@@ -1415,10 +1415,11 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: linear-gradient(135deg, #F1EEF9, #E2DBF7);
-    border-radius: 16px;
+    background: #FAFAFE;
+    border-radius: 20px;
     padding: 18px;
-    border: 2px solid #C8B6E2;
+    border: 1px solid #E8E0F0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 }
 
 .profile-goal-icon {
@@ -1450,10 +1451,11 @@ body::before {
 }
 
 .profile-settings {
-    background: white;
+    background: #FAFAFE;
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid #E8E0F0;
 }
 
 .profile-settings-title {
@@ -1478,14 +1480,13 @@ body::before {
 }
 
 .profile-setting-icon {
-    font-size: 24px;
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5f7fa;
-    border-radius: 10px;
+    background: #F1EEF9;
+    border-radius: 12px;
 }
 
 .profile-setting-label {

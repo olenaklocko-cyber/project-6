@@ -643,31 +643,31 @@ var Screens = {
             '</div>' +
             
             '<div class="profile-setting-item">' +
-            '<div class="profile-setting-icon">⚖️</div>' +
+            '<div class="profile-setting-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 8l7-5 7 5"/><path d="M5 8v4a7 7 0 0014 0V8"/></svg></div>' +
             '<div class="profile-setting-label">' + I18n.t('weight') + '</div>' +
             '<input type="number" id="profileWeight" value="' + profile.weight + '" class="profile-input" placeholder="60">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
-            '<div class="profile-setting-icon">📏</div>' +
+            '<div class="profile-setting-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>' +
             '<div class="profile-setting-label">' + I18n.t('height') + '</div>' +
             '<input type="number" id="profileHeight" value="' + (profile.height || '') + '" class="profile-input" placeholder="170">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
-            '<div class="profile-setting-icon">🎂</div>' +
+            '<div class="profile-setting-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="M12 14v4"/><path d="M10 16h4"/></svg></div>' +
             '<div class="profile-setting-label">' + I18n.t('age') + '</div>' +
             '<input type="number" id="profileAge" value="' + (profile.age || '') + '" class="profile-input" placeholder="25">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
-            '<div class="profile-setting-icon">🎯</div>' +
+            '<div class="profile-setting-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>' +
             '<div class="profile-setting-label">' + I18n.t('goal') + '</div>' +
             '<input type="text" id="profileGoal" value="' + profile.goal + '" class="profile-input">' +
             '</div>' +
             
             '<div class="profile-setting-item">' +
-            '<div class="profile-setting-icon">🌍</div>' +
+            '<div class="profile-setting-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B8EC4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>' +
             '<div class="profile-setting-label">' + I18n.t('language') + '</div>' +
             '<div class="language-picker">' +
             '<button class="lang-btn ' + (I18n.currentLang === 'uk' ? 'active' : '') + '" data-lang="uk">🇺🇦 Українська</button>' +
