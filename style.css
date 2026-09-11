@@ -1313,11 +1313,19 @@ body::before {
     flex-direction: column;
     align-items: center;
     padding: 30px 20px;
-    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
-    border-radius: 24px;
-    color: #3D2A6A;
-    box-shadow: 0 8px 30px rgba(162, 140, 220, 0.2);
+    background: linear-gradient(135deg, #E8DFFB 0%, #F5E6F8 25%, #E0F0E8 50%, #F8E8F0 75%, #E4DCF8 100%);
+    background-size: 400% 400%;
+    animation: auroraFlow 8s ease-in-out infinite;
+    border-radius: 28px;
+    color: #2D1B69;
+    box-shadow:
+        0 20px 60px rgba(162, 140, 220, 0.3),
+        0 8px 24px rgba(180, 160, 220, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
 }
 
 .profile-avatar {
@@ -1334,6 +1342,7 @@ body::before {
     position: relative;
     display: inline-block;
     cursor: pointer;
+    box-shadow: 0 8px 30px rgba(162, 140, 220, 0.25);
 }
 
 .profile-avatar-emoji {
@@ -1369,12 +1378,12 @@ body::before {
     font-size: 22px;
     font-weight: 900;
     margin-bottom: 5px;
-    color: #3D2A6A;
+    color: #2D1B69;
 }
 
 .profile-status {
     font-size: 14px;
-    color: #5A4A7A;
+    color: #4A3A6A;
     font-weight: 600;
 }
 
@@ -1396,15 +1405,12 @@ body::before {
 .profile-stat-number {
     font-size: 28px;
     font-weight: 900;
-    background: linear-gradient(135deg, #B8A9D4, #8B7CB8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #2D1B69;
 }
 
 .profile-stat-label {
     font-size: 12px;
-    color: #9B8EC4;
+    color: #6A5A8A;
     font-weight: 600;
 }
 
@@ -1418,11 +1424,11 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    background: linear-gradient(145deg, #FAFAFE 0%, #F5F2FB 100%);
     border-radius: 20px;
     padding: 18px;
     border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
+    box-shadow: 0 4px 20px rgba(162, 140, 220, 0.12);
 }
 
 .profile-goal-icon {
@@ -1441,7 +1447,7 @@ body::before {
 
 .profile-goal-title {
     font-size: 12px;
-    color: #5A4A7A;
+    color: #6A5A8A;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 3px;
@@ -1454,7 +1460,7 @@ body::before {
 }
 
 .profile-settings {
-    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    background: linear-gradient(145deg, #FAFAFE 0%, #F5F2FB 100%);
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
@@ -1495,7 +1501,7 @@ body::before {
 .profile-setting-label {
     font-size: 14px;
     font-weight: 700;
-    color: #333;
+    color: #2D1B69;
     min-width: 60px;
 }
 
@@ -1526,11 +1532,11 @@ body::before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
+    background: linear-gradient(145deg, #FAFAFE 0%, #F5F2FB 100%);
     border-radius: 16px;
     padding: 18px;
     border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
+    box-shadow: 0 4px 20px rgba(162, 140, 220, 0.12);
 }
 
 .motivation-emoji {
@@ -1545,7 +1551,7 @@ body::before {
 
 .motivation-text {
     font-size: 14px;
-    color: #3D2A6A;
+    color: #4A3A6A;
     font-weight: 700;
 }
 
@@ -3210,8 +3216,9 @@ body::before {
 .gender-option.selected {
     border-color: #C8B6E2;
     background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
-    color: #3D2A6A;
+    color: #2D1B69;
     transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(200, 182, 226, 0.5), 0 4px 12px rgba(162, 140, 220, 0.2);
 }
 
 /* Мова */
@@ -3248,13 +3255,14 @@ body::before {
 .lang-btn.active {
     border-color: #C8B6E2;
     background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
-    color: #3D2A6A;
+    color: #2D1B69;
     transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(200, 182, 226, 0.5), 0 4px 12px rgba(162, 140, 220, 0.2);
 }
 
 .btn-primary {
-    background: linear-gradient(145deg, #E2DBF7 0%, #ECDFFB 100%);
-    color: #3D2A6A;
+    background: linear-gradient(135deg, #C8B6E2, #A898D0);
+    color: white;
     border: none;
     padding: 18px;
     border-radius: 16px;
@@ -3265,7 +3273,7 @@ body::before {
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.2);
+    box-shadow: 0 8px 24px rgba(162, 140, 220, 0.25);
 }
 
 .btn-primary:hover {
